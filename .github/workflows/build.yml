@@ -40,6 +40,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.x
+          source-url: https://nuget.pkg.github.com/prism-be/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Restore dependencies
         run: dotnet restore
@@ -58,7 +61,5 @@ jobs:
         working-directory: ./src
 
       - name: Push
-        run: dotnet nuget push "**/*.nupkg" --source https://nuget.pkg.github.com/prism-be/index.json --no-symbols true
+        run: dotnet nuget push "**/*.nupkg"
         working-directory: ./src
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
