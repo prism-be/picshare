@@ -49,8 +49,8 @@ jobs:
         run: dotnet build --no-restore --configuration Release
         working-directory: ./src
 
-      - name: Test --configuration Release
-        run: dotnet test --no-build --verbosity normal
+      - name: Test
+        run: dotnet test --no-build --verbosity normal --configuration Release
         working-directory: ./src
 
       - name: Pack
