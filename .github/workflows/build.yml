@@ -63,3 +63,5 @@ jobs:
       - name: Push
         run: dotnet nuget push "**/*.nupkg"
         working-directory: ./src
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
