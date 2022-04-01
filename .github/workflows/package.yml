@@ -1,0 +1,72 @@
+name: Package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Determine And Set Version
+        shell: pwsh
+        run: |
+          Write-Host "TagName: ${{ github.event.release.tag_name }}"
+          $informationalVersion = ("${{ github.event.release.tag_name }}").Replace("v","")
+          if ($informationalVersion -eq "") {
+            $informationalVersion = $env:GITHUB_REF.replace('refs/tags/v', '')
+          }
+          if (($informationalVersion -eq "") -or ($informationalVersion -like "refs/*")) {
+            $informationalVersion = "0.0.0"
+          }
+          echo "VERSION_INFORMATIONAL=$informationalVersion" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          $assemblyVersion = $informationalVersion.Split("-")[0];
+          $assemblyVersion = $assemblyVersion + ".${{github.run_number}}"
+          $informationalVersion = $informationalVersion + ".${{github.run_number}}"
+          Write-Host "InformationalVersion: $informationalVersion"
+          Write-Host "AssemblyVersion: $assemblyVersion"
+          ((Get-Content -path "${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj" -Raw) -replace '1.0.0-pre',$informationalVersion) | Set-Content -Path ${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj
+          ((Get-Content -path "${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj" -Raw) -replace '1.0.0',$assemblyVersion) | Set-Content -Path ${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./src
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: ./src
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+        working-directory: ./src
+
+      - name: Pack
+        run: dotnet pack --configuration Release
+        working-directory: ./src
+
+      - name: Authentication On Github Feed
+        run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/prism-be/index.json"
+
+      - name: Push
+        run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/prism-be/index.json
+        working-directory: ./src
+
+      - name: Clean old packages
+        uses: actions/delete-package-versions@v3
+        with:
+          package-name: 'Prism.Picshare.Events'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-versions-to-keep: 10

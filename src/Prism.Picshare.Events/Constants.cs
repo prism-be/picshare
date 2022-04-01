@@ -1,14 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="ReturnCodes.cs" company="Prism">
+//  <copyright file="Constants.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 namespace Prism.Picshare.Events;
 
-public enum ReturnCodes
+public static class Constants
 {
-    CoffeeBreak = -42,
-    Ok = 0,
-    InvalidCredentials = 100
+    public const int MaxShortStringLength = 65536;
 }
