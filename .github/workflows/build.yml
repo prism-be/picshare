@@ -61,5 +61,12 @@ jobs:
         run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/prism-be/index.json"
 
       - name: Push
-        run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+        run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/prism-be/index.json
         working-directory: ./src
+
+      - name: Clean old packages
+        uses: actions/delete-package-versions@v3
+        with:
+          package-name: 'Prism.Picshare.Events'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-versions-to-keep: 10
