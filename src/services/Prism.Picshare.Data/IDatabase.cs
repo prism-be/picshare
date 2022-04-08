@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Prism.Picshare.Data;
 
-public interface IDatabase
+public interface IDatabase: IDisposable
 {
     int Count<T>();
 

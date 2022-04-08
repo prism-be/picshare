@@ -11,7 +11,7 @@ namespace Prism.Picshare.Data.LiteDB;
 
 public static class ServiceCollectionExtensions
 {
-    public static void UseLiteDb(this IServiceCollection services, Action<DatabaseConfiguration> config)
+    public static void UseLiteDbStorage(this IServiceCollection services)
     {
         var databasesDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_DIRECTORY");
         var databasePassword = Environment.GetEnvironmentVariable("PICSHARE_DB_PASSWORD");
@@ -27,8 +27,6 @@ public static class ServiceCollectionExtensions
         }
 
         var configuration = new DatabaseConfiguration(databasesDirectory, databasePassword);
-        config(configuration);
-
         services.AddSingleton(configuration);
 
         services.AddScoped<IDatabaseResolver, DatabaseResolver>();
