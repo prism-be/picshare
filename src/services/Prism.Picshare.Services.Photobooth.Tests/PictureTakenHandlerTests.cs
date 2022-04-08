@@ -9,6 +9,7 @@ using System.IO;
 using LiteDB;
 using Moq;
 using Prism.Picshare.Data;
+using Prism.Picshare.Data.LiteDB;
 using Prism.Picshare.Events.Photobooth;
 using Prism.Picshare.Services.Photobooth.Data;
 using Prism.Picshare.Services.Photobooth.Handlers;
@@ -28,9 +29,10 @@ public class PictureTakenHandlerTests
 
         using var liteDbMemory = new MemoryStream();
         using var liteDb = new LiteDatabase(liteDbMemory);
+        using var db = new Database(liteDb);
 
         var databaseResolver = new Mock<IDatabaseResolver>();
-        databaseResolver.Setup(x => x.GetDatabase(organisationId, "photobooth")).Returns(liteDb);
+        databaseResolver.Setup(x => x.GetDatabase(organisationId, "photobooth")).Returns(db);
 
         var handler = new PictureTakenHandler(databaseResolver.Object);
 

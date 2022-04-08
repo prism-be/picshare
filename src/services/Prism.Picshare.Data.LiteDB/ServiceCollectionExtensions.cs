@@ -5,9 +5,9 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.Extensions.DependencyInjection;
-using Prism.Picshare.Exceptions;
+using Prism.Picshare.Data.Exceptions;
 
-namespace Prism.Picshare.Data;
+namespace Prism.Picshare.Data.LiteDB;
 
 public static class ServiceCollectionExtensions
 {
@@ -31,9 +31,6 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton(configuration);
 
-        if (configuration.DatabaseResolver != null)
-        {
-            services.AddSingleton(configuration.DatabaseResolver);
-        }
+        services.AddScoped<IDatabaseResolver, DatabaseResolver>();
     }
 }

@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Data;
+namespace Prism.Picshare.Data.LiteDB;
 
 public class DatabaseConfiguration
 {
@@ -17,11 +17,4 @@ public class DatabaseConfiguration
     public string DatabaseDirectory { get; init; }
 
     public string DatabasePassword { get; init; }
-
-    public IDatabaseResolver? DatabaseResolver { get; private set; }
-
-    public void WithDatabaseResolver(IDatabaseResolver? resolver)
-    {
-        DatabaseResolver = resolver;
-    }
 }
