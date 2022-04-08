@@ -20,10 +20,9 @@ public class DatabaseResolverTests
         var organisation = Guid.NewGuid().ToString();
         var type = Guid.NewGuid().ToString();
         var password = Guid.NewGuid().ToString();
-        Environment.SetEnvironmentVariable("PICSHARE_DB_DIRECTORY", null);
-        Environment.SetEnvironmentVariable("PICSHARE_DB_PASSWORD", password);
+        var configuration = new DatabaseConfiguration { DatabasePassword = password };
 
-        var databaseResolver = new DatabaseResolver();
+        var databaseResolver = new DatabaseResolver(configuration);
 
         // Act
         var ex = Assert.Throws<DatabaseConfigurationException>(() => databaseResolver.GetDatabase(organisation, type));
@@ -38,10 +37,9 @@ public class DatabaseResolverTests
         // Arrange
         var organisation = Guid.NewGuid().ToString();
         var type = Guid.NewGuid().ToString();
-        Environment.SetEnvironmentVariable("PICSHARE_DB_DIRECTORY", Path.GetTempPath());
-        Environment.SetEnvironmentVariable("PICSHARE_DB_PASSWORD", null);
+        var configuration = new DatabaseConfiguration { DatabaseDirectory = Path.GetTempPath() };
 
-        var databaseResolver = new DatabaseResolver();
+        var databaseResolver = new DatabaseResolver(configuration);
 
         // Act
         var ex = Assert.Throws<DatabaseConfigurationException>(() => databaseResolver.GetDatabase(organisation, type));
@@ -57,10 +55,9 @@ public class DatabaseResolverTests
         var organisation = Guid.NewGuid().ToString();
         var type = Guid.NewGuid().ToString();
         var password = Guid.NewGuid().ToString();
-        Environment.SetEnvironmentVariable("PICSHARE_DB_DIRECTORY", Path.GetTempPath());
-        Environment.SetEnvironmentVariable("PICSHARE_DB_PASSWORD", password);
+        var configuration = new DatabaseConfiguration { DatabaseDirectory = Path.GetTempPath(), DatabasePassword = password };
 
-        var databaseResolver = new DatabaseResolver();
+        var databaseResolver = new DatabaseResolver(configuration);
 
         // Act
         using var db = databaseResolver.GetDatabase(organisation, type);

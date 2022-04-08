@@ -20,12 +20,15 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var password = Guid.NewGuid().ToString();
-        Environment.SetEnvironmentVariable("PICSHARE_DB_DIRECTORY", Path.GetTempPath());
-        Environment.SetEnvironmentVariable("PICSHARE_DB_PASSWORD", password);
 
         // Act
         var services = new ServiceCollection();
-        services.UseLiteDbStorage();
+        services.UseLiteDbStorage(config =>
+        {
+            config.DatabaseDirectory = Path.GetTempPath();
+            config.DatabasePassword = password;
+
+        });
 
         // Assert
         Assert.Equal(1, services.Count(x => x.ServiceType == typeof(DatabaseConfiguration)));
@@ -43,12 +46,14 @@ public class ServiceCollectionExtensionsTests
     {
         // Arrange
         var password = Guid.NewGuid().ToString();
-        Environment.SetEnvironmentVariable("PICSHARE_DB_DIRECTORY", null);
-        Environment.SetEnvironmentVariable("PICSHARE_DB_PASSWORD", password);
 
         // Act
         var services = new ServiceCollection();
-        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.UseLiteDbStorage());
+        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.UseLiteDbStorage(config =>
+        {
+            config.DatabasePassword = password;
+
+        }));
 
         // Assert
         Assert.Equal("Application cannot start because of missing variable: PICSHARE_DB_DIRECTORY", ex.Message);
@@ -63,7 +68,11 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         var services = new ServiceCollection();
-        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.UseLiteDbStorage());
+        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.UseLiteDbStorage(config =>
+        {
+            config.DatabaseDirectory = Path.GetTempPath();
+
+        }));
 
         // Assert
         Assert.Equal("Application cannot start because of missing variable: PICSHARE_DB_PASSWORD", ex.Message);

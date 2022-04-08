@@ -8,13 +8,7 @@ namespace Prism.Picshare.Data.LiteDB;
 
 public class DatabaseConfiguration
 {
-    public DatabaseConfiguration(string databaseDirectory, string databasePassword)
-    {
-        DatabaseDirectory = databaseDirectory;
-        DatabasePassword = databasePassword;
-    }
+    public string? DatabaseDirectory { get; set; }
 
-    public string DatabaseDirectory { get; init; }
-
-    public string DatabasePassword { get; init; }
+    public string? DatabasePassword { get; set; }
 }

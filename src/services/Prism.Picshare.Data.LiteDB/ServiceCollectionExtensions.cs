@@ -11,22 +11,21 @@ namespace Prism.Picshare.Data.LiteDB;
 
 public static class ServiceCollectionExtensions
 {
-    public static void UseLiteDbStorage(this IServiceCollection services)
+    public static void UseLiteDbStorage(this IServiceCollection services, Action<DatabaseConfiguration> config)
     {
-        var databasesDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_DIRECTORY");
-        var databasePassword = Environment.GetEnvironmentVariable("PICSHARE_DB_PASSWORD");
+        var configuration = new DatabaseConfiguration();
+        config(configuration);
 
-        if (string.IsNullOrWhiteSpace(databasesDirectory))
+        if (string.IsNullOrWhiteSpace(configuration.DatabaseDirectory))
         {
             throw new DatabaseConfigurationException("Application cannot start because of missing variable: PICSHARE_DB_DIRECTORY");
         }
 
-        if (string.IsNullOrWhiteSpace(databasePassword))
+        if (string.IsNullOrWhiteSpace(configuration.DatabasePassword))
         {
             throw new DatabaseConfigurationException("Application cannot start because of missing variable: PICSHARE_DB_PASSWORD");
         }
 
-        var configuration = new DatabaseConfiguration(databasesDirectory, databasePassword);
         services.AddSingleton(configuration);
 
         services.AddScoped<IDatabaseResolver, DatabaseResolver>();
