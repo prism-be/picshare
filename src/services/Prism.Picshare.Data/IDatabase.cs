@@ -28,20 +28,20 @@ public interface IDatabase
 
     T FindOne<T>(Expression<Func<T, bool>> predicate);
 
-    int Insert<T>(IEnumerable<T> entities);
+    int InsertMany<T>(IEnumerable<T> entities);
 
-    bool Insert<T>(T entity);
+    Guid Insert<T>(T entity);
 
     int InsertBulk<T>(IEnumerable<T> entities, int batchSize = 5000);
 
     K Max<T, K>(Expression<Func<T, K>> keySelector);
 
     K Min<T, K>(Expression<Func<T, K>> keySelector);
-    int Update<T>(IEnumerable<T> entities);
+    int UpdateMany<T>(IEnumerable<T> entities);
 
     bool Update<T>(T entity);
 
-    int Upsert<T>(IEnumerable<T> entities);
+    int UpsertMany<T>(IEnumerable<T> entities);
 
     bool Upsert<T>(T entity);
 }

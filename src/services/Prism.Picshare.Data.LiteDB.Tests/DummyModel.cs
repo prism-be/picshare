@@ -8,4 +8,4 @@ using System;
 
 namespace Prism.Picshare.Data.LiteDB.Tests;
 
-public record DummyModel(Guid Id, string Firstname, string Lastname, string Email, int Age);
+public record DummyModel(Guid Id, string Lastname, string Firstname, string Email, int Age);

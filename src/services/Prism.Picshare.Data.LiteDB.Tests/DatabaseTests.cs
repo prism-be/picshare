@@ -140,7 +140,7 @@ public class DatabaseTests
     {
         using var db = GetFakeDatabase();
 
-        var inserted = db.Insert(new List<DummyModel>
+        var inserted = db.InsertMany(new List<DummyModel>
         {
             new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462A"), "Brendan", "Zamora", "augue.malesuada@aol.org", 42),
             new DummyModel(new Guid("5683855E-B07A-0582-C577-3A1C02FBD99B"), "Macon", "Wright", "gravida@aol.org", 42),
@@ -150,7 +150,7 @@ public class DatabaseTests
             new DummyModel(new Guid("A34629FF-3F15-4B1D-1C67-15401E18EC4F"), "Brittany", "Mccoy", "et.rutrum@yahoo.net", 42)
         });
 
-        Assert.True(inserted);
+        Assert.Equal(6, inserted);
 
         var count = db.Count<DummyModel>();
         Assert.Equal(12, count);
@@ -184,7 +184,7 @@ public class DatabaseTests
 
         var inserted = db.Insert(new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462A"), "Brendan", "Zamora", "augue.malesuada@aol.org", 42));
 
-        Assert.True(inserted);
+        Assert.Equal(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462A"), inserted);
 
         var count = db.Count<DummyModel>();
         Assert.Equal(7, count);
@@ -228,7 +228,7 @@ public class DatabaseTests
     {
         using var db = GetFakeDatabase();
 
-        db.Update(new List<DummyModel>
+        db.UpdateMany(new List<DummyModel>
         {
             new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462C"), "Brenda", "Zamora", "augue.malesuada@aol.org", 21),
             new DummyModel(new Guid("5683855E-B07A-0582-C577-3A1C02FBD991"), "Maron", "Wright", "gravida@aol.org", 42),
@@ -250,7 +250,7 @@ public class DatabaseTests
     {
         using var db = GetFakeDatabase();
 
-        db.Update(new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462C"), "Brenda", "Zamora", "augue.malesuada@aol.org", 21));
+        db.Upsert(new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462C"), "Brenda", "Zamora", "augue.malesuada@aol.org", 21));
 
         var found = db.FindById<DummyModel>(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462C"));
 
@@ -263,7 +263,7 @@ public class DatabaseTests
     {
         using var db = GetFakeDatabase();
 
-        db.Update(new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC34642"), "Brendon", "Zamora", "augue.malesuada@aol.org", 21));
+        db.Upsert(new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC34642"), "Brendon", "Zamora", "augue.malesuada@aol.org", 21));
 
         var found = db.FindById<DummyModel>(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC34642"));
 
@@ -279,7 +279,7 @@ public class DatabaseTests
     {
         using var db = GetFakeDatabase();
 
-        db.Update(new List<DummyModel>
+        db.UpsertMany(new List<DummyModel>
         {
             new DummyModel(new Guid("E762DDCE-4DEE-0F25-751D-F9019DC3462C"), "Brenda", "Zamora", "augue.malesuada@aol.org", 21),
             new DummyModel(new Guid("5683855E-B07A-0582-C577-3A1C02FBD991"), "Maron", "Wright", "gravida@aol.org", 42),
@@ -321,6 +321,8 @@ public class DatabaseTests
             new DummyModel(new Guid("E0C463C0-176D-154C-5E27-4B5EA485A22A"), "Velma", "Gutierrez", "ullamcorper@aol.couk", 19),
             new DummyModel(new Guid("A34629FF-3F15-4B1D-1C67-15401E18EC4D"), "Brittany", "Mccoy", "et.rutrum@yahoo.net", 27)
         });
+
+        db.Commit();
 
         return new Database(db);
     }
