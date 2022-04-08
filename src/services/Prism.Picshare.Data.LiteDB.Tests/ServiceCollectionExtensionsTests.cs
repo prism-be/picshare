@@ -23,7 +23,7 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         var services = new ServiceCollection();
-        services.UseLiteDbStorage(config =>
+        services.AddLiteDbStorage(config =>
         {
             config.DatabaseDirectory = Path.GetTempPath();
             config.DatabasePassword = password;
@@ -49,7 +49,7 @@ public class ServiceCollectionExtensionsTests
 
         // Act
         var services = new ServiceCollection();
-        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.UseLiteDbStorage(config =>
+        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.AddLiteDbStorage(config =>
         {
             config.DatabasePassword = password;
 
@@ -62,16 +62,11 @@ public class ServiceCollectionExtensionsTests
     [Fact]
     public void UseLiteDb_NO_DB_PASSWORD()
     {
-        // Arrange
-        Environment.SetEnvironmentVariable("PICSHARE_DB_DIRECTORY", Path.GetTempPath());
-        Environment.SetEnvironmentVariable("PICSHARE_DB_PASSWORD", null);
-
         // Act
         var services = new ServiceCollection();
-        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.UseLiteDbStorage(config =>
+        var ex = Assert.Throws<DatabaseConfigurationException>(() => services.AddLiteDbStorage(config =>
         {
             config.DatabaseDirectory = Path.GetTempPath();
-
         }));
 
         // Assert

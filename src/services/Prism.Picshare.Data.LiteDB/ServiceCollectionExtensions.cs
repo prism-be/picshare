@@ -11,7 +11,7 @@ namespace Prism.Picshare.Data.LiteDB;
 
 public static class ServiceCollectionExtensions
 {
-    public static void UseLiteDbStorage(this IServiceCollection services, Action<DatabaseConfiguration> config)
+    public static void AddLiteDbStorage(this IServiceCollection services, Action<DatabaseConfiguration> config)
     {
         var configuration = new DatabaseConfiguration();
         config(configuration);
