@@ -5,11 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.IO;
-using LiteDB;
 using Moq;
 using Prism.Picshare.Data;
-using Prism.Picshare.Data.LiteDB;
 using Prism.Picshare.Photobooth.Commands;
 using Prism.Picshare.Photobooth.Handlers;
 using Prism.Picshare.Photobooth.Model;
@@ -27,12 +24,10 @@ public class PictureTakenHandlerTests
         var sessionId = Guid.NewGuid();
         var pictureId = Guid.NewGuid();
 
-        using var liteDbMemory = new MemoryStream();
-        using var liteDb = new LiteDatabase(liteDbMemory);
-        using var db = new Database(liteDb);
+        var db = new Mock<IDatabase>();
 
         var databaseResolver = new Mock<IDatabaseResolver>();
-        databaseResolver.Setup(x => x.GetDatabase(organisationId, "photobooth")).Returns(db);
+        databaseResolver.Setup(x => x.GetDatabase(organisationId, "photobooth")).Returns(db.Object);
 
         var handler = new PictureTakenHandler(databaseResolver.Object);
 
@@ -41,8 +36,6 @@ public class PictureTakenHandlerTests
         handler.Handle(request, default);
 
         // Assert
-        var dbPicture = liteDb.GetCollection<Pictures>().FindById(pictureId);
-        Assert.NotNull(dbPicture);
-        Assert.Equal(sessionId, dbPicture.Session);
+        db.Verify(x => x.Insert(It.IsAny<Pictures>()));
     }
 }
