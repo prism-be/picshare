@@ -22,9 +22,9 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken>
 
     public Task<Unit> Handle(PictureTaken request, CancellationToken cancellationToken)
     {
-        var db = _databaseResolver.GetDatabase(request.Organisation, DatabaseTypes.Photobooth);
+        using var db = _databaseResolver.GetDatabase(request.Organisation, DatabaseTypes.Photobooth);
 
-        var picture = new Pictures(request.Id, request.Session, request.DateTaken);
+        var picture = new Pictures(request.Id, request.Session, DateTime.UtcNow);
         db.Insert(picture);
 
         return Task.FromResult(Unit.Value);

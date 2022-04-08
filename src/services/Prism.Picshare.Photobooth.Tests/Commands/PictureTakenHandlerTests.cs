@@ -37,7 +37,7 @@ public class PictureTakenHandlerTests
         var handler = new PictureTakenHandler(databaseResolver.Object);
 
         // Act
-        var request = new PictureTaken(organisationId, sessionId, pictureId, DateTime.Now);
+        var request = new PictureTaken(organisationId, sessionId, pictureId);
         handler.Handle(request, default);
 
         // Assert

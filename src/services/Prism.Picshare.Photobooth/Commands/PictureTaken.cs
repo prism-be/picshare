@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Prism.Picshare.Photobooth.Commands;
 
-public record PictureTaken(string Organisation, Guid Session, Guid Id, DateTime DateTaken): IRequest;
+public record PictureTaken(string Organisation, Guid Session, Guid Id): IRequest;
 
 public class PictureTakenValidator : AbstractValidator<PictureTaken>
 {
@@ -18,6 +18,5 @@ public class PictureTakenValidator : AbstractValidator<PictureTaken>
         RuleFor(x => x.Organisation).NotNull().NotEmpty().MaximumLength(Constants.MaxShortStringLength);
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Session).NotEmpty();
-        RuleFor(x => x.DateTaken).NotEmpty();
     }
 }
