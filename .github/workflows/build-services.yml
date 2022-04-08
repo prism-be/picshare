@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    pull_request:
+      types: [ opened, synchronize, reopened ]
+
+jobs:
+  build-services:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+
+      - name: Trick for Sonar
+        run: rm -f ./sonar-project.properties
+
+      - name: BackEnd - Build and Analyze
+        uses: highbyte/sonarscan-dotnet@v2.1.2
+        with:
+          sonarProjectKey: prism-be_picshare-services
+          sonarProjectName: Prism.Picshare.Services
+          sonarOrganization: prism-be
+          dotnetBuildArguments: ./src/services
+          dotnetTestArguments: ./src/services --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
