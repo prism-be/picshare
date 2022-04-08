@@ -1,14 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Events", "Prism.Picshare.Events\Prism.Picshare.Events.csproj", "{2E8EA2AD-3C38-4C2A-9B88-CE4B74FC0C67}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Events.Tests", "Prism.Picshare.Events.Tests\Prism.Picshare.Events.Tests.csproj", "{95865675-DB0F-471B-9B34-6A596FDFA6C4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Photobooth", "Prism.Picshare.Services.Photobooth\Prism.Picshare.Services.Photobooth.csproj", "{DAA7F647-2D59-42AC-9112-50BB7D1D4773}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare", "Prism.Picshare\Prism.Picshare.csproj", "{ADAA36FD-43E0-4F15-8962-854545D74373}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Photobooth.Tests", "Prism.Picshare.Services.Photobooth.Tests\Prism.Picshare.Services.Photobooth.Tests.csproj", "{9D1C51DF-AECF-4773-877A-D8B93141135E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{9E16667A-8226-4685-8373-932D8ED86D97}"
 EndProject
@@ -20,20 +14,28 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Data.LiteDB"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Data.LiteDB.Tests", "Prism.Picshare.Data.LiteDB.Tests\Prism.Picshare.Data.LiteDB.Tests.csproj", "{FE18D817-FCDE-4B3C-8084-307EC802D370}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Authentication", "Prism.Picshare.Authentication\Prism.Picshare.Authentication.csproj", "{6469B05E-4D7C-4A69-B391-E1FE50F08CDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Authentication.Tests", "Prism.Picshare.Authentication.Tests\Prism.Picshare.Authentication.Tests.csproj", "{7E914855-4CB9-4CAD-99AF-C19400861F92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Photobooth", "Prism.Picshare.Photobooth\Prism.Picshare.Photobooth.csproj", "{248A95C2-B38D-453E-B081-00514F4FAD59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Photobooth.Tests", "Prism.Picshare.Photobooth.Tests\Prism.Picshare.Photobooth.Tests.csproj", "{E633C0E4-76CC-40DD-A709-B71A7AFB7D13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Tests", "Prism.Picshare.Tests\Prism.Picshare.Tests.csproj", "{CBD0C7C3-D1F9-48C2-B836-331E57368F3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "business", "business", "{E96882D1-23C2-4302-87E8-448936A9E308}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "authentication", "authentication", "{AA27344C-7191-4700-89E6-1DE32B024951}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "photobooth", "photobooth", "{34ADE463-BF5E-44FF-94AA-68CCBBD6A593}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E8EA2AD-3C38-4C2A-9B88-CE4B74FC0C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E8EA2AD-3C38-4C2A-9B88-CE4B74FC0C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E8EA2AD-3C38-4C2A-9B88-CE4B74FC0C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E8EA2AD-3C38-4C2A-9B88-CE4B74FC0C67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95865675-DB0F-471B-9B34-6A596FDFA6C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95865675-DB0F-471B-9B34-6A596FDFA6C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95865675-DB0F-471B-9B34-6A596FDFA6C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95865675-DB0F-471B-9B34-6A596FDFA6C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DAA7F647-2D59-42AC-9112-50BB7D1D4773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DAA7F647-2D59-42AC-9112-50BB7D1D4773}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAA7F647-2D59-42AC-9112-50BB7D1D4773}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,10 +44,6 @@ Global
 		{ADAA36FD-43E0-4F15-8962-854545D74373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADAA36FD-43E0-4F15-8962-854545D74373}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADAA36FD-43E0-4F15-8962-854545D74373}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D1C51DF-AECF-4773-877A-D8B93141135E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D1C51DF-AECF-4773-877A-D8B93141135E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D1C51DF-AECF-4773-877A-D8B93141135E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D1C51DF-AECF-4773-877A-D8B93141135E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9691640-3376-4C68-809B-B1E9098F17C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9691640-3376-4C68-809B-B1E9098F17C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9691640-3376-4C68-809B-B1E9098F17C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -58,12 +56,39 @@ Global
 		{FE18D817-FCDE-4B3C-8084-307EC802D370}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE18D817-FCDE-4B3C-8084-307EC802D370}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE18D817-FCDE-4B3C-8084-307EC802D370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6469B05E-4D7C-4A69-B391-E1FE50F08CDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6469B05E-4D7C-4A69-B391-E1FE50F08CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6469B05E-4D7C-4A69-B391-E1FE50F08CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6469B05E-4D7C-4A69-B391-E1FE50F08CDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E914855-4CB9-4CAD-99AF-C19400861F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E914855-4CB9-4CAD-99AF-C19400861F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E914855-4CB9-4CAD-99AF-C19400861F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E914855-4CB9-4CAD-99AF-C19400861F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{248A95C2-B38D-453E-B081-00514F4FAD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248A95C2-B38D-453E-B081-00514F4FAD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{248A95C2-B38D-453E-B081-00514F4FAD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{248A95C2-B38D-453E-B081-00514F4FAD59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E633C0E4-76CC-40DD-A709-B71A7AFB7D13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E633C0E4-76CC-40DD-A709-B71A7AFB7D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E633C0E4-76CC-40DD-A709-B71A7AFB7D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E633C0E4-76CC-40DD-A709-B71A7AFB7D13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBD0C7C3-D1F9-48C2-B836-331E57368F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBD0C7C3-D1F9-48C2-B836-331E57368F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBD0C7C3-D1F9-48C2-B836-331E57368F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBD0C7C3-D1F9-48C2-B836-331E57368F3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DAA7F647-2D59-42AC-9112-50BB7D1D4773} = {9E16667A-8226-4685-8373-932D8ED86D97}
-		{9D1C51DF-AECF-4773-877A-D8B93141135E} = {9E16667A-8226-4685-8373-932D8ED86D97}
 		{D9691640-3376-4C68-809B-B1E9098F17C5} = {29BAB347-29EA-462A-9BD4-6C3C61F920E1}
 		{069B8A9F-70F6-4B28-958B-78AF8A72AC2F} = {29BAB347-29EA-462A-9BD4-6C3C61F920E1}
 		{FE18D817-FCDE-4B3C-8084-307EC802D370} = {29BAB347-29EA-462A-9BD4-6C3C61F920E1}
+		{ADAA36FD-43E0-4F15-8962-854545D74373} = {E96882D1-23C2-4302-87E8-448936A9E308}
+		{CBD0C7C3-D1F9-48C2-B836-331E57368F3F} = {E96882D1-23C2-4302-87E8-448936A9E308}
+		{AA27344C-7191-4700-89E6-1DE32B024951} = {E96882D1-23C2-4302-87E8-448936A9E308}
+		{6469B05E-4D7C-4A69-B391-E1FE50F08CDB} = {AA27344C-7191-4700-89E6-1DE32B024951}
+		{7E914855-4CB9-4CAD-99AF-C19400861F92} = {AA27344C-7191-4700-89E6-1DE32B024951}
+		{34ADE463-BF5E-44FF-94AA-68CCBBD6A593} = {E96882D1-23C2-4302-87E8-448936A9E308}
+		{248A95C2-B38D-453E-B081-00514F4FAD59} = {34ADE463-BF5E-44FF-94AA-68CCBBD6A593}
+		{E633C0E4-76CC-40DD-A709-B71A7AFB7D13} = {34ADE463-BF5E-44FF-94AA-68CCBBD6A593}
 	EndGlobalSection
 EndGlobal

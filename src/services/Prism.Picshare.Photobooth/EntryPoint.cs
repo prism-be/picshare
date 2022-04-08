@@ -4,6 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Events;
+namespace Prism.Picshare.Photobooth;
 
 public record EntryPoint;

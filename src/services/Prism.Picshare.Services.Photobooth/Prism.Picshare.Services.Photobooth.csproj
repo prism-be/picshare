@@ -9,7 +9,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Prism.Picshare.Data.LiteDB\Prism.Picshare.Data.LiteDB.csproj" />
         <ProjectReference Include="..\Prism.Picshare.Data\Prism.Picshare.Data.csproj" />
-        <ProjectReference Include="..\Prism.Picshare.Events\Prism.Picshare.Events.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Photobooth\Prism.Picshare.Photobooth.csproj" />
         <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 

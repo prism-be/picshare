@@ -6,9 +6,9 @@
 
 using FluentValidation;
 using MediatR;
-using Prism.Picshare.Events.Exceptions;
+using Prism.Picshare.Exceptions;
 
-namespace Prism.Picshare.Events.Behaviors;
+namespace Prism.Picshare.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : class, IRequest<TResponse>

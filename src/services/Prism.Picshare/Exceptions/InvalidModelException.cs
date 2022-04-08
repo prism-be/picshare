@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
-namespace Prism.Picshare.Events.Exceptions;
+namespace Prism.Picshare.Exceptions;
 
 [Serializable]
 public class InvalidModelException : Exception

@@ -1,14 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="ReturnCodes.cs" company="Prism">
+//  <copyright file="Pictures.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Events;
+namespace Prism.Picshare.Photobooth.Model;
 
-public enum ReturnCodes
-{
-    CoffeeBreak = -42,
-    Ok = 0,
-    InvalidCredentials = 100
-}
+public record Pictures(Guid Id, Guid Session, DateTime DateTaken);

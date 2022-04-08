@@ -1,12 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="DatabaseTypes.cs" company="Prism">
+//  <copyright file="Constants.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Services.Photobooth.Data;
+namespace Prism.Picshare;
 
-public static class DatabaseTypes
+public static class Constants
 {
-    public const string Photobooth = "photobooth";
+    public const int MaxShortStringLength = 65536;
 }

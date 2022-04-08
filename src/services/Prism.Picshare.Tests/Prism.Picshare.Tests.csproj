@@ -22,12 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Prism.Picshare.Events\Prism.Picshare.Events.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Authentication" />
-      <Folder Include="Photobooth" />
+      <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 
 </Project>
