@@ -6,7 +6,7 @@
 
 using Xunit;
 
-namespace Prism.Picshare.Events.Tests;
+namespace Prism.Picshare.Tests;
 
 public class CoverageTrick
 {

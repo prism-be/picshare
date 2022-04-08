@@ -7,9 +7,10 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Prism.Picshare.Events;
-using Prism.Picshare.Events.Behaviors;
-using Prism.Picshare.Events.Photobooth;
+using Prism.Picshare.Behaviors;
+using Prism.Picshare.Data.LiteDB;
+using Prism.Picshare.Photobooth;
+using Prism.Picshare.Photobooth.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -20,6 +21,12 @@ var applicationAssembly = typeof(EntryPoint).Assembly;
 builder.Services.AddMediatR(applicationAssembly);
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(applicationAssembly);
+
+builder.Services.UseLiteDbStorage(config =>
+{
+    config.DatabaseDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_DIRECTORY");
+    config.DatabaseDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_PASSWORD");
+});
 
 // Register routes
 app.MapPost("api/take", async ([FromBody] PictureTaken user, IMediator mediator) =>

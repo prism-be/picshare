@@ -4,10 +4,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Prism.Picshare.Events.Authentication;
+using Prism.Picshare.Authentication.Commands;
 using Xunit;
 
-namespace Prism.Picshare.Events.Tests.Authentication;
+namespace Prism.Picshare.Authentication.Tests.Commands;
 
 public class LoginRequestTests
 {

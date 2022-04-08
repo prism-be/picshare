@@ -6,10 +6,10 @@
 
 using MediatR;
 using Prism.Picshare.Data;
-using Prism.Picshare.Events.Photobooth;
-using Prism.Picshare.Services.Photobooth.Data;
+using Prism.Picshare.Photobooth.Commands;
+using Prism.Picshare.Photobooth.Model;
 
-namespace Prism.Picshare.Services.Photobooth.Handlers;
+namespace Prism.Picshare.Photobooth.Handlers;
 
 public class PictureTakenHandler : IRequestHandler<PictureTaken>
 {

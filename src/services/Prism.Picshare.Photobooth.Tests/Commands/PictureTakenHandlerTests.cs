@@ -10,12 +10,12 @@ using LiteDB;
 using Moq;
 using Prism.Picshare.Data;
 using Prism.Picshare.Data.LiteDB;
-using Prism.Picshare.Events.Photobooth;
-using Prism.Picshare.Services.Photobooth.Data;
-using Prism.Picshare.Services.Photobooth.Handlers;
+using Prism.Picshare.Photobooth.Commands;
+using Prism.Picshare.Photobooth.Handlers;
+using Prism.Picshare.Photobooth.Model;
 using Xunit;
 
-namespace Prism.Picshare.Services.Photobooth.Tests;
+namespace Prism.Picshare.Photobooth.Tests.Commands;
 
 public class PictureTakenHandlerTests
 {

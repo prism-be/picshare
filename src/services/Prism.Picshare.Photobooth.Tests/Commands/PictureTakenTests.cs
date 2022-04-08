@@ -5,10 +5,10 @@
 // -----------------------------------------------------------------------
 
 using System;
-using Prism.Picshare.Events.Photobooth;
+using Prism.Picshare.Photobooth.Commands;
 using Xunit;
 
-namespace Prism.Picshare.Events.Tests.Photobooth;
+namespace Prism.Picshare.Photobooth.Tests;
 
 public class PictureTakenTests
 {
