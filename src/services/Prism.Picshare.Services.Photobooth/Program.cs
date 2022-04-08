@@ -9,6 +9,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Data.LiteDB;
+using Prism.Picshare.Events;
+using Prism.Picshare.Events.Rabbit;
 using Prism.Picshare.Photobooth;
 using Prism.Picshare.Photobooth.Commands;
 
@@ -21,10 +23,16 @@ builder.Services.AddMediatR(applicationAssembly);
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(applicationAssembly);
 
-builder.Services.UseLiteDbStorage(config =>
+builder.Services.AddLiteDbStorage(config =>
 {
     config.DatabaseDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_DIRECTORY");
     config.DatabasePassword = Environment.GetEnvironmentVariable("PICSHARE_DB_PASSWORD");
+});
+
+builder.Services.AddRabbitMqExchange(config =>
+{
+    config.Uri = new Uri(Environment.GetEnvironmentVariable("PICSHARE_RABBIT_URI") ?? string.Empty);
+    config.Exchange = Exchanges.Photobooth;
 });
 
 // Build the application

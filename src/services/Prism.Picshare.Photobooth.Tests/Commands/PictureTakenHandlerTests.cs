@@ -7,6 +7,7 @@
 using System;
 using Moq;
 using Prism.Picshare.Data;
+using Prism.Picshare.Events;
 using Prism.Picshare.Photobooth.Commands;
 using Prism.Picshare.Photobooth.Handlers;
 using Prism.Picshare.Photobooth.Model;
@@ -29,13 +30,16 @@ public class PictureTakenHandlerTests
         var databaseResolver = new Mock<IDatabaseResolver>();
         databaseResolver.Setup(x => x.GetDatabase(organisationId, "photobooth")).Returns(db.Object);
 
-        var handler = new PictureTakenHandler(databaseResolver.Object);
+        var eventPublisher = new Mock<IEventPublisher>();
+
+        var handler = new PictureTakenHandler(databaseResolver.Object, eventPublisher.Object);
 
         // Act
         var request = new PictureTaken(organisationId, sessionId, pictureId);
         handler.Handle(request, default);
 
         // Assert
-        db.Verify(x => x.Insert(It.IsAny<Pictures>()));
+        db.Verify(x => x.Insert(It.IsAny<Pictures>()), Times.Once);
+        eventPublisher.Verify(x => x.Publish(Topics.Photobooth.PictureTaken, It.IsAny<PictureTaken>()), Times.Once);
     }
 }
