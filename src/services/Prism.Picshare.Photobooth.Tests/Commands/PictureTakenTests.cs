@@ -8,23 +8,10 @@ using System;
 using Prism.Picshare.Photobooth.Commands;
 using Xunit;
 
-namespace Prism.Picshare.Photobooth.Tests;
+namespace Prism.Picshare.Photobooth.Tests.Commands;
 
 public class PictureTakenTests
 {
-    [Fact]
-    public void PictureTakenValidator_MustHave_DateTaken()
-    {
-        // Arrange
-        var validator = new PictureTakenValidator();
-
-        // Act
-        var result = validator.Validate(new PictureTaken("test", Guid.NewGuid(), Guid.NewGuid(), DateTime.MinValue));
-
-        // Assert
-        Assert.False(result.IsValid);
-    }
-
     [Fact]
     public void PictureTakenValidator_MustHave_Id()
     {
@@ -32,7 +19,7 @@ public class PictureTakenTests
         var validator = new PictureTakenValidator();
 
         // Act
-        var result = validator.Validate(new PictureTaken("test", Guid.NewGuid(), Guid.Empty, DateTime.Now));
+        var result = validator.Validate(new PictureTaken("test", Guid.NewGuid(), Guid.Empty));
 
         // Assert
         Assert.False(result.IsValid);
@@ -45,7 +32,7 @@ public class PictureTakenTests
         var validator = new PictureTakenValidator();
 
         // Act
-        var result = validator.Validate(new PictureTaken("", Guid.NewGuid(), Guid.NewGuid(), DateTime.Now));
+        var result = validator.Validate(new PictureTaken("", Guid.NewGuid(), Guid.NewGuid()));
 
         // Assert
         Assert.False(result.IsValid);
@@ -58,7 +45,7 @@ public class PictureTakenTests
         var validator = new PictureTakenValidator();
 
         // Act
-        var result = validator.Validate(new PictureTaken("test", Guid.Empty, Guid.NewGuid(), DateTime.Now));
+        var result = validator.Validate(new PictureTaken("test", Guid.Empty, Guid.NewGuid()));
 
         // Assert
         Assert.False(result.IsValid);
@@ -71,7 +58,7 @@ public class PictureTakenTests
         var validator = new PictureTakenValidator();
 
         // Act
-        var result = validator.Validate(new PictureTaken("test", Guid.NewGuid(), Guid.NewGuid(), DateTime.Now));
+        var result = validator.Validate(new PictureTaken("test", Guid.NewGuid(), Guid.NewGuid()));
 
         // Assert
         Assert.True(result.IsValid);

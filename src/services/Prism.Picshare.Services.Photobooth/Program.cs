@@ -13,7 +13,6 @@ using Prism.Picshare.Photobooth;
 using Prism.Picshare.Photobooth.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
 
 // Register all services
 
@@ -25,8 +24,11 @@ builder.Services.AddValidatorsFromAssembly(applicationAssembly);
 builder.Services.UseLiteDbStorage(config =>
 {
     config.DatabaseDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_DIRECTORY");
-    config.DatabaseDirectory = Environment.GetEnvironmentVariable("PICSHARE_DB_PASSWORD");
+    config.DatabasePassword = Environment.GetEnvironmentVariable("PICSHARE_DB_PASSWORD");
 });
+
+// Build the application
+var app = builder.Build();
 
 // Register routes
 app.MapPost("api/take", async ([FromBody] PictureTaken user, IMediator mediator) =>

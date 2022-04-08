@@ -11,17 +11,12 @@
     "Prism.Picshare.Services.Photobooth": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:7277;http://localhost:5277",
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7277",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "PICSHARE_DB_DIRECTORY": "c:\\tmp\\picshare\\",
+        "PICSHARE_DB_PASSWORD": "verYstr0nG"
       }
     }
   }
