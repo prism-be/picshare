@@ -9,7 +9,7 @@ using LiteDB;
 
 namespace Prism.Picshare.Data.LiteDB;
 
-public class Database : IDatabase, IDisposable
+public class Database : IDatabase
 {
     private readonly ILiteDatabase _liteDatabase;
 
@@ -128,6 +128,15 @@ public class Database : IDatabase, IDisposable
 
     public void Dispose()
     {
-        _liteDatabase.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _liteDatabase.Dispose();
+        }
     }
 }

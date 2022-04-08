@@ -305,7 +305,7 @@ public class DatabaseTests
         Assert.Equal(7, count);
     }
 
-    private Database GetFakeDatabase()
+    private static Database GetFakeDatabase()
     {
         var data = new MemoryStream();
         var db = new LiteDatabase(data);
