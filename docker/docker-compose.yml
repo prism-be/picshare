@@ -1,0 +1,10 @@
+﻿version: "3.9"
+services:
+  rabbitmq:
+    image: "rabbitmq:management-alpine"
+    ports:
+      - "15672:15672"
+  photobooth:
+    image: "simonbaudart/picshare:service-photobooth-latest"
+    ports:
+      - "8001:80"
