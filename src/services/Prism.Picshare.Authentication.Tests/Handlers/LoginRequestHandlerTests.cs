@@ -15,6 +15,7 @@ using Prism.Picshare.Authentication.Handlers;
 using Prism.Picshare.Authentication.Model;
 using Prism.Picshare.Data;
 using Prism.Picshare.Events;
+using Prism.Picshare.Security;
 using Xunit;
 
 namespace Prism.Picshare.Authentication.Tests.Handlers;
@@ -27,8 +28,9 @@ public class LoginRequestHandlerTests
         var organisationId = "tests";
         var login = Guid.NewGuid().ToString();
         var password = Guid.NewGuid().ToString();
+        var userId = Guid.NewGuid();
 
-        var user = new User(Guid.NewGuid(), login, Argon2.Hash(password, 1, 1024), DateTime.UtcNow);
+        var user = new User(userId, login, Argon2.Hash(password, 1, 1024), DateTime.UtcNow);
 
         var db = new Mock<IDatabase>();
         db.Setup(x => x.FindOne(It.IsAny<Expression<Func<User, bool>>>())).Returns(user);
@@ -48,6 +50,8 @@ public class LoginRequestHandlerTests
         // Assert
         Assert.Equal(ReturnCodes.Ok, result.ReturnCode);
         Assert.NotNull(result.Token);
+
+        eventPublisher.Verify(x => x.Publish(Topics.Authentication.UserAuthenticated, new Events.Model.UserAuthenticated(userId, ReturnCodes.Ok) ), Times.Once);
     }
 
     [Fact]

@@ -1,9 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="JwtConfiguration.cs" company="Prism">
+//  <copyright file="User.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Authentication;
+namespace Prism.Picshare.Events.Model;
 
-public record JwtConfiguration (string Key, string Audience, string Issuer);
+public record UserAuthenticated(Guid Id, ReturnCodes ReturnCode);

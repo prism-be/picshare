@@ -9,11 +9,15 @@
     <ItemGroup>
         <ProjectReference Include="..\Prism.Picshare.Data\Prism.Picshare.Data.csproj" />
         <ProjectReference Include="..\Prism.Picshare.Events\Prism.Picshare.Events.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Security\Prism.Picshare.Security.csproj" />
         <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
       <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.11" />
+      <PackageReference Include="MediatR" Version="10.0.1" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
     </ItemGroup>

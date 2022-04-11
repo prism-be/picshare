@@ -8,5 +8,6 @@ namespace Prism.Picshare.Events;
 
 public static class Exchanges
 {
+    public const string Authentication = "authentication";
     public const string Photobooth = "photobooth";
 }

@@ -15,6 +15,8 @@ using Prism.Picshare.Authentication.Commands;
 using Prism.Picshare.Authentication.Model;
 using Prism.Picshare.Data;
 using Prism.Picshare.Events;
+using Prism.Picshare.Events.Model;
+using Prism.Picshare.Security;
 
 namespace Prism.Picshare.Authentication.Handlers;
 
@@ -46,11 +48,13 @@ public class LoginRequestHandler : IRequestHandler<LoginRequest, LoginResponse>
             user = new User(Guid.NewGuid(), request.Login, Argon2.Hash(request.Password), DateTime.UtcNow);
             db.Insert(user);
 
+            _eventPublisher.Publish(Topics.Authentication.UserAuthenticated, new UserAuthenticated(user.Id, ReturnCodes.Ok));
             return Task.FromResult(GenerateReponseOk(user));
         }
 
         if (Argon2.Verify(user.PasswordHash, request.Password))
         {
+            _eventPublisher.Publish(Topics.Authentication.UserAuthenticated, new UserAuthenticated(user.Id, ReturnCodes.Ok));
             return Task.FromResult(GenerateReponseOk(user));
         }
 
@@ -59,7 +63,7 @@ public class LoginRequestHandler : IRequestHandler<LoginRequest, LoginResponse>
 
     private string GenerateJwt(User user)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Key));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Key!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         //claim is used to add identity to JWT token
