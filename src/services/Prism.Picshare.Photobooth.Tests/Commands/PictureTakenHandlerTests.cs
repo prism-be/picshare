@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Picshare.Data;
 using Prism.Picshare.Events;
@@ -32,7 +33,7 @@ public class PictureTakenHandlerTests
 
         var eventPublisher = new Mock<IEventPublisher>();
 
-        var handler = new PictureTakenHandler(databaseResolver.Object, eventPublisher.Object);
+        var handler = new PictureTakenHandler(databaseResolver.Object, eventPublisher.Object, Mock.Of<ILogger<PictureTakenHandler>>());
 
         // Act
         var request = new PictureTaken(organisationId, sessionId, pictureId);
