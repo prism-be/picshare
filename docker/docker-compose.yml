@@ -1,10 +1,32 @@
 ﻿version: "3.9"
+
 services:
   rabbitmq:
     image: "rabbitmq:management-alpine"
+    networks:
+      - back-tier
     ports:
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: picshare
+      RABBITMQ_DEFAULT_PASS: verYstr0nGRMQP1ss
+
   photobooth:
-    image: "simonbaudart/picshare:service-photobooth-latest"
+    build:
+      context: ../src/services/
+      dockerfile: ./Prism.Picshare.Services.Photobooth/Dockerfile
+    networks:
+      - back-tier
     ports:
       - "8001:80"
+    volumes:
+      - ./data/db-photobooth:/data/db
+    environment:
+      PICSHARE_DB_DIRECTORY: "/data/db"
+      PICSHARE_DB_PASSWORD: "verYstr0nG"
+      PICSHARE_RABBIT_URI: "amqp://picshare:verYstr0nGRMQP1ss@rabbitmq:5672"
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+
+networks:
+  front-tier: {}
+  back-tier: {}
