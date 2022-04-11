@@ -4,9 +4,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Prism.Picshare.Authentication.Commands;
 using Prism.Picshare.Authentication.Model;
 using Prism.Picshare.Data;
@@ -16,9 +20,9 @@ namespace Prism.Picshare.Authentication.Handlers;
 
 public class LoginRequestHandler : IRequestHandler<LoginRequest, LoginResponse>
 {
-    private readonly JwtConfiguration _jwtConfiguration;
     private readonly IDatabaseResolver _databaseResolver;
     private readonly IEventPublisher _eventPublisher;
+    private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<LoginRequestHandler> _logger;
 
     public LoginRequestHandler(JwtConfiguration jwtConfiguration, IDatabaseResolver databaseResolver, IEventPublisher eventPublisher, ILogger<LoginRequestHandler> logger)
@@ -39,22 +43,39 @@ public class LoginRequestHandler : IRequestHandler<LoginRequest, LoginResponse>
 
         if (user == null)
         {
-            user = new User( Guid.NewGuid(), request.Login, Argon2.Hash(request.Password), DateTime.UtcNow);
+            user = new User(Guid.NewGuid(), request.Login, Argon2.Hash(request.Password), DateTime.UtcNow);
             db.Insert(user);
 
-            return GenerateReponseOk(user);
+            return Task.FromResult(GenerateReponseOk(user));
         }
 
         if (Argon2.Verify(user.PasswordHash, request.Password))
         {
-            return GenerateReponseOk(user);
+            return Task.FromResult(GenerateReponseOk(user));
         }
 
         return Task.FromResult(new LoginResponse(ReturnCodes.InvalidCredentials, null));
     }
 
-    private Task<LoginResponse> GenerateReponseOk(User user)
+    private string GenerateJwt(User user)
     {
-        throw new NotImplementedException();
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Key));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        //claim is used to add identity to JWT token
+        var claims = new[] { new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()), new Claim(JwtRegisteredClaimNames.Name, user.Login), new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) };
+
+        var token = new JwtSecurityToken(_jwtConfiguration.Issuer,
+            _jwtConfiguration.Issuer,
+            claims,
+            expires: DateTime.Now.AddMinutes(120),
+            signingCredentials: credentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private LoginResponse GenerateReponseOk(User user)
+    {
+        return new LoginResponse(ReturnCodes.Ok, GenerateJwt(user));
     }
 }

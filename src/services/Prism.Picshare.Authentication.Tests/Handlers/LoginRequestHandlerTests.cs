@@ -36,7 +36,7 @@ public class LoginRequestHandlerTests
         var databaseResolver = new Mock<IDatabaseResolver>();
         databaseResolver.Setup(x => x.GetDatabase(organisationId, DatabaseTypes.Authentication)).Returns(db.Object);
 
-        var jwtConfiguration = new JwtConfiguration();
+        var jwtConfiguration = new JwtConfiguration(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
         var eventPublisher = new Mock<IEventPublisher>();
         var logger = new Mock<ILogger<LoginRequestHandler>>();
 
@@ -66,7 +66,7 @@ public class LoginRequestHandlerTests
         var databaseResolver = new Mock<IDatabaseResolver>();
         databaseResolver.Setup(x => x.GetDatabase(organisationId, DatabaseTypes.Authentication)).Returns(db.Object);
 
-        var jwtConfiguration = new JwtConfiguration();
+        var jwtConfiguration = new JwtConfiguration(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
         var eventPublisher = new Mock<IEventPublisher>();
         var logger = new Mock<ILogger<LoginRequestHandler>>();
 
@@ -84,18 +84,14 @@ public class LoginRequestHandlerTests
     public async Task Handle_Wrong_Username()
     {
         var organisationId = "tests";
-        var login = Guid.NewGuid().ToString();
         var password = Guid.NewGuid().ToString();
 
-        var user = new User(Guid.NewGuid(), login, Argon2.Hash(password, 1, 1024), DateTime.UtcNow);
-
         var db = new Mock<IDatabase>();
-        db.Setup(x => x.FindOne(It.IsAny<Expression<Func<User, bool>>>())).Returns(user);
 
         var databaseResolver = new Mock<IDatabaseResolver>();
         databaseResolver.Setup(x => x.GetDatabase(organisationId, DatabaseTypes.Authentication)).Returns(db.Object);
 
-        var jwtConfiguration = new JwtConfiguration();
+        var jwtConfiguration = new JwtConfiguration(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
         var eventPublisher = new Mock<IEventPublisher>();
         var logger = new Mock<ILogger<LoginRequestHandler>>();
 
