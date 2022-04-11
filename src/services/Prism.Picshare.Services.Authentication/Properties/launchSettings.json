@@ -17,7 +17,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "PICSHARE_DB_DIRECTORY": "c:\\tmp\\picshare\\",
         "PICSHARE_DB_PASSWORD": "verYstr0nG",
-        "PICSHARE_RABBIT_URI": "amqp://guest:guest@127.0.0.1:5672"
+        "PICSHARE_RABBIT_URI": "amqp://picshare:verYstr0nGRMQP1ss@rabbitmq:5672",
+        "PICSHARE_JWT_KEY": "ThisIsAV&r1Str0ngKey!AndNotTooShort",
+        "PICSHARE_JWT_ISSUER": "picshare",
+        "PICSHARE_JWT_AUDIENCE": "authentication"
       }
     }
   }

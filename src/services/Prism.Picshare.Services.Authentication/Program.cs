@@ -13,6 +13,7 @@ using Prism.Picshare.Behaviors;
 using Prism.Picshare.Data.LiteDB;
 using Prism.Picshare.Events;
 using Prism.Picshare.Events.Rabbit;
+using Prism.Picshare.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,13 +36,20 @@ builder.Services.AddRabbitMqExchange(config =>
     config.Exchange = Exchanges.Authentication;
 });
 
+builder.Services.AddJwtAuthentication(config =>
+{
+    config.Key = Environment.GetEnvironmentVariable("PICSHARE_JWT_KEY");
+    config.Issuer = Environment.GetEnvironmentVariable("PICSHARE_JWT_ISSUER") ;
+    config.Audience = Environment.GetEnvironmentVariable("PICSHARE_JWT_AUDIENCE");
+});
+
 // Build the application
 var app = builder.Build();
 
 // Register routes
 app.MapPost("api/login", async ([FromBody] LoginRequest user, IMediator mediator) =>
 {
-    await mediator.Send(user);
+    Results.Ok(await mediator.Send(user));
 });
 
 // Let's run it !
