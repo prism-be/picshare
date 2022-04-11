@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  backend:
+  services-photobooth:
     runs-on: ubuntu-latest
 
     steps:

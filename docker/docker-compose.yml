@@ -5,6 +5,15 @@ services:
     ports:
       - "15672:15672"
   photobooth:
-    image: "simonbaudart/picshare:service-photobooth-latest"
+    build:
+      context: ../src/services/
+      dockerfile: ./Prism.Picshare.Services.Photobooth/Dockerfile
     ports:
       - "8001:80"
+    volumes:
+      - ./data/db-photobooth:/data/db
+    environment:
+      PICSHARE_DB_DIRECTORY: "/data/db"
+      PICSHARE_DB_PASSWORD: "verYstr0nG"
+      PICSHARE_RABBIT_URI: "amqp://guest:guest@rabbitmq:5672"
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
