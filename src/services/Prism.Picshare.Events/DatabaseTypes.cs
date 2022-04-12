@@ -4,9 +4,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Photobooth;
+namespace Prism.Picshare.Events;
 
 public static class DatabaseTypes
 {
+    public const string Authentication = "authentication";
+
     public const string Photobooth = "photobooth";
 }
