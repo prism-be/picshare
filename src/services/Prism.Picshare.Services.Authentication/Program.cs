@@ -4,16 +4,16 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text.Json;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Picshare.Authentication;
+using Prism.Picshare.Authentication.Commands;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Data.LiteDB;
 using Prism.Picshare.Events;
 using Prism.Picshare.Events.Rabbit;
-using Prism.Picshare.Photobooth;
-using Prism.Picshare.Photobooth.Commands;
 using Prism.Picshare.Security;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +34,7 @@ builder.Services.AddLiteDbStorage(config =>
 builder.Services.AddRabbitMqExchange(config =>
 {
     config.Uri = new Uri(Environment.GetEnvironmentVariable("PICSHARE_RABBIT_URI") ?? string.Empty);
-    config.Exchange = Exchanges.Photobooth;
+    config.Exchange = Exchanges.Authentication;
 });
 
 builder.Services.AddJwtAuthentication(config =>
@@ -51,10 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Register routes
-app.MapPost("api/take", [Authorize] async ([FromBody] PictureTaken user, IMediator mediator) =>
-{
-    await mediator.Send(user);
-});
+app.MapPost("api/login", async ([FromBody] LoginRequest user, IMediator mediator) => Results.Ok(await mediator.Send(user)));
 
 // Let's run it !
 app.Run();

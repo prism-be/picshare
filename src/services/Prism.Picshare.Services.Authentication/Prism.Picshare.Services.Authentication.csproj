@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Prism.Picshare.Authentication\Prism.Picshare.Authentication.csproj" />
+      <ProjectReference Include="..\Prism.Picshare.Data.LiteDB\Prism.Picshare.Data.LiteDB.csproj" />
+      <ProjectReference Include="..\Prism.Picshare.Events.Rabbit\Prism.Picshare.Events.Rabbit.csproj" />
+    </ItemGroup>
+
+</Project>

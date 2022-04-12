@@ -1,13 +1,14 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Exchanges.cs" company="Prism">
+//  <copyright file="DatabaseTypes.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 namespace Prism.Picshare.Events;
 
-public static class Exchanges
+public static class DatabaseTypes
 {
     public const string Authentication = "authentication";
+
     public const string Photobooth = "photobooth";
 }

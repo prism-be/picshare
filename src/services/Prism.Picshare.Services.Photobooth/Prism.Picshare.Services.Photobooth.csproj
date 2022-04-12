@@ -12,6 +12,7 @@
         <ProjectReference Include="..\Prism.Picshare.Events.Rabbit\Prism.Picshare.Events.Rabbit.csproj" />
         <ProjectReference Include="..\Prism.Picshare.Events\Prism.Picshare.Events.csproj" />
         <ProjectReference Include="..\Prism.Picshare.Photobooth\Prism.Picshare.Photobooth.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Security\Prism.Picshare.Security.csproj" />
         <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 

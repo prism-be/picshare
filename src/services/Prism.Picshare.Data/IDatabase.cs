@@ -26,7 +26,7 @@ public interface IDatabase: IDisposable
 
     T FindById<T>(Guid id);
 
-    T FindOne<T>(Expression<Func<T, bool>> predicate);
+    T? FindOne<T>(Expression<Func<T, bool>> predicate);
 
     int InsertMany<T>(IEnumerable<T> entities);
 

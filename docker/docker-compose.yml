@@ -7,6 +7,7 @@ services:
       - back-tier
     ports:
       - "15672:15672"
+      - "5672:5672"
     environment:
       RABBITMQ_DEFAULT_USER: picshare
       RABBITMQ_DEFAULT_PASS: verYstr0nGRMQP1ss
@@ -27,6 +28,25 @@ services:
       PICSHARE_RABBIT_URI: "amqp://picshare:verYstr0nGRMQP1ss@rabbitmq:5672"
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
 
+  authentication:
+    build:
+      context: ../src/services/
+      dockerfile: ./Prism.Picshare.Services.Authentication/Dockerfile
+    networks:
+      - back-tier
+    ports:
+      - "8002:80"
+    volumes:
+      - ./data/db-authentication:/data/db
+    environment:
+      PICSHARE_DB_DIRECTORY: "/data/db"
+      PICSHARE_DB_PASSWORD: "verYstr0nG"
+      PICSHARE_RABBIT_URI: "amqp://picshare:verYstr0nGRMQP1ss@rabbitmq:5672"
+      PICSHARE_JWT_KEY: "ThisIsAV&r1Str0ngKey!AndNotTooShort"
+      PICSHARE_JWT_ISSUER: "picshare"
+      PICSHARE_JWT_AUDIENCE: "authentication"
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+
 networks:
-  front-tier: {}
-  back-tier: {}
+  front-tier: { }
+  back-tier: { }

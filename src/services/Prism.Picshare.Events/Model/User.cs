@@ -1,12 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="DatabaseTypes.cs" company="Prism">
+//  <copyright file="User.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Photobooth;
+namespace Prism.Picshare.Events.Model;
 
-public static class DatabaseTypes
-{
-    public const string Photobooth = "photobooth";
-}
+public record UserAuthenticated(Guid Id, ReturnCodes ReturnCode);
