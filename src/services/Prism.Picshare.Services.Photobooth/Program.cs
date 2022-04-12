@@ -6,6 +6,7 @@
 
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Data.LiteDB;
@@ -13,6 +14,7 @@ using Prism.Picshare.Events;
 using Prism.Picshare.Events.Rabbit;
 using Prism.Picshare.Photobooth;
 using Prism.Picshare.Photobooth.Commands;
+using Prism.Picshare.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,11 +37,21 @@ builder.Services.AddRabbitMqExchange(config =>
     config.Exchange = Exchanges.Photobooth;
 });
 
+builder.Services.AddJwtAuthentication(config =>
+{
+    config.Key = Environment.GetEnvironmentVariable("PICSHARE_JWT_KEY");
+    config.Issuer = Environment.GetEnvironmentVariable("PICSHARE_JWT_ISSUER") ;
+    config.Audience = Environment.GetEnvironmentVariable("PICSHARE_JWT_AUDIENCE");
+});
+
 // Build the application
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Register routes
-app.MapPost("api/take", async ([FromBody] PictureTaken user, IMediator mediator) =>
+app.MapPost("api/take", [Authorize] async ([FromBody] PictureTaken user, IMediator mediator) =>
 {
     await mediator.Send(user);
 });

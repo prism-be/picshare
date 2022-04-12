@@ -47,6 +47,9 @@ builder.Services.AddJwtAuthentication(config =>
 // Build the application
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Register routes
 app.MapPost("api/login", async ([FromBody] LoginRequest user, IMediator mediator) => Results.Ok(await mediator.Send(user)));
 
