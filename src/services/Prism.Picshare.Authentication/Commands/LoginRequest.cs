@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text.Json.Serialization;
 using FluentValidation;
 using MediatR;
 

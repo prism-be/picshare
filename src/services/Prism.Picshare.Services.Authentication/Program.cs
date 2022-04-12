@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text.Json;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -47,10 +48,7 @@ builder.Services.AddJwtAuthentication(config =>
 var app = builder.Build();
 
 // Register routes
-app.MapPost("api/login", async ([FromBody] LoginRequest user, IMediator mediator) =>
-{
-    Results.Ok(await mediator.Send(user));
-});
+app.MapPost("api/login", async ([FromBody] LoginRequest user, IMediator mediator) => Results.Ok(await mediator.Send(user)));
 
 // Let's run it !
 app.Run();
