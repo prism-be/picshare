@@ -2,6 +2,6 @@
 Content-Type: application/json
 
 {
-  "id": {{$uuid}},
-  "name": {{$uuid}}
+  "id": "{{$uuid}}",
+  "name": "{{$uuid}}"
 }

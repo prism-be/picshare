@@ -4,6 +4,7 @@
     <attachedFolders>
       <Path>../../.github/workflows</Path>
       <Path>HttpRequests</Path>
+      <Path>http-requests</Path>
     </attachedFolders>
     <explicitIncludes />
     <explicitExcludes />

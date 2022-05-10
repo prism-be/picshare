@@ -12,7 +12,6 @@ public class OrganisationRepository : IOrganisationRepository
 {
     private readonly CosmosClient _cosmosClient;
 
-
     public OrganisationRepository(CosmosClient cosmosClient)
     {
         _cosmosClient = cosmosClient;

@@ -9,7 +9,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
@@ -19,12 +18,13 @@ namespace Prism.Picshare.Organisations;
 
 public class Create
 {
-    private readonly CosmosClient _cosmosClient;
+    private readonly IOrganisationRepository _organisationRepository;
 
-    public Create(CosmosClient cosmosClient)
+    public Create(IOrganisationRepository organisationRepository)
     {
-        _cosmosClient = cosmosClient;
+        _organisationRepository = organisationRepository;
     }
+
 
     [FunctionName(nameof(Organisations) + nameof(Create))]
     public async Task<IActionResult> RunAsync(
@@ -35,26 +35,13 @@ public class Create
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var organisation = JsonSerializer.Deserialize<Organisation>(requestBody);
 
-        var db = await _cosmosClient.CreateDatabaseIfNotExistsAsync(nameof(Databases.General));
-        
-        var organisationContainer = new ContainerProperties
+        if (organisation == null || organisation.Id == default)
         {
-            Id = Databases.General.Organisations,
-            PartitionKeyPath = "/id",
-            IndexingPolicy = new IndexingPolicy
-            {
-                Automatic = false,
-                IndexingMode = IndexingMode.None
-            }
-        };
-        
-        organisationContainer.IndexingPolicy.ExcludedPaths.Clear();
-        organisationContainer.IndexingPolicy.IncludedPaths.Clear();
-        
-        var organisations = await db.Database.CreateContainerIfNotExistsAsync(organisationContainer);
+            return new BadRequestResult();
+        }
 
-        var response = await organisations.Container.CreateItemAsync(organisation);
+        var statusCode = await _organisationRepository.CreateOrganisationAsync(organisation);
 
-        return new StatusCodeResult((int)response.StatusCode);
+        return new StatusCodeResult(statusCode);
     }
 }

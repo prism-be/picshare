@@ -1,3 +1,18 @@
-﻿namespace Prism.Picshare;
+﻿// -----------------------------------------------------------------------
+//  <copyright file="Organisation.cs" company="Prism">
+//  Copyright (c) Prism. All rights reserved.
+//  </copyright>
+// -----------------------------------------------------------------------
 
-public record Organisation (Guid Id, string Name);
+using System.Text.Json.Serialization;
+
+namespace Prism.Picshare;
+
+public class Organisation
+{
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+}
