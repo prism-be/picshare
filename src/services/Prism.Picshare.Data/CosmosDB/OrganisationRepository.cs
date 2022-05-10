@@ -28,11 +28,11 @@ public class OrganisationRepository : IOrganisationRepository
 
     private async Task<Container> EnsureContainersAsync()
     {
-        var db = await _cosmosClient.CreateDatabaseIfNotExistsAsync(nameof(Databases.General));
+        var db = await _cosmosClient.CreateDatabaseIfNotExistsAsync("picshare");
 
         var organisationContainer = new ContainerProperties
         {
-            Id = Databases.General.Organisations,
+            Id = "organisations",
             PartitionKeyPath = "/id",
             IndexingPolicy = new IndexingPolicy
             {

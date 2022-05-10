@@ -4,6 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,13 +20,20 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton(_ =>
         {
+            var cosmosSystemTextJsonSerializer = new CosmosSystemTextJsonSerializer(
+                new JsonSerializerOptions
+                {
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                });
+
             var cosmosClientBuilder = new CosmosClientBuilder(cosmosDbConnectionString);
 
             return cosmosClientBuilder.WithConnectionModeDirect()
                 .WithBulkExecution(true)
+                .WithCustomSerializer(cosmosSystemTextJsonSerializer)
                 .Build();
         });
-        
+
         services.AddScoped<IOrganisationRepository, OrganisationRepository>();
     }
 }

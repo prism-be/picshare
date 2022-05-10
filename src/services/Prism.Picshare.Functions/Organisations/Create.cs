@@ -28,7 +28,7 @@ public class Create
 
     [FunctionName(nameof(Organisations) + nameof(Create))]
     public async Task<IActionResult> RunAsync(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "organisations/create")]
         HttpRequest req,
         ILogger log)
     {
