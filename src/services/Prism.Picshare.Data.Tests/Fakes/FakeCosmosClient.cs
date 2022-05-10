@@ -19,7 +19,7 @@ public class FakeCosmosClient: CosmosClient
         _container = container;
     }
 
-    public override Task<DatabaseResponse> CreateDatabaseIfNotExistsAsync(string id, int? throughput = null, RequestOptions requestOptions = null, CancellationToken cancellationToken = new CancellationToken())
+    public override Task<DatabaseResponse> CreateDatabaseIfNotExistsAsync(string id, int? throughput = null, RequestOptions requestOptions = null!, CancellationToken cancellationToken = new CancellationToken())
     {
         return Task.FromResult(new FakeDatabaseResponse(_container) as DatabaseResponse);
     }

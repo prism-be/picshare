@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ public class Create
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var organisation = JsonSerializer.Deserialize<Organisation>(requestBody);
 
-        if (organisation == null || organisation.Id == default)
+        if (organisation == null || organisation.Id == Guid.Empty)
         {
             return new BadRequestResult();
         }
