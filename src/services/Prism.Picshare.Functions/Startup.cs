@@ -9,6 +9,7 @@ using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Picshare;
+using Prism.Picshare.Data.CosmosDB;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -18,15 +19,6 @@ public class Startup : FunctionsStartup
 {
     public override void Configure(IFunctionsHostBuilder builder)
     {
-        var cosmosDbConnectionString = Environment.GetEnvironmentVariable("COSMOSDB_CONNECTION_STRING");
-
-        builder.Services.AddSingleton(_ =>
-        {
-            var cosmosClientBuilder = new CosmosClientBuilder(cosmosDbConnectionString);
-
-            return cosmosClientBuilder.WithConnectionModeDirect()
-                .WithBulkExecution(true)
-                .Build();
-        });
+        builder.Services.UseCosmosDB();
     }
 }

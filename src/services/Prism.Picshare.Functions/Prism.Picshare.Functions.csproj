@@ -5,7 +5,6 @@
         <RootNamespace>Prism.Picshare</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.27.0" />
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="3.0.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
@@ -21,6 +20,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\Prism.Picshare.Data\Prism.Picshare.Data.csproj" />
       <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 </Project>

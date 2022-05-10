@@ -36,7 +36,22 @@ public class Create
         var organisation = JsonSerializer.Deserialize<Organisation>(requestBody);
 
         var db = await _cosmosClient.CreateDatabaseIfNotExistsAsync(nameof(Databases.General));
-        var organisations = await db.Database.CreateContainerIfNotExistsAsync(Databases.General.Organisations, "/id");
+        
+        var organisationContainer = new ContainerProperties
+        {
+            Id = Databases.General.Organisations,
+            PartitionKeyPath = "/id",
+            IndexingPolicy = new IndexingPolicy
+            {
+                Automatic = false,
+                IndexingMode = IndexingMode.None
+            }
+        };
+        
+        organisationContainer.IndexingPolicy.ExcludedPaths.Clear();
+        organisationContainer.IndexingPolicy.IncludedPaths.Clear();
+        
+        var organisations = await db.Database.CreateContainerIfNotExistsAsync(organisationContainer);
 
         var response = await organisations.Container.CreateItemAsync(organisation);
 

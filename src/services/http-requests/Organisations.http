@@ -1,0 +1,7 @@
+﻿POST {{baseUri}}/api/OrganisationsCreate
+Content-Type: application/json
+
+{
+  "id": {{$uuid}},
+  "name": {{$uuid}}
+}

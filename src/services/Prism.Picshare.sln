@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Functions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare", "Prism.Picshare\Prism.Picshare.csproj", "{0DCAA9DE-657D-429E-931E-1A450E416149}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Data", "Prism.Picshare.Data\Prism.Picshare.Data.csproj", "{19AD0C51-8E9F-4044-8AD8-8EE38C130AEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{0DCAA9DE-657D-429E-931E-1A450E416149}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DCAA9DE-657D-429E-931E-1A450E416149}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DCAA9DE-657D-429E-931E-1A450E416149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19AD0C51-8E9F-4044-8AD8-8EE38C130AEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19AD0C51-8E9F-4044-8AD8-8EE38C130AEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19AD0C51-8E9F-4044-8AD8-8EE38C130AEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19AD0C51-8E9F-4044-8AD8-8EE38C130AEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
