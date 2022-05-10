@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
@@ -13,11 +14,13 @@ namespace Prism.Picshare.Data.Tests.Fakes;
 
 public class FakeDatabase : Database
 {
-    private Container _container;
+    private readonly Container _container;
 
     public FakeDatabase(Container container)
     {
         _container = container;
+        Id = Guid.NewGuid().ToString();
+        Client = new FakeCosmosClient(_container);
     }
 
     public override Task<DatabaseResponse> ReadAsync(RequestOptions requestOptions = null!, CancellationToken cancellationToken = new CancellationToken())
