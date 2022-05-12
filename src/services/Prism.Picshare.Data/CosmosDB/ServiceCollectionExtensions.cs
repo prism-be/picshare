@@ -6,6 +6,7 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +15,7 @@ namespace Prism.Picshare.Data.CosmosDB;
 public static class ServiceCollectionExtensions
 {
     // ReSharper disable once InconsistentNaming
-    public static void UseCosmosDB(this IServiceCollection services)
+    public static void UseCosmosDB(this IServiceCollection services, CosmosClient? cosmosClient = null)
     {
         var cosmosDbConnectionString = Environment.GetEnvironmentVariable("COSMOSDB_CONNECTION_STRING");
 
@@ -35,5 +36,36 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+
+        cosmosClient ??= new CosmosClient(cosmosDbConnectionString);
+        
+        InitializeCosmosDb(cosmosClient);
+    }
+
+    private static void InitializeCosmosDb(CosmosClient cosmosClient)
+    {
+        var task = InitializeOrganisationsContainer(cosmosClient);
+
+        task.Wait();
+    }
+
+    private static async Task InitializeOrganisationsContainer(CosmosClient cosmosClient)
+    {
+        var db = await cosmosClient.CreateDatabaseIfNotExistsAsync(OrganisationRepository.Database);
+
+        var organisationContainer = new ContainerProperties
+        {
+            Id = OrganisationRepository.Container,
+            PartitionKeyPath = "/id",
+            IndexingPolicy = new IndexingPolicy
+            {
+                Automatic = false, IndexingMode = IndexingMode.None
+            }
+        };
+
+        organisationContainer.IndexingPolicy.ExcludedPaths.Clear();
+        organisationContainer.IndexingPolicy.IncludedPaths.Clear();
+
+        await db.Database.CreateContainerIfNotExistsAsync(organisationContainer);
     }
 }
