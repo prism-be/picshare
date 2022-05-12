@@ -10,6 +10,9 @@ namespace Prism.Picshare.Data.CosmosDB;
 
 public class OrganisationRepository : IOrganisationRepository
 {
+    public const string Database = "picshare";
+    public const string Container = "organisations";
+    
     private readonly CosmosClient _cosmosClient;
 
     public OrganisationRepository(CosmosClient cosmosClient)
@@ -19,32 +22,10 @@ public class OrganisationRepository : IOrganisationRepository
 
     public async Task<int> CreateOrganisationAsync(Organisation organisation)
     {
-        var container = await EnsureContainersAsync();
+        var container = _cosmosClient.GetDatabase(Database).GetContainer(Container);
 
         var result = await container.CreateItemAsync(organisation);
 
         return (int)result.StatusCode;
-    }
-
-    private async Task<Container> EnsureContainersAsync()
-    {
-        var db = await _cosmosClient.CreateDatabaseIfNotExistsAsync("picshare");
-
-        var organisationContainer = new ContainerProperties
-        {
-            Id = "organisations",
-            PartitionKeyPath = "/id",
-            IndexingPolicy = new IndexingPolicy
-            {
-                Automatic = false, IndexingMode = IndexingMode.None
-            }
-        };
-
-        organisationContainer.IndexingPolicy.ExcludedPaths.Clear();
-        organisationContainer.IndexingPolicy.IncludedPaths.Clear();
-
-        var organisations = await db.Database.CreateContainerIfNotExistsAsync(organisationContainer);
-
-        return organisations.Container;
     }
 }

@@ -80,7 +80,7 @@ public class FakeDatabase : Database
 
     public override Container GetContainer(string id)
     {
-        throw new System.NotImplementedException();
+        return _container;
     }
 
     public override Task<ContainerResponse> CreateContainerAsync(ContainerProperties containerProperties, int? throughput = null, RequestOptions requestOptions = null!, CancellationToken cancellationToken = new CancellationToken())

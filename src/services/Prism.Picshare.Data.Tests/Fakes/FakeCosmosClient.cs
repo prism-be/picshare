@@ -23,4 +23,9 @@ public class FakeCosmosClient: CosmosClient
     {
         return Task.FromResult(new FakeDatabaseResponse(_container) as DatabaseResponse);
     }
+
+    public override Database GetDatabase(string id)
+    {
+        return new FakeDatabase(_container);
+    }
 }
