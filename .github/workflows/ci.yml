@@ -1,8 +1,9 @@
-name: Package
+name: CI
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -46,9 +47,13 @@ jobs:
         working-directory: ./src/services
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build --configuration Release --output ./output
         working-directory: ./src/services
 
-      - name: Test
-        run: dotnet test --no-build --verbosity normal --configuration Release
-        working-directory: ./src/services
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: picshare-functions
+          package: ./src/services/output
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
