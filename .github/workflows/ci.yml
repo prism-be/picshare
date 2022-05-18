@@ -34,8 +34,8 @@ jobs:
           $informationalVersion = $informationalVersion + ".${{github.run_number}}"
           Write-Host "InformationalVersion: $informationalVersion"
           Write-Host "AssemblyVersion: $assemblyVersion"
-          ((Get-Content -path "${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj" -Raw) -replace '1.0.0-pre',$informationalVersion) | Set-Content -Path ${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj
-          ((Get-Content -path "${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj" -Raw) -replace '1.0.0',$assemblyVersion) | Set-Content -Path ${{ github.workspace }}/src/Prism.Picshare.Events/Prism.Picshare.Events.csproj
+          ((Get-Content -path "${{ github.workspace }}/src/services/Prism.Picshare.Functions/Prism.Picshare.Functions.csproj" -Raw) -replace '1.0.0-pre',$informationalVersion) | Set-Content -Path ${{ github.workspace }}/src/services/Prism.Picshare.Functions/Prism.Picshare.Functions.csproj
+          ((Get-Content -path "${{ github.workspace }}/src/services/Prism.Picshare.Functions/Prism.Picshare.Functions.csproj" -Raw) -replace '1.0.0',$assemblyVersion) | Set-Content -Path ${{ github.workspace }}/src/services/Prism.Picshare.Functions/Prism.Picshare.Functions.csproj
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
