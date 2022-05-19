@@ -28,4 +28,10 @@ public class OrganisationRepository : IOrganisationRepository
 
         return (int)result.StatusCode;
     }
+
+    public async Task<Organisation?> GetOrganisationAsync(Guid id)
+    {
+        var container = _cosmosClient.GetDatabase(Database).GetContainer(Container);
+        return await container.ReadItemAsync<Organisation>(id.ToString(), new PartitionKey(id.ToString()));
+    }
 }

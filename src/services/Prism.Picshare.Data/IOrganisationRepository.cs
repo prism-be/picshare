@@ -4,12 +4,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Microsoft.Azure.Cosmos;
-
 namespace Prism.Picshare.Data;
 
 public interface IOrganisationRepository
 {
-    
     Task<int> CreateOrganisationAsync(Organisation organisation);
+    Task<Organisation?> GetOrganisationAsync(Guid id);
 }
