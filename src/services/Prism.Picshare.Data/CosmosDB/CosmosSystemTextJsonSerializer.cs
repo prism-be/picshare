@@ -10,13 +10,13 @@ using Microsoft.Azure.Cosmos;
 
 namespace Prism.Picshare.Data.CosmosDB;
 
-public class CosmosSystemTextJsonSerializer: CosmosSerializer
+public class CosmosSystemTextJsonSerializer : CosmosSerializer
 {
     private readonly JsonObjectSerializer _systemTextJsonSerializer;
 
     public CosmosSystemTextJsonSerializer(JsonSerializerOptions jsonSerializerOptions)
     {
-        this._systemTextJsonSerializer = new JsonObjectSerializer(jsonSerializerOptions);
+        _systemTextJsonSerializer = new JsonObjectSerializer(jsonSerializerOptions);
     }
 
     public override T FromStream<T>(Stream stream)
@@ -33,14 +33,14 @@ public class CosmosSystemTextJsonSerializer: CosmosSerializer
                 return (T)(object)stream;
             }
 
-            return (T) this._systemTextJsonSerializer.Deserialize(stream, typeof(T), default)!;
+            return (T)_systemTextJsonSerializer.Deserialize(stream, typeof(T), default)!;
         }
     }
 
     public override Stream ToStream<T>(T input)
     {
-        MemoryStream streamPayload = new MemoryStream();
-        this._systemTextJsonSerializer.Serialize(streamPayload, input, typeof(T), default);
+        var streamPayload = new MemoryStream();
+        _systemTextJsonSerializer.Serialize(streamPayload, input, typeof(T), default);
         streamPayload.Position = 0;
         return streamPayload;
     }

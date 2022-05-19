@@ -10,7 +10,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Prism.Picshare.Data.Tests.Fakes;
 
-public class FakeCosmosClient: CosmosClient
+public class FakeCosmosClient : CosmosClient
 {
     private readonly Container _container;
 
@@ -19,7 +19,7 @@ public class FakeCosmosClient: CosmosClient
         _container = container;
     }
 
-    public override Task<DatabaseResponse> CreateDatabaseIfNotExistsAsync(string id, int? throughput = null, RequestOptions requestOptions = null!, CancellationToken cancellationToken = new CancellationToken())
+    public override Task<DatabaseResponse> CreateDatabaseIfNotExistsAsync(string id, int? throughput = null, RequestOptions requestOptions = null!, CancellationToken cancellationToken = new())
     {
         return Task.FromResult(new FakeDatabaseResponse(_container) as DatabaseResponse);
     }

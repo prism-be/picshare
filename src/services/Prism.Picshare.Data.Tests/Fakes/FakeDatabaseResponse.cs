@@ -8,7 +8,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Prism.Picshare.Data.Tests.Fakes;
 
-public class FakeDatabaseResponse: DatabaseResponse
+public class FakeDatabaseResponse : DatabaseResponse
 {
     private readonly Container _container;
 
