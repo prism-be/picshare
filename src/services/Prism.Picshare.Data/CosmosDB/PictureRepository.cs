@@ -14,21 +14,22 @@ public class PictureRepository : IPictureRepository
     public const string Database = "picshare";
     public const string Container = "pictures";
 
-    private readonly CosmosClient _cosmosClient;
+    private readonly Container _container;
 
     public PictureRepository(CosmosClient cosmosClient)
     {
-        this._cosmosClient = cosmosClient;
+        _container = cosmosClient.GetDatabase(Database).GetContainer(Container);
     }
 
-    public Task<HttpStatusCode> Upsert(Guid organisationId, Picture picture)
+    public async Task Upsert(Guid organisationId, Picture picture)
     {
-        var container = _cosmosClient.GetDatabase(Database).GetContainer(Container);
-        throw new NotImplementedException();
+        picture.OrganisationId = organisationId;
+        await _container.UpsertItemAsync(picture);
     }
 
-    public Task<Picture> Get(Guid organisationId, Guid pictureId)
+    public async Task<Picture?> Get(Guid organisationId, Guid pictureId)
     {
-        throw new NotImplementedException();
+        var result = await this._container.ReadItemAsync<Picture>(pictureId.ToString(), new PartitionKey(organisationId.ToString()));
+        return result.StatusCode == HttpStatusCode.OK ? result.Resource : default;
     }
 }

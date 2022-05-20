@@ -10,7 +10,7 @@ namespace Prism.Picshare.Data;
 
 public interface IPictureRepository
 {
-    public Task<HttpStatusCode> Upsert(Guid organisationId, Picture picture);
+    public Task Upsert(Guid organisationId, Picture picture);
 
-    public Task<Picture> Get(Guid organisationId, Guid pictureId);
+    public Task<Picture?> Get(Guid organisationId, Guid pictureId);
 }

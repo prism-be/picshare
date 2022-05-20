@@ -36,6 +36,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+        services.AddScoped<IPictureRepository, PictureRepository>();
 
         cosmosClient ??= new CosmosClient(cosmosDbConnectionString);
 

@@ -10,6 +10,11 @@ namespace Prism.Picshare;
 
 public class Organisation
 {
+    public Organisation()
+    {
+        Id = Guid.NewGuid();
+    }
+    
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
 
