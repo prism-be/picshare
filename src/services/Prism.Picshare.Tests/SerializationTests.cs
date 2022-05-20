@@ -22,8 +22,13 @@ public class SerializationTests
             Id = Guid.NewGuid(), Name = Guid.NewGuid().ToString()
         };
 
+        CheckSerialization(source);
+    }
+
+    private static void CheckSerialization<T>(T source)
+    {
         // Act
-        var destination = this.SerializeAndDeserialize(source);
+        var destination = SerializeAndDeserialize(source);
 
         // Assert
         destination.Should().BeEquivalentTo(source);
@@ -38,14 +43,10 @@ public class SerializationTests
             Id = Guid.NewGuid(), OrganisationId = Guid.NewGuid(), Source = PictureSource.Upload
         };
 
-        // Act
-        var destination = this.SerializeAndDeserialize(source);
-
-        // Assert
-        destination.Should().BeEquivalentTo(source);
+        CheckSerialization(source);
     }
 
-    private T? SerializeAndDeserialize<T>(T source)
+    private static T? SerializeAndDeserialize<T>(T source)
     {
         var json = JsonSerializer.Serialize(source);
         return JsonSerializer.Deserialize<T>(json);
