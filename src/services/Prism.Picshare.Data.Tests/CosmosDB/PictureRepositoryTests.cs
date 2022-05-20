@@ -59,7 +59,7 @@ public class PictureRepositoryTests
         };
 
         var containerMock = new Mock<Container>();
-        containerMock.Setup(x => x.ReadItemAsync<Picture>(picture.Id.ToString(), new PartitionKey(organisationId.ToString()), null, default)).ReturnsAsync(new FakeItemResponse<Picture?>(HttpStatusCode.OK, picture));
+        containerMock.Setup(x => x.ReadItemAsync<Picture>(picture.Id.ToString(), new PartitionKey(organisationId.ToString()), null, default)).ReturnsAsync(new FakeItemResponse<Picture>(HttpStatusCode.OK, picture));
         var organisationRepository = new PictureRepository(new FakeCosmosClient(containerMock.Object));
 
         // Act
