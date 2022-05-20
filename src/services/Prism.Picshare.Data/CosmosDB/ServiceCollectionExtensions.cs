@@ -44,9 +44,30 @@ public static class ServiceCollectionExtensions
 
     private static void InitializeCosmosDb(CosmosClient cosmosClient)
     {
-        var task = InitializeOrganisationsContainer(cosmosClient);
+        var task = async () =>
+        {
+            await InitializeOrganisationsContainer(cosmosClient);
+            await InitializePicturesContainer(cosmosClient);
+        };
 
-        task.Wait();
+        task.Invoke().Wait();
+    }
+
+    private static async Task InitializePicturesContainer(CosmosClient cosmosClient)
+    {
+        var db = await cosmosClient.CreateDatabaseIfNotExistsAsync(PictureRepository.Database);
+
+        var organisationContainer = new ContainerProperties
+        {
+            Id = PictureRepository.Container,
+            PartitionKeyPath = "/organisationId",
+            IndexingPolicy = new IndexingPolicy
+            {
+                Automatic = true
+            }
+        };
+
+        await db.Database.CreateContainerIfNotExistsAsync(organisationContainer);
     }
 
     private static async Task InitializeOrganisationsContainer(CosmosClient cosmosClient)
