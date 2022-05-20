@@ -4,6 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Net;
+using Microsoft.Azure.Cosmos;
+
 namespace Prism.Picshare.Data.CosmosDB;
 
 public class PictureRepository : IPictureRepository
@@ -11,8 +14,16 @@ public class PictureRepository : IPictureRepository
     public const string Database = "picshare";
     public const string Container = "pictures";
 
-    public Task<int> Upsert(Guid organisationId, Picture picture)
+    private readonly CosmosClient _cosmosClient;
+
+    public PictureRepository(CosmosClient cosmosClient)
     {
+        this._cosmosClient = cosmosClient;
+    }
+
+    public Task<HttpStatusCode> Upsert(Guid organisationId, Picture picture)
+    {
+        var container = _cosmosClient.GetDatabase(Database).GetContainer(Container);
         throw new NotImplementedException();
     }
 
