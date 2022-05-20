@@ -25,7 +25,4 @@
         <ProjectReference Include="..\Prism.Picshare.Data\Prism.Picshare.Data.csproj" />
         <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Photobooth" />
-    </ItemGroup>
 </Project>
