@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="FakeItemReponse.cs" company="Prism">
+//  <copyright file="FakeItemResponse.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -9,12 +9,17 @@ using Microsoft.Azure.Cosmos;
 
 namespace Prism.Picshare.Data.Tests.Fakes;
 
-public class FakeItemResponse<T> : ItemResponse<T>
+public class FakeItemResponse<T> : ItemResponse<T> where T : new()
 {
-    public FakeItemResponse(HttpStatusCode statusCode)
+    private readonly T? _data;
+
+    public FakeItemResponse(HttpStatusCode statusCode, T? data = default)
     {
-        StatusCode = statusCode;
+        this.StatusCode = statusCode;
+        this._data = data;
     }
+
+    public override T Resource => this._data ?? new T();
 
     public override HttpStatusCode StatusCode { get; }
 }

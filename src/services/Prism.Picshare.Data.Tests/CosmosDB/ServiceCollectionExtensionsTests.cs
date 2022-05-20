@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +22,7 @@ public class ServiceCollectionExtensionsTests
         var cosmosClient = new FakeCosmosClient(Mock.Of<Container>()) as CosmosClient;
         var services = new ServiceCollection();
         services.UseCosmosDB(cosmosClient);
-        
+
         Assert.NotNull(services.FirstOrDefault(x => x.ServiceType == typeof(CosmosClient)));
     }
 }

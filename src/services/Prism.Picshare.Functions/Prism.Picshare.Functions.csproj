@@ -10,7 +10,7 @@
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="3.0.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
+        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.0" />
     </ItemGroup>
     <ItemGroup>
         <None Update="host.json">
@@ -22,7 +22,10 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Prism.Picshare.Data\Prism.Picshare.Data.csproj" />
-      <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Data\Prism.Picshare.Data.csproj" />
+        <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Photobooth" />
     </ItemGroup>
 </Project>

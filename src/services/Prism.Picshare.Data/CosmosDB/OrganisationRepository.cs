@@ -12,7 +12,7 @@ public class OrganisationRepository : IOrganisationRepository
 {
     public const string Database = "picshare";
     public const string Container = "organisations";
-    
+
     private readonly CosmosClient _cosmosClient;
 
     public OrganisationRepository(CosmosClient cosmosClient)

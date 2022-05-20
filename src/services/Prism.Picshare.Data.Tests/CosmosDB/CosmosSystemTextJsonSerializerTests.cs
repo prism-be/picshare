@@ -18,14 +18,13 @@ public class CosmosSystemTextJsonSerializerTests
     {
         var organisation = new Organisation
         {
-            Id = Guid.NewGuid(),
-            Name = "Unit Tests"
+            Id = Guid.NewGuid(), Name = "Unit Tests"
         };
 
         var serializer = new CosmosSystemTextJsonSerializer(new JsonSerializerOptions());
         var serialized = serializer.ToStream(organisation);
         var deserialized = serializer.FromStream<Organisation>(serialized);
-        
+
         Assert.Equal(organisation.Id, deserialized.Id);
         Assert.Equal(organisation.Name, deserialized.Name);
     }
