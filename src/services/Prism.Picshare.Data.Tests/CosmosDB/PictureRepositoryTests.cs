@@ -11,6 +11,7 @@ using Microsoft.Azure.Cosmos;
 using Moq;
 using Prism.Picshare.Data.CosmosDB;
 using Prism.Picshare.Data.Tests.Fakes;
+using Prism.Picshare.Domain;
 using Xunit;
 
 namespace Prism.Picshare.Data.Tests.CosmosDB;

@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Prism.Picshare;
+namespace Prism.Picshare.Domain;
 
 public class Organisation
 {

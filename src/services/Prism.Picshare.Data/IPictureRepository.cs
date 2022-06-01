@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Net;
+using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Data;
 

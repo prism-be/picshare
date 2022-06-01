@@ -14,6 +14,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Prism.Picshare.Data;
+using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Organisations;
 

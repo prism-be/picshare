@@ -1,14 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="PictureSource.cs" company="Prism">
+//  <copyright file="Constants.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 namespace Prism.Picshare;
 
-public enum PictureSource
+public static class Constants
 {
-    Unknown = 0,
-    Upload = 1,
-    Photobooth = 10
+    public const int MaxShortStringLength = 65536;
 }

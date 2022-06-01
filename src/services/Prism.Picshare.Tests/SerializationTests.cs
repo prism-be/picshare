@@ -7,6 +7,7 @@
 using System;
 using System.Text.Json;
 using FluentAssertions;
+using Prism.Picshare.Domain;
 using Xunit;
 
 namespace Prism.Picshare.Tests;

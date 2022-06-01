@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.Azure.Cosmos;
+using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Data.CosmosDB;
 

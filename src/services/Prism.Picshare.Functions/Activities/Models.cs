@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Activities;
 

@@ -13,6 +13,12 @@ public static class DatabaseStructure
         public const string Database = "picshare";
         public const string Container = "pictures";
     }
+    
+    public static class Organisations
+    {
+        public const string Database = "picshare";
+        public const string Container = "organisations";
+    }
 
     public static class Albums
     {

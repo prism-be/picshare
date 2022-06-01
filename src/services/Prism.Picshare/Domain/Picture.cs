@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Prism.Picshare;
+namespace Prism.Picshare.Domain;
 
 public class Picture
 {
@@ -25,6 +25,9 @@ public class Picture
 
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
+
+    [JsonPropertyName("published")]
+    public bool Published { get; set; }
 
     [JsonPropertyName("source")]
     public PictureSource Source { get; set; }

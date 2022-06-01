@@ -4,6 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Prism.Picshare.Domain;
+
 namespace Prism.Picshare.Data;
 
 public interface IOrganisationRepository
