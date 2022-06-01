@@ -4,32 +4,55 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.IO;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using Prism.Picshare.Activities;
+using Prism.Picshare.Functions.Extensions;
 
 namespace Prism.Picshare.Photobooth;
 
 public static class TakePicture
 {
-    [FunctionName(nameof(Photobooth) + nameof(TakePicture))]
-    public static async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
+    [FunctionName(nameof(Photobooth) + nameof(TakePicture) + nameof(RunAsync))]
+    public static async Task<IActionResult> RunAsync(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "photobooth/take-picture")] HttpRequest req,
+        [DurableClient] IDurableOrchestrationClient starter,
+        ILogger log)
     {
-        log.LogInformation("Ne picture taken from Photobooth");
+        var organisationId = req.GetOrganisationId();
 
-        string name = req.Query["name"];
+        if (!Guid.TryParse(req.Query["albumId"], out var albumId))
+        {
+            return new BadRequestObjectResult("The album id is not well formatted");
+        }
 
-        var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        dynamic data = JsonConvert.DeserializeObject(requestBody);
-        name = name ?? data?.name;
+        var pictureId = Guid.NewGuid();
 
-        return name != null
-            ? new OkObjectResult($"Hello, {name}")
-            : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+        var pictureReference = new PhotoBoothPictureTaken(organisationId, pictureId, albumId);
+        await starter.StartNewAsync(nameof(Photobooth) + nameof(TakePicture) + nameof(RunOrchestrator), pictureReference);
+
+        log.LogInformation("New picture taken from Photobooth for {organisationId} in {albumId} with reference {pictureId}", organisationId, albumId, pictureId);
+
+        return new OkObjectResult(new
+        {
+            pictureId
+        });
+    }
+
+    [FunctionName(nameof(Photobooth) + nameof(TakePicture) + nameof(RunOrchestrator))]
+    public static async Task<List<string>> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
+    {
+        var pictureReference = context.GetInput<PhotoBoothPictureTaken>();
+
+        await context.CallActivityAsync(nameof(Activities) + nameof(Pictures) + nameof(Pictures.Create), pictureReference);
+
+        return new List<string>();
     }
 }

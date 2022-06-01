@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Picture.cs" company="Prism">
+//  <copyright file="Album.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -8,24 +8,23 @@ using System.Text.Json.Serialization;
 
 namespace Prism.Picshare;
 
-public class Picture
+public class Album
 {
-    public Picture()
+    public Album(List<Guid> pictures)
     {
-        this.Id = Guid.NewGuid();
-        this.Source = PictureSource.Unknown;
-        this.CreationDate = DateTime.UtcNow;
+        this.Pictures = pictures;
+        this.Name = string.Empty;
     }
-
-    [JsonPropertyName("creationDate")]
-    public DateTime CreationDate { get; set; }
 
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
 
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
 
-    [JsonPropertyName("source")]
-    public PictureSource Source { get; set; }
+    [JsonPropertyName("pictures")]
+    public List<Guid> Pictures { get; set; }
 }

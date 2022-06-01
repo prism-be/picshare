@@ -24,7 +24,7 @@ public class GetDetails
         _organisationRepository = organisationRepository;
     }
 
-    [FunctionName(nameof(Organisations) + nameof(GetDetails))]
+    [FunctionName(nameof(Organisations) + nameof(GetDetails) + nameof(RunAsync))]
     public async Task<IActionResult> RunAsync(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "organisation")]
         HttpRequest req,

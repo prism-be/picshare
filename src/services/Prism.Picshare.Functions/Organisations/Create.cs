@@ -26,7 +26,7 @@ public class Create
         _organisationRepository = organisationRepository;
     }
 
-    [FunctionName(nameof(Organisations) + nameof(Create))]
+    [FunctionName(nameof(Organisations) + nameof(Create) + nameof(RunAsync))]
     public async Task<IActionResult> RunAsync(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = "organisations/create")]
         HttpRequest req,
