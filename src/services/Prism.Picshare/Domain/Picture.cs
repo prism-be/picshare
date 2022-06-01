@@ -10,6 +10,8 @@ namespace Prism.Picshare.Domain;
 
 public class Picture
 {
+    public const string Store = "picture-store";
+
     public Picture()
     {
         this.Id = Guid.NewGuid();

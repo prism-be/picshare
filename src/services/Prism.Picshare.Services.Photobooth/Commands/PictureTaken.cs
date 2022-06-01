@@ -4,11 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Net;
+using Dapr.Client;
 using FluentValidation;
 using MediatR;
-using Microsoft.Azure.Cosmos;
-using Prism.Picshare.Data.CosmosDB;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Photobooth.Commands;
@@ -26,13 +24,13 @@ public class PictureTakenValidator : AbstractValidator<PictureTaken>
 
 public class PictureTakenHandler : IRequestHandler<PictureTaken, Guid>
 {
-    private readonly CosmosClient _cosmosClient;
+    private readonly DaprClient _daprClient;
     private readonly ILogger<PictureTakenHandler> _logger;
 
-    public PictureTakenHandler(ILogger<PictureTakenHandler> logger, CosmosClient cosmosClient)
+    public PictureTakenHandler(ILogger<PictureTakenHandler> logger, DaprClient daprClient)
     {
         this._logger = logger;
-        this._cosmosClient = cosmosClient;
+        this._daprClient = daprClient;
     }
 
     public async Task<Guid> Handle(PictureTaken request, CancellationToken cancellationToken)
@@ -49,7 +47,7 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken, Guid>
 
     private async Task AddPictureToAlbum(Guid pictureId, Guid organisationId, Guid albumId, CancellationToken cancellationToken)
     {
-        var albumContainer = this._cosmosClient.GetContainer(DatabaseStructure.Albums.Database, DatabaseStructure.Albums.Container);
+        /*var albumContainer = this._cosmosClient.GetContainer(DatabaseStructure.Albums.Database, DatabaseStructure.Albums.Container);
 
         var albumResult = await albumContainer.ReadItemAsync<Album>(albumId.ToString(), new PartitionKey(organisationId.ToString()), cancellationToken: cancellationToken);
 
@@ -66,30 +64,19 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken, Guid>
         {
             this._logger.LogCritical("Error when adding picture to the album: {pictureId} -> {albumId} => {statusCode}", pictureId, albumId, albumResult.StatusCode);
             throw new BadHttpRequestException("Error when creating the picture", (int)albumResult.StatusCode);
-        }
+        }*/
     }
 
     private async Task<Picture> CreatePicture(Guid organisationId, CancellationToken cancellationToken)
     {
-        var pictureContainer = this._cosmosClient.GetContainer(DatabaseStructure.Pictures.Database, DatabaseStructure.Pictures.Container);
-
         var picture = new Picture
         {
             Id = Guid.NewGuid(), Source = PictureSource.Photobooth, CreationDate = DateTime.UtcNow, OrganisationId = organisationId
         };
 
-        var createPictureResult = await pictureContainer.CreateItemAsync(picture, cancellationToken: cancellationToken);
+        await this._daprClient.SaveStateAsync(Picture.Store, picture.Id.ToString(), picture, cancellationToken: cancellationToken);
+        this._logger.LogInformation("Picture created with success: {pictureId}", picture.Id);
 
-        if (createPictureResult.StatusCode == HttpStatusCode.OK)
-        {
-            this._logger.LogInformation("Picture created with success: {pictureId}", picture.Id);
-        }
-        else
-        {
-            this._logger.LogCritical("Error when creating the picture: {pictureId} => {statusCode}", picture.Id, createPictureResult.StatusCode);
-            throw new BadHttpRequestException("Error when creating the picture", (int)createPictureResult.StatusCode);
-        }
-
-        return createPictureResult.Resource;
+        return picture;
     }
 }

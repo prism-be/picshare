@@ -10,6 +10,8 @@ namespace Prism.Picshare.Domain;
 
 public class Album
 {
+    public const string Store = "album-store";
+    
     public Album(List<Guid> pictures)
     {
         this.Pictures = pictures;
