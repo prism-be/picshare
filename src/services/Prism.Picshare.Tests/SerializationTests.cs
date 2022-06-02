@@ -7,6 +7,7 @@
 using System;
 using System.Text.Json;
 using FluentAssertions;
+using Prism.Picshare.Domain;
 using Xunit;
 
 namespace Prism.Picshare.Tests;
@@ -40,7 +41,7 @@ public class SerializationTests
         // Arrange
         var source = new Picture
         {
-            Id = Guid.NewGuid(), OrganisationId = Guid.NewGuid(), Source = PictureSource.Upload
+            Id = Guid.NewGuid(), OrganisationId = Guid.NewGuid(), Source = PictureSource.Upload, CreationDate = DateTime.Today
         };
 
         CheckSerialization(source);
