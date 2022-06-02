@@ -7,7 +7,7 @@
 using Dapr.Client;
 using FluentValidation;
 using MediatR;
-using Prism.Picshare.Domain;
+using Prism.Picshare.Events;
 
 namespace Prism.Picshare.Services.Photobooth.Commands;
 
@@ -37,46 +37,9 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken, Guid>
     {
         this._logger.LogInformation("Processing a picture taken request: {request}", request);
 
-        var pictureId = Guid.NewGuid();
+        var pictureCreated = new PicureCreated(Guid.NewGuid(), request.OrganisationId, request.SessionId);
+        await this._daprClient.PublishEventAsync(PubSub.Pictures, PicureCreated.Topic, pictureCreated, cancellationToken);
 
-        var picture = await this.CreatePicture(request.OrganisationId, cancellationToken);
-        await this.AddPictureToAlbum(picture.Id, request.OrganisationId, request.SessionId, cancellationToken);
-
-        return pictureId;
-    }
-
-    private async Task AddPictureToAlbum(Guid pictureId, Guid organisationId, Guid albumId, CancellationToken cancellationToken)
-    {
-        /*var albumContainer = this._cosmosClient.GetContainer(DatabaseStructure.Albums.Database, DatabaseStructure.Albums.Container);
-
-        var albumResult = await albumContainer.ReadItemAsync<Album>(albumId.ToString(), new PartitionKey(organisationId.ToString()), cancellationToken: cancellationToken);
-
-        if (albumResult.StatusCode == HttpStatusCode.OK)
-        {
-            var album = albumResult.Resource;
-
-            album.Pictures.Insert(0, pictureId);
-            await albumContainer.ReplaceItemAsync(album, album.Id.ToString(), cancellationToken: cancellationToken);
-
-            this._logger.LogInformation("Picture added to the album: {pictureId} -> {albumId}", pictureId, albumId);
-        }
-        else
-        {
-            this._logger.LogCritical("Error when adding picture to the album: {pictureId} -> {albumId} => {statusCode}", pictureId, albumId, albumResult.StatusCode);
-            throw new BadHttpRequestException("Error when creating the picture", (int)albumResult.StatusCode);
-        }*/
-    }
-
-    private async Task<Picture> CreatePicture(Guid organisationId, CancellationToken cancellationToken)
-    {
-        var picture = new Picture
-        {
-            Id = Guid.NewGuid(), Source = PictureSource.Photobooth, CreationDate = DateTime.UtcNow, OrganisationId = organisationId
-        };
-
-        await this._daprClient.SaveStateAsync(Picture.Store, picture.Id.ToString(), picture, cancellationToken: cancellationToken);
-        this._logger.LogInformation("Picture created with success: {pictureId}", picture.Id);
-
-        return picture;
+        return pictureCreated.Id;
     }
 }
