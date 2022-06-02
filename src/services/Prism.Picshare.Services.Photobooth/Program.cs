@@ -20,7 +20,11 @@ builder.Services.AddValidatorsFromAssembly(applicationAssembly);
 
 builder.Services.AddDaprClient();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
+
+app.UseHealthChecks("/health");
 
 // Register routes
 app.MapPost("api/setup", async ([FromBody] Setup setup, IMediator mediator) => Results.Ok(await mediator.Send(setup)));
