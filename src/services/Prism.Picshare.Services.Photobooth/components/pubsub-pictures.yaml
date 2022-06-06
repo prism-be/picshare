@@ -3,10 +3,12 @@ kind: Component
 metadata:
   name: pubsub-pictures
 spec:
-  type: pubsub.redis
+  type: pubsub.azure.servicebus
   version: v1
   metadata:
-    - name: redisHost
-      value: localhost:6379
-    - name: redisPassword
-      value: ""
+    - name: connectionString # Required when not using Azure Authentication.
+      secretKeyRef:
+        name: service-bus-connectionString
+        key: service-bus-connectionString
+auth:
+  secretStore: secret-store

@@ -27,7 +27,6 @@ var app = builder.Build();
 app.UseHealthChecks("/health");
 
 // Register routes
-app.MapPost("api/setup", async ([FromBody] Setup setup, IMediator mediator) => Results.Ok(await mediator.Send(setup)));
 app.MapPost("api/take", async ([FromBody] PictureTaken request, IMediator mediator) => Results.Ok(await mediator.Send(request)));
 
 // Let's run it !
