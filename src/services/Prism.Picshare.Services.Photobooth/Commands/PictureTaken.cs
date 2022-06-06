@@ -7,11 +7,12 @@
 using Dapr.Client;
 using FluentValidation;
 using MediatR;
+using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 
 namespace Prism.Picshare.Services.Photobooth.Commands;
 
-public record PictureTaken(Guid OrganisationId, Guid SessionId) : IRequest<Guid>;
+public record PictureTaken(Guid OrganisationId, Guid SessionId) : IRequest<PhotoboothPicture>;
 
 public class PictureTakenValidator : AbstractValidator<PictureTaken>
 {
@@ -22,7 +23,7 @@ public class PictureTakenValidator : AbstractValidator<PictureTaken>
     }
 }
 
-public class PictureTakenHandler : IRequestHandler<PictureTaken, Guid>
+public class PictureTakenHandler : IRequestHandler<PictureTaken, PhotoboothPicture>
 {
     private readonly DaprClient _daprClient;
     private readonly ILogger<PictureTakenHandler> _logger;
@@ -33,13 +34,17 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken, Guid>
         this._daprClient = daprClient;
     }
 
-    public async Task<Guid> Handle(PictureTaken request, CancellationToken cancellationToken)
+    public async Task<PhotoboothPicture> Handle(PictureTaken request, CancellationToken cancellationToken)
     {
         this._logger.LogInformation("Processing a picture taken request: {request}", request);
 
-        var pictureCreated = new PicureCreated(Guid.NewGuid(), request.OrganisationId, request.SessionId);
-        await this._daprClient.PublishEventAsync(PubSub.Pictures, PicureCreated.Topic, pictureCreated, cancellationToken);
+        var photoboothPicture = new PhotoboothPicture
+        {
+            Id = Guid.NewGuid(), OrganisationId = request.OrganisationId, SessionId = request.SessionId
+        };
 
-        return pictureCreated.Id;
+        await this._daprClient.PublishEventAsync(PubSub.Pictures, Topics.Photobooth.PictureTaken, photoboothPicture, cancellationToken);
+
+        return photoboothPicture;
     }
 }
