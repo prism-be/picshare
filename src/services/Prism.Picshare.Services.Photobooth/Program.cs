@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
