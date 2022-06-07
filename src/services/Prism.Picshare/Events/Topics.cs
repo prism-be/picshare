@@ -12,6 +12,5 @@ public static class Topics
     {
         public const string PictureTaken = "photobooth/picture/taken";
         public const string PictureUploaded = "photobooth/picture/uploaded";
-        public const string PictureReady = "photobooth/picture/ready";
     }
 }

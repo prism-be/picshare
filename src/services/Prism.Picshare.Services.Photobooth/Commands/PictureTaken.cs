@@ -18,8 +18,8 @@ public class PictureTakenValidator : AbstractValidator<PictureTaken>
 {
     public PictureTakenValidator()
     {
-        this.RuleFor(x => x.OrganisationId).NotEmpty();
-        this.RuleFor(x => x.SessionId).NotEmpty();
+        RuleFor(x => x.OrganisationId).NotEmpty();
+        RuleFor(x => x.SessionId).NotEmpty();
     }
 }
 
@@ -30,20 +30,20 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken, PhotoboothPictu
 
     public PictureTakenHandler(ILogger<PictureTakenHandler> logger, DaprClient daprClient)
     {
-        this._logger = logger;
-        this._daprClient = daprClient;
+        _logger = logger;
+        _daprClient = daprClient;
     }
 
     public async Task<PhotoboothPicture> Handle(PictureTaken request, CancellationToken cancellationToken)
     {
-        this._logger.LogInformation("Processing a picture taken request: {request}", request);
+        _logger.LogInformation("Processing a picture taken request: {request}", request);
 
         var photoboothPicture = new PhotoboothPicture
         {
             Id = Guid.NewGuid(), OrganisationId = request.OrganisationId, SessionId = request.SessionId
         };
 
-        await this._daprClient.PublishEventAsync(PubSub.Pictures, Topics.Photobooth.PictureTaken, photoboothPicture, cancellationToken);
+        await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture, cancellationToken);
 
         return photoboothPicture;
     }

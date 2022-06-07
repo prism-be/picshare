@@ -1,12 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="PubSub.cs" company="Prism">
+//  <copyright file="DaprConfiguration.cs" company="Prism">
 //  Copyright (c) Prism. All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Events;
+namespace Prism.Picshare;
 
-public static class PubSub
+public static class DaprConfiguration
 {
-    public const string Pictures = "pubsub-pictures";
+    public const string PubSub = "pubsub";
 }

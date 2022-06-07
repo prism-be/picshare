@@ -37,7 +37,7 @@ public class PictureTakenHandlerTests
         var result = await handler.Handle(new PictureTaken(organisationId, sessionId), CancellationToken.None);
 
         // Assert
-        daprClient.Verify(x => x.PublishEventAsync(PubSub.Pictures, Topics.Photobooth.PictureTaken, It.IsAny<PhotoboothPicture>(), It.IsAny<CancellationToken>()), Times.Once);
+        daprClient.Verify(x => x.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, It.IsAny<PhotoboothPicture>(), It.IsAny<CancellationToken>()), Times.Once);
         Assert.Equal(organisationId, result.OrganisationId);
         Assert.Equal(sessionId, result.SessionId);
     }
