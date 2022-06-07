@@ -68,7 +68,7 @@ public class PictureWatcher : BackgroundService
         _logger.LogInformation("Starting a background processor on {path}", path);
         Directory.CreateDirectory(path);
 
-        _destinationPath = Path.Combine(_env.ContentRootPath, "pictures");
+        _destinationPath = Path.Combine(_env.ContentRootPath, "wwwroot", "pictures");
         Directory.CreateDirectory(_destinationPath);
 
         _watcher = new FileSystemWatcher(path);
@@ -109,6 +109,11 @@ public class PictureWatcher : BackgroundService
                 "fileName", blobName
             }
         });
+        _logger.LogInformation("Picture uploaded on storage: {blobName}", blobName);
+
+        var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
+        File.Move(fullPath, destination);
+        _logger.LogInformation("File moved to local storage: {destination}", destination);
 
         await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureUploaded, photoboothPicture);
     }
