@@ -103,7 +103,7 @@ public class PictureWatcher : BackgroundService
                 File.Move(fullPath, destination);
                 _logger.LogInformation("File moved to local storage: {destination}", destination);
             }
-            catch (Exception exception)
+            catch (IOException exception)
             {
                 _logger.LogError(exception, "Error when reading the picture {photoboothPicture}", photoboothPicture.Id);
                 Thread.Sleep(250);

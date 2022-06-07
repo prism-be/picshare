@@ -4,11 +4,11 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/hubs',
-        destination: 'http://localhost:5047/hubs',
+        source: '/hubs/:slug*',
+        destination: 'http://localhost:5047/hubs/:slug*'
       },
     ]
-  }
+  },
 }
 
 module.exports = nextConfig

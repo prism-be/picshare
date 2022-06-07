@@ -1,11 +1,7 @@
 import type { NextPage } from 'next'
 import React, { useState, useEffect, useRef } from 'react';
 
-import { HubConnectionBuilder } from '@microsoft/signalr';
-
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import {HttpTransportType, HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
 
 const Home: NextPage = () => {
 
@@ -16,14 +12,18 @@ const Home: NextPage = () => {
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
             .withUrl('http://localhost:5047/hubs/photobooth')
-            .withAutomaticReconnect()
+            .configureLogging(LogLevel.Information)
             .build();
 
         setConnection(newConnection);
     }, []);
 
     useEffect(() => {
+        
         if (connection) {
+
+            console.log("Initiate Connection to hub ...");
+            
             connection.start()
                 .then(() => {
                     console.log('Connected!');
@@ -31,7 +31,7 @@ const Home: NextPage = () => {
                     connection.on('PictureTaken', (pictureTaken: any) => {
                         console.log(pictureTaken);
                         setPicture(pictureTaken);
-                        setPictureUrl("http://localhost:5047/pictures/" + pictureTaken.id)
+                        setPictureUrl("/pictures/" + pictureTaken.id)
                     });
                 })
                 .catch((e: any) => console.log('Connection failed: ', e));
