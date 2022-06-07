@@ -8,7 +8,6 @@ using Dapr;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Prism.Picshare;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Domain;
@@ -49,20 +48,17 @@ app.UseCors("ClientPermission");
 app.MapSubscribeHandler();
 app.UseCloudEvents();
 
-app.UseStaticFiles();
 app.UseHealthChecks("/health");
 
-app.MapPost("/take", async ([FromBody] PictureTaken request, IMediator mediator) => Results.Ok(await mediator.Send(request)));
+app.MapPost("/take", async ([FromBody] PictureTaken request, IMediator mediator)
+    => Results.Ok(await mediator.Send(request)));
 
 app.MapHub<PhotoboothHub>("/hubs/photobooth");
 
-app.MapPost(Topics.Photobooth.PictureTaken, [Topic(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken)] async ([FromBody]PhotoboothPicture picture, IHubContext<PhotoboothHub> hubContext) =>
-{
-    await hubContext.Clients.All.SendAsync("PictureTaken", picture);
-    
-    Console.WriteLine("Picture Received received : " + picture);
-    return Results.Ok(picture);
-});
+app.MapPost(Topics.Photobooth.PictureTaken,
+    [Topic(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken)]
+    async ([FromBody] PhotoboothPicture picture, IMediator mediator)
+        => Results.Ok(await mediator.Send(new NotifyPictureTaken(picture))));
 
 // Let's run it !
 await app.RunAsync();
