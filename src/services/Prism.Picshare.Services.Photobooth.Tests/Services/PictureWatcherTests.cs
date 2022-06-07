@@ -134,6 +134,9 @@ public class PictureWatcherTests
         var inMemorySettings = new Dictionary<string, string>
         {
             {
+                "PHOTOBOOTH_ORGANISATION", Guid.NewGuid().ToString()
+            },
+            {
                 "PHOTOBOOTH_SESSION", Guid.NewGuid().ToString()
             }
         };

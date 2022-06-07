@@ -19,8 +19,8 @@ public class PictureWatcher : BackgroundService
     private readonly DaprClient _daprClient;
     private readonly IHostEnvironment _env;
     private readonly ILogger<PictureWatcher> _logger;
+    private readonly string? _destinationPath;
 
-    private string? _destinationPath;
 
     private FileSystemWatcher? _watcher;
 
@@ -30,6 +30,9 @@ public class PictureWatcher : BackgroundService
         _env = env;
         _config = config;
         _daprClient = daprClient;
+        
+        _destinationPath = Path.Combine(_env.ContentRootPath, "wwwroot", "pictures");
+        Directory.CreateDirectory(_destinationPath);
     }
 
     public Guid OrganisationId { get; private set; }
@@ -69,9 +72,6 @@ public class PictureWatcher : BackgroundService
 
         _logger.LogInformation("Starting a background processor on {path}", path);
         Directory.CreateDirectory(path);
-
-        _destinationPath = Path.Combine(_env.ContentRootPath, "wwwroot", "pictures");
-        Directory.CreateDirectory(_destinationPath);
 
         _watcher = new FileSystemWatcher(path);
         _watcher.Created += NewPictureCreated;
