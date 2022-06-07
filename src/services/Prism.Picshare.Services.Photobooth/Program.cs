@@ -31,8 +31,20 @@ builder.Services.AddHealthChecks();
 builder.Services.AddHostedService<PictureWatcher>();
 
 builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClientPermission", policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins("http://localhost:3000")
+            .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
+
+app.UseCors("ClientPermission");
 
 app.MapSubscribeHandler();
 app.UseCloudEvents();

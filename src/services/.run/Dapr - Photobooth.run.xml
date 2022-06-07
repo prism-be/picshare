@@ -1,7 +1,7 @@
 ﻿<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Dapr - Photobooth" type="RunNativeExe" factoryName="Native Executable">
     <option name="EXE_PATH" value="$PROJECT_DIR$/../../../../../../dapr/dapr.exe" />
-    <option name="PROGRAM_PARAMETERS" value="run -a &quot;picshare-photobooth&quot; -d &quot;./components&quot; --app-port 8001 -- dotnet run" />
+    <option name="PROGRAM_PARAMETERS" value="run -a &quot;picshare-photobooth&quot; -d &quot;./components&quot; --app-port 5047 -- dotnet run" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Prism.Picshare.Services.Photobooth/" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <envs>
@@ -10,6 +10,8 @@
       <env name="PHOTOBOOTH_ORGANISATION" value="23a47be4-a501-4641-b73a-b497813b8e06" />
     </envs>
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
-    <method v="2" />
+    <method v="2">
+      <option name="Build Solution" enabled="true" />
+    </method>
   </configuration>
 </component>
