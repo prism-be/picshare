@@ -11,7 +11,7 @@ const Home: NextPage = () => {
 
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5047/hubs/photobooth')
+            .withUrl( process.env.NEXT_PUBLIC_BACKEND_URL + 'hubs/photobooth')
             .configureLogging(LogLevel.Information)
             .build();
 
@@ -31,7 +31,7 @@ const Home: NextPage = () => {
                     connection.on('PictureTaken', (pictureTaken: any) => {
                         console.log(pictureTaken);
                         setPicture(pictureTaken);
-                        setPictureUrl("/pictures/" + pictureTaken.id)
+                        setPictureUrl(process.env.NEXT_PUBLIC_BACKEND_URL + "pictures/" + pictureTaken.id)
                     });
                 })
                 .catch((e: any) => console.log('Connection failed: ', e));

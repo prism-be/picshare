@@ -53,6 +53,9 @@ app.UseHealthChecks("/health");
 app.MapPost("/take", async ([FromBody] PictureTaken request, IMediator mediator)
     => Results.Ok(await mediator.Send(request)));
 
+app.MapGet("/pictures/{pictureId}", ([FromRoute] Guid pictureId, IHostEnvironment env)
+    => Results.File(Path.Combine(env.ContentRootPath,"wwwroot", "pictures", pictureId.ToString())));
+
 app.MapHub<PhotoboothHub>("/hubs/photobooth");
 
 app.MapPost(Topics.Photobooth.PictureTaken,
