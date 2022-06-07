@@ -4,7 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Dapr;
 using Dapr.Client;
+using Polly;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Exceptions;
@@ -93,9 +95,27 @@ public class PictureWatcher : BackgroundService
             Id = Guid.NewGuid(), OrganisationId = OrganisationId, SessionId = SessionId, OriginalFileName = Path.GetFileName(fullPath)
         };
 
+        var data = await File.ReadAllBytesAsync(fullPath);
+        var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
+        File.Move(fullPath, destination);
+        _logger.LogInformation("File moved to local storage: {destination}", destination);
+        
         await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
 
-        var data = await File.ReadAllBytesAsync(fullPath);
+        var policy = Policy.Handle<DaprException>()
+            .RetryForever(onRetry: exception =>
+            {
+                _logger.LogError(exception, "Error when uploading the picture {photoboothPicture}", photoboothPicture.Id);
+            });
+
+        await policy.Execute(async () =>
+        {
+            await UploadFile(photoboothPicture, data);
+        });
+    }
+
+    private async Task UploadFile(PhotoboothPicture photoboothPicture, byte[] data)
+    {
         var dataBase64 = Convert.ToBase64String(data);
 
         var blobName = $"{OrganisationId}/{photoboothPicture.Id}/source";
@@ -110,10 +130,6 @@ public class PictureWatcher : BackgroundService
             }
         });
         _logger.LogInformation("Picture uploaded on storage: {blobName}", blobName);
-
-        var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
-        File.Move(fullPath, destination);
-        _logger.LogInformation("File moved to local storage: {destination}", destination);
 
         await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureUploaded, photoboothPicture);
     }
