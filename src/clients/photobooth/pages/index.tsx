@@ -1,13 +1,14 @@
 import type {NextPage} from 'next'
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {HttpTransportType, HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
+import {HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
+import QRCodeSVG from "qrcode.react";
 
 const Home: NextPage = () => {
 
     const [connection, setConnection] = useState<any>(null);
-    const [picture, setPicture] = useState<any>(null);
     const [pictureUrl, setPictureUrl] = useState<any>(null);
+    const [frontPictureUrl, setFrontPictureUrl] = useState<any>(null);
 
     let timer: any;
 
@@ -32,11 +33,13 @@ const Home: NextPage = () => {
 
                     connection.on('PictureTaken', (pictureTaken: any) => {
                         console.log(pictureTaken);
-                        setPicture(pictureTaken);
                         setPictureUrl(process.env.NEXT_PUBLIC_BACKEND_URL + "/pictures/" + pictureTaken.id)
-                        
+                        setFrontPictureUrl(process.env.NEXT_PUBLIC_FRONT_URL + "/taken/" + pictureTaken.sessionId + "/" + pictureTaken.id);
                         clearTimeout(timer);
-                        timer = setTimeout(() => { setPictureUrl(null); }, 2 * 60 * 1000);
+                        timer = setTimeout(() => {
+                            setPictureUrl(null);
+                            setFrontPictureUrl(null);
+                        }, 2 * 60 * 1000);
                     });
                 })
                 .catch((e: any) => console.log('Connection failed: ', e));
@@ -44,6 +47,8 @@ const Home: NextPage = () => {
     }, [connection]);
 
     return (
+
+
         <div>
             {pictureUrl && <div className="w-full p-3 h-screen">
                 <div className="w-full h-full">
@@ -51,9 +56,13 @@ const Home: NextPage = () => {
                          className="object-contain  w-full h-full"
                          alt={"test"}/>
                 </div>
+                {frontPictureUrl && <div className={"absolute top-5 left-5"}>
+                    <QRCodeSVG size={128} value={frontPictureUrl}/>
+                </div>
+                }
             </div>}
-            
-            
+
+
             {!pictureUrl && <div className="w-full text-center">
                 <h1 className="text-5xl p-5 font-bold underline">
                     Bonjour et bienvenue !
@@ -71,7 +80,8 @@ const Home: NextPage = () => {
                             Souriez et appuyez sur le bouton !
                         </li>
                         <li className={"pt-5 italic text-xl"}>
-                            La photo reste affichée maximum 2 minutes et le QR code vous permet de la retrouver sur votre téléphone.
+                            La photo reste affichée maximum 2 minutes et le QR code vous permet de la retrouver sur
+                            votre téléphone.
                         </li>
                     </ul>
                 </div>
@@ -79,11 +89,13 @@ const Home: NextPage = () => {
                     <img src="/say-cheese.svg" className={"w-96 m-auto"} alt={"Say Cheese !"}/>
                 </div>
                 <div className={"text-center text-xl italic"}>
-                    Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n'hésitez pas à leur laisser un souvenir !
+                    Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n'hésitez pas à
+                    leur laisser un souvenir !
                 </div>
-            </div> }
 
-            
+            </div>}
+
+
         </div>
     )
 }

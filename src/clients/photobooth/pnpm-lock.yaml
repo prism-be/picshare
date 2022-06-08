@@ -12,6 +12,7 @@ specifiers:
   http-proxy-middleware: ^2.0.6
   next: 12.1.6
   postcss: ^8.4.14
+  qrcode.react: ^3.0.2
   react: 18.1.0
   react-dom: 18.1.0
   tailwindcss: ^3.0.24
@@ -33,6 +34,7 @@ devDependencies:
   express: 4.18.1
   http-proxy-middleware: 2.0.6
   postcss: 8.4.14
+  qrcode.react: 3.0.2_react@18.1.0
   tailwindcss: 3.0.24
   typescript: 4.7.3
 
@@ -2060,6 +2062,14 @@ packages:
   /punycode/2.1.1:
     resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
     engines: {node: '>=6'}
+
+  /qrcode.react/3.0.2_react@18.1.0:
+    resolution: {integrity: sha512-8F3SGxSkNb3fMIHdlseqjFjLbsPrF3WvF/1MOboSUUHytT537W8f/FtbdA3XFIHDrc+TrRBjTI/QLmwhAIGWWw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.1.0
+    dev: true
 
   /qs/6.10.3:
     resolution: {integrity: sha512-wr7M2E0OFRfIfJZjKGieI8lBKb7fRCH4Fv5KNPEs7gJ8jadvotdsS08PzOKR7opXhZ/Xkjtt3WF9g38drmyRqQ==}
