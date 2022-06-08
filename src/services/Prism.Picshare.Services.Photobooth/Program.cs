@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-//  <copyright file="Program.cs" company="Prism">
-//  Copyright (c) Prism. All rights reserved.
+//  <copyright file = "Program.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins("http://localhost:3000")
+            .WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Value.Split(","))
             .AllowCredentials();
     });
 });
@@ -53,7 +53,7 @@ app.UseHealthChecks("/health");
 app.MapPost("/take", async ([FromBody] PictureTaken request, IMediator mediator)
     => Results.Ok(await mediator.Send(request)));
 
-app.MapGet("/pictures/{pictureId}", ([FromRoute] Guid pictureId, IHostEnvironment env)
+app.MapGet("/pictures/{pictureId:guid}", ([FromRoute] Guid pictureId, IHostEnvironment env)
     => Results.File(Path.Combine(env.ContentRootPath, "wwwroot", "pictures", pictureId.ToString())));
 
 app.MapHub<PhotoboothHub>("/hubs/photobooth");
