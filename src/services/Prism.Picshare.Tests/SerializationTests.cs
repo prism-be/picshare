@@ -15,6 +15,20 @@ namespace Prism.Picshare.Tests;
 public class SerializationTests
 {
     [Fact]
+    public void Album_Ok()
+    {
+        // Arrange
+        var source = new Album()
+        {
+            Id = Guid.NewGuid(), 
+            Name = Guid.NewGuid().ToString(),
+            OrganisationId = Guid.NewGuid()
+        };
+
+        CheckSerialization(source);
+    }
+    
+    [Fact]
     public void Organisation_Ok()
     {
         // Arrange

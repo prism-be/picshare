@@ -12,9 +12,9 @@ public class Album
 {
     public const string Store = "album-store";
     
-    public Album(List<Guid> pictures)
+    public Album()
     {
-        this.Pictures = pictures;
+        this.Pictures = new List<Guid>();
         this.Name = string.Empty;
     }
 
