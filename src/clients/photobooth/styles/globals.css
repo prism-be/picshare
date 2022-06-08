@@ -40,7 +40,7 @@ a, a:link, a:visited, a:hover {
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Material Icons';
+  font-family: 'Material Icons, sans-serif';
   font-style: normal;
   font-weight: 400;
   src: url(/fonts/MaterialIcons-Regular.woff2) format('woff2');

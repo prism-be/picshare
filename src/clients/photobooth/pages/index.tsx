@@ -62,7 +62,7 @@ const Home: NextPage = () => {
         <div>
             {pictureUrl && <div className="w-full p-3 h-screen">
                 <div className="w-full h-full">
-                    <Image src={pictureUrl}
+                    <Image src={pictureUrl} layout={"fill"}
                          className="object-contain  w-full h-full"
                          alt={"test"}/>
                 </div>
@@ -95,8 +95,8 @@ const Home: NextPage = () => {
                         </li>
                     </ul>
                 </div>
-                <div className={"flex items-center"}>
-                    <Image src="/say-cheese.svg" className={"w-96 m-auto"} alt={"Say Cheese !"}/>
+                <div className={"text-center"}>
+                    <Image width={500} height={500} src="/say-cheese.svg" className={"w-96 m-auto"} alt={"Say Cheese !"}/>
                 </div>
                 <div className={"text-center text-xl italic"}>
                     Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n&apos;hésitez pas à
