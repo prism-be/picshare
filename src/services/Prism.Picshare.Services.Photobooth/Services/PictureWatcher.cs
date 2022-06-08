@@ -89,7 +89,10 @@ public class PictureWatcher : BackgroundService
 
         var photoboothPicture = new PhotoboothPicture
         {
-            Id = Guid.NewGuid(), OrganisationId = OrganisationId, SessionId = SessionId, OriginalFileName = Path.GetFileName(fullPath)
+            Id = Guid.NewGuid(),
+            OrganisationId = OrganisationId,
+            SessionId = SessionId,
+            OriginalFileName = Path.GetFileName(fullPath)
         };
 
         byte[]? data = null;

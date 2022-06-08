@@ -18,16 +18,16 @@ public class SerializationTests
     public void Album_Ok()
     {
         // Arrange
-        var source = new Album()
+        var source = new Album
         {
             Id = Guid.NewGuid(), 
-            Name = Guid.NewGuid().ToString(),
+            Name = Guid.NewGuid().ToString(), 
             OrganisationId = Guid.NewGuid()
         };
 
         CheckSerialization(source);
     }
-    
+
     [Fact]
     public void Organisation_Ok()
     {
@@ -55,7 +55,10 @@ public class SerializationTests
         // Arrange
         var source = new Picture
         {
-            Id = Guid.NewGuid(), OrganisationId = Guid.NewGuid(), Source = PictureSource.Upload, CreationDate = DateTime.Today
+            Id = Guid.NewGuid(), 
+            OrganisationId = Guid.NewGuid(),
+            Source = PictureSource.Upload,
+            CreationDate = DateTime.Today
         };
 
         CheckSerialization(source);
