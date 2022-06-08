@@ -1,5 +1,5 @@
 ﻿import type { NextApiRequest, NextApiResponse } from 'next'
-import {Config} from "../contracts/config";
+import Config from "../contracts/config";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Config>) {
     res.status(200).json(
