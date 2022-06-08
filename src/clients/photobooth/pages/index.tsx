@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
 import QRCodeSVG from "qrcode.react";
 import Image from "next/image";
+import {Config} from "./contracts/config";
 
 const Home: NextPage = () => {
 
@@ -12,48 +13,65 @@ const Home: NextPage = () => {
     const [frontPictureUrl, setFrontPictureUrl] = useState<any>(null);
 
     useEffect(() => {
-        const newConnection = new HubConnectionBuilder()
-            .withUrl(process.env.NEXT_PUBLIC_BACKEND_URL + '/hubs/photobooth')
-            .configureLogging(LogLevel.Information)
-            .build();
 
-        setConnection(newConnection);
+        const initiateConnection = async () => {
+            const response = await fetch("/api/config");
+            const config: Config = await response.json();
+
+            const newConnection = new HubConnectionBuilder()
+                .withUrl(config.publicBackendUrl + '/hubs/photobooth')
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            setConnection(newConnection);
+        };
+
+        initiateConnection().catch(console.error);
+
     }, []);
 
     useEffect(() => {
-
-        let timer: any;
         
-        if (connection) {
+        const startListening = async () => {
+            const response = await fetch("/api/config");
+            const config: Config = await response.json();
 
-            console.log("Initiate Connection to hub ...");
+            let timer: any;
 
-            connection.start()
-                .then(() => {
-                    console.log('Connected!');
+            if (connection) {
 
-                    connection.on('PictureTaken', (photoboothPicture: any) => {
-                        console.log(photoboothPicture);
-                        setPictureUrl(process.env.NEXT_PUBLIC_BACKEND_URL + "/pictures/" + photoboothPicture.id)
-                        clearTimeout(timer);
-                        timer = setTimeout(() => {
-                            setPictureUrl(null);
-                            setFrontPictureUrl(null);
-                        }, 2 * 60 * 1000);
-                    });
+                console.log("Initiate Connection to hub ...");
 
-                    connection.on('PictureUploaded', (photoboothPicture: any) => {
-                        console.log(photoboothPicture);
-                        setFrontPictureUrl(process.env.NEXT_PUBLIC_FRONT_URL + "/taken/" + photoboothPicture.sessionId + "/" + photoboothPicture.id);
-                        clearTimeout(timer);
-                        timer = setTimeout(() => {
-                            setPictureUrl(null);
-                            setFrontPictureUrl(null);
-                        }, 2 * 60 * 1000);
-                    });
-                })
-                .catch((e: any) => console.log('Connection failed: ', e));
+                connection.start()
+                    .then(() => {
+                        console.log('Connected!');
+
+                        connection.on('PictureTaken', (photoboothPicture: any) => {
+                            console.log(photoboothPicture);
+                            setPictureUrl(config.publicBackendUrl + "/pictures/" + photoboothPicture.id)
+                            clearTimeout(timer);
+                            timer = setTimeout(() => {
+                                setPictureUrl(null);
+                                setFrontPictureUrl(null);
+                            }, 2 * 60 * 1000);
+                        });
+
+                        connection.on('PictureUploaded', (photoboothPicture: any) => {
+                            console.log(photoboothPicture);
+                            setFrontPictureUrl(config.publicFrontUrl + "/taken/" + photoboothPicture.sessionId + "/" + photoboothPicture.id);
+                            clearTimeout(timer);
+                            timer = setTimeout(() => {
+                                setPictureUrl(null);
+                                setFrontPictureUrl(null);
+                            }, 2 * 60 * 1000);
+                        });
+                    })
+                    .catch((e: any) => console.log('Connection failed: ', e));
+            }
         }
+
+        startListening().catch(console.error);
+        
     }, [connection]);
 
     return (
