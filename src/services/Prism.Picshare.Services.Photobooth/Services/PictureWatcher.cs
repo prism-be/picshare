@@ -78,7 +78,7 @@ public class PictureWatcher : BackgroundService
         });
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var organisationId = _config.GetValue<string>("PHOTOBOOTH_ORGANISATION");
 
@@ -113,17 +113,16 @@ public class PictureWatcher : BackgroundService
         _logger.LogInformation("Starting a background processor on {path}", path);
         Directory.CreateDirectory(path);
 
-        var watcher = new FileSystemWatcher(path);
-        watcher.Created += NewPictureCreated;
-        watcher.EnableRaisingEvents = true;
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            foreach (var file in Directory.GetFiles(path))
+            {
+                _logger.LogInformation("New file found : {file}", file);
+                await ProcessPictureAsync(file);
+            }
 
-        return Task.CompletedTask;
-    }
-
-    private void NewPictureCreated(object sender, FileSystemEventArgs e)
-    {
-        var task = ProcessPictureAsync(e.FullPath);
-        task.Wait();
+            Thread.Sleep(1000);
+        }
     }
 
     private async Task UploadFile(PhotoboothPicture photoboothPicture, byte[] data)
