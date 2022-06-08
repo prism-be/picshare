@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
 import QRCodeSVG from "qrcode.react";
 import Image from "next/image";
-import Config from "./contracts/config";
+import Config from "../lib/contracts/config";
 
 const Home: NextPage = () => {
 

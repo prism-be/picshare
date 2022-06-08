@@ -3,6 +3,7 @@
   <component name="UserContentModel">
     <attachedFolders>
       <Path>../../.github/workflows</Path>
+      <Path>../../docker</Path>
       <Path>../clients/photobooth</Path>
       <Path>HttpRequests</Path>
       <Path>components</Path>
