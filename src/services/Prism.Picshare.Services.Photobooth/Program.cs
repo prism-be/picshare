@@ -30,13 +30,29 @@ builder.Services.AddHealthChecks();
 builder.Services.AddHostedService<PictureWatcher>();
 
 builder.Services.AddSignalR();
+
+var originsConfiguration = builder.Configuration.GetSection("AllowedOrigins")?.Value?.Split(",");
+var originsEnvironement = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(",");
+
+var origins = new List<string>();
+
+if (originsConfiguration != null)
+{
+    origins.AddRange(originsConfiguration);
+}
+
+if (originsEnvironement != null)
+{
+    origins.AddRange(originsEnvironement);
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ClientPermission", policy =>
     {
         policy.AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Value.Split(","))
+            .WithOrigins(origins.ToArray())
             .AllowCredentials();
     });
 });
