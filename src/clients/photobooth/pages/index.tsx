@@ -21,6 +21,7 @@ const Home: NextPage = () => {
             const newConnection = new HubConnectionBuilder()
                 .withUrl(config.publicBackendUrl + '/hubs/photobooth')
                 .configureLogging(LogLevel.Information)
+                .withAutomaticReconnect()
                 .build();
 
             setConnection(newConnection);
@@ -31,7 +32,7 @@ const Home: NextPage = () => {
     }, []);
 
     useEffect(() => {
-        
+
         const startListening = async () => {
             const response = await fetch("/api/config");
             const config: Config = await response.json();
@@ -65,13 +66,20 @@ const Home: NextPage = () => {
                                 setFrontPictureUrl(null);
                             }, 2 * 60 * 1000);
                         });
+
+                        connection.onclose(() => {
+                            window.location.reload();
+                        });
                     })
-                    .catch((e: any) => console.log('Connection failed: ', e));
+                    .catch((e: any) => {
+                        console.log('Connection failed: ', e);
+                        window.location.reload();
+                    });
             }
         }
 
         startListening().catch(console.error);
-        
+
     }, [connection]);
 
     return (
@@ -81,8 +89,8 @@ const Home: NextPage = () => {
             {pictureUrl && <div className="w-full p-3 h-screen">
                 <div className="w-full h-full">
                     <Image src={pictureUrl} layout={"fill"}
-                         className="object-contain  w-full h-full"
-                         alt={"test"}/>
+                           className="object-contain  w-full h-full"
+                           alt={"test"}/>
                 </div>
                 {frontPictureUrl && <div className={"absolute top-5 left-5"}>
                     <QRCodeSVG size={128} value={frontPictureUrl}/>
@@ -114,10 +122,12 @@ const Home: NextPage = () => {
                     </ul>
                 </div>
                 <div className={"text-center"}>
-                    <Image width={500} height={500} src="/say-cheese.svg" className={"w-96 m-auto"} alt={"Say Cheese !"}/>
+                    <Image width={500} height={500} src="/say-cheese.svg" className={"w-96 m-auto"}
+                           alt={"Say Cheese !"}/>
                 </div>
                 <div className={"text-center text-xl italic"}>
-                    Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n&apos;hésitez pas à
+                    Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n&apos;hésitez pas
+                    à
                     leur laisser un souvenir !
                 </div>
 
