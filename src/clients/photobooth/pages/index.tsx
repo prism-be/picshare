@@ -3,14 +3,13 @@ import React, {useEffect, useState} from 'react';
 
 import {HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
 import QRCodeSVG from "qrcode.react";
+import Image from "next/image";
 
 const Home: NextPage = () => {
 
     const [connection, setConnection] = useState<any>(null);
     const [pictureUrl, setPictureUrl] = useState<any>(null);
     const [frontPictureUrl, setFrontPictureUrl] = useState<any>(null);
-
-    let timer: any;
 
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
@@ -23,6 +22,8 @@ const Home: NextPage = () => {
 
     useEffect(() => {
 
+        let timer: any;
+        
         if (connection) {
 
             console.log("Initiate Connection to hub ...");
@@ -61,7 +62,7 @@ const Home: NextPage = () => {
         <div>
             {pictureUrl && <div className="w-full p-3 h-screen">
                 <div className="w-full h-full">
-                    <img src={pictureUrl}
+                    <Image src={pictureUrl}
                          className="object-contain  w-full h-full"
                          alt={"test"}/>
                 </div>
@@ -77,7 +78,7 @@ const Home: NextPage = () => {
                     Bonjour et bienvenue !
                 </h1>
                 <div>
-                    <h2 className={"text-4xl underline"}>Mode d'emploi</h2>
+                    <h2 className={"text-4xl underline"}>Mode d&apos;emploi</h2>
                     <ul className={"text-2xl pt-5"}>
                         <li>
                             Positionnez vous au niveau de la ligne au sol
@@ -95,10 +96,10 @@ const Home: NextPage = () => {
                     </ul>
                 </div>
                 <div className={"flex items-center"}>
-                    <img src="/say-cheese.svg" className={"w-96 m-auto"} alt={"Say Cheese !"}/>
+                    <Image src="/say-cheese.svg" className={"w-96 m-auto"} alt={"Say Cheese !"}/>
                 </div>
                 <div className={"text-center text-xl italic"}>
-                    Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n'hésitez pas à
+                    Les photos que vous prenez seront envoyées à Hadrien et Laurie après le mariage, n&apos;hésitez pas à
                     leur laisser un souvenir !
                 </div>
 
