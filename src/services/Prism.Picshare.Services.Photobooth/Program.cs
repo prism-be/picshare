@@ -50,18 +50,26 @@ app.UseCloudEvents();
 
 app.UseHealthChecks("/health");
 
+// Direct API
 app.MapPost("/take", async ([FromBody] PictureTaken request, IMediator mediator)
     => Results.Ok(await mediator.Send(request)));
 
 app.MapGet("/pictures/{pictureId:guid}", ([FromRoute] Guid pictureId, IHostEnvironment env)
     => Results.File(Path.Combine(env.ContentRootPath, "wwwroot", "pictures", pictureId.ToString())));
 
+// SignalR
 app.MapHub<PhotoboothHub>("/hubs/photobooth");
 
+// PubSub Events
 app.MapPost(Topics.Photobooth.PictureTaken,
     [Topic(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken)]
     async ([FromBody] PhotoboothPicture picture, IMediator mediator)
         => Results.Ok(await mediator.Send(new NotifyPictureTaken(picture))));
+
+app.MapPost(Topics.Photobooth.PictureUploaded,
+    [Topic(DaprConfiguration.PubSub, Topics.Photobooth.PictureUploaded)]
+    async ([FromBody] PhotoboothPicture picture, IMediator mediator)
+        => Results.Ok(await mediator.Send(new NotifyPictureUploaded(picture))));
 
 // Let's run it !
 await app.RunAsync();

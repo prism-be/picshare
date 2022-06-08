@@ -31,10 +31,19 @@ const Home: NextPage = () => {
                 .then(() => {
                     console.log('Connected!');
 
-                    connection.on('PictureTaken', (pictureTaken: any) => {
-                        console.log(pictureTaken);
-                        setPictureUrl(process.env.NEXT_PUBLIC_BACKEND_URL + "/pictures/" + pictureTaken.id)
-                        setFrontPictureUrl(process.env.NEXT_PUBLIC_FRONT_URL + "/taken/" + pictureTaken.sessionId + "/" + pictureTaken.id);
+                    connection.on('PictureTaken', (photoboothPicture: any) => {
+                        console.log(photoboothPicture);
+                        setPictureUrl(process.env.NEXT_PUBLIC_BACKEND_URL + "/pictures/" + photoboothPicture.id)
+                        clearTimeout(timer);
+                        timer = setTimeout(() => {
+                            setPictureUrl(null);
+                            setFrontPictureUrl(null);
+                        }, 2 * 60 * 1000);
+                    });
+
+                    connection.on('PictureUploaded', (photoboothPicture: any) => {
+                        console.log(photoboothPicture);
+                        setFrontPictureUrl(process.env.NEXT_PUBLIC_FRONT_URL + "/taken/" + photoboothPicture.sessionId + "/" + photoboothPicture.id);
                         clearTimeout(timer);
                         timer = setTimeout(() => {
                             setPictureUrl(null);
