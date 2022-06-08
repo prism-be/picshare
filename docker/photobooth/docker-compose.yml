@@ -1,0 +1,45 @@
+version: '3'
+services:
+  frontend:
+    image: "simonbaudart/picshare:client-photobooth-latest"
+    ports:
+      - "3000:3000"
+    environment:
+      - PUBLIC_BACKEND_URL=http://localhost:3001
+      - PUBLIC_FRONT_URL=https://photobooth.picshare.be
+  
+  backend:
+    image: "simonbaudart/picshare:service-photobooth-latest"
+    ports:
+      - "3001:80"
+    depends_on:
+      - placement
+    networks:
+      - hello-dapr
+    environment:
+      - ALLOWED_ORIGINS=http://localhost:3000
+  
+  backend-dapr:
+    image: "daprio/daprd:edge"
+    command: [
+      "./daprd",
+      "-app-id", "nodeapp",
+      "-app-port", "80",
+      "-placement-host-address", "placement:50006"
+    ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      - backend
+    network_mode: "service:backend"
+
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
+    ports:
+      - "50006:50006"
+    networks:
+      - hello-dapr
+
+networks:
+  hello-dapr:
