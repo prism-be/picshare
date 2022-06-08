@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 using Dapr.Client;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Pose;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Photobooth.Commands;
-using Shimmy;
 using Xunit;
 
 namespace Prism.Picshare.Services.Photobooth.Tests;

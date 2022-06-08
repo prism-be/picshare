@@ -168,34 +168,34 @@ dotnet_naming_rule.method_should_be_pascal_case.style = pascal_case
 
 dotnet_naming_symbols.class.applicable_kinds = class
 dotnet_naming_symbols.class.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.class.required_modifiers = 
+dotnet_naming_symbols.class.required_modifiers =
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.interface.required_modifiers = 
+dotnet_naming_symbols.interface.required_modifiers =
 
 dotnet_naming_symbols.method.applicable_kinds = method
 dotnet_naming_symbols.method.applicable_accessibilities = public
-dotnet_naming_symbols.method.required_modifiers = 
+dotnet_naming_symbols.method.required_modifiers =
 
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.types.required_modifiers = 
+dotnet_naming_symbols.types.required_modifiers =
 
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.non_field_members.required_modifiers = 
+dotnet_naming_symbols.non_field_members.required_modifiers =
 
 # Naming styles
 
-dotnet_naming_style.pascal_case.required_prefix = 
-dotnet_naming_style.pascal_case.required_suffix = 
-dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 dotnet_naming_style.begins_with_i.required_prefix = I
-dotnet_naming_style.begins_with_i.required_suffix = 
-dotnet_naming_style.begins_with_i.word_separator = 
+dotnet_naming_style.begins_with_i.required_suffix =
+dotnet_naming_style.begins_with_i.word_separator =
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 # Microsoft .NET properties
@@ -250,12 +250,12 @@ dotnet_naming_symbols.method_symbols.applicable_kinds = method
 dotnet_naming_symbols.property_symbols.applicable_accessibilities = *
 dotnet_naming_symbols.property_symbols.applicable_kinds = property
 dotnet_naming_symbols.types_and_namespaces_symbols.applicable_accessibilities = *
-dotnet_naming_symbols.types_and_namespaces_symbols.applicable_kinds = namespace,class,struct,enum,delegate
+dotnet_naming_symbols.types_and_namespaces_symbols.applicable_kinds = namespace, class, struct, enum, delegate
 dotnet_naming_symbols.unity_serialized_field_symbols.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds =
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_applicable_kinds = unity_serialised_field
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_required_modifiers = instance
-file_header_template = -----------------------------------------------------------------------\n <copyright file="{fileName}" company="Prism">\n Copyright (c) Prism. All rights reserved.\n </copyright>\n-----------------------------------------------------------------------
+file_header_template = -----------------------------------------------------------------------\n <copyright file = "{fileName}" company = "Prism">\n Copyright (c) Prism.All rights reserved.\n </copyright>\n-----------------------------------------------------------------------
 
 # ReSharper properties
 resharper_arguments_skip_single = true
@@ -277,7 +277,7 @@ resharper_csharp_naming_rule.property = AaBb
 resharper_csharp_naming_rule.types_and_namespaces = AaBb
 resharper_csharp_wrap_lines = false
 resharper_enforce_line_ending_style = true
-resharper_instance_members_qualify_declared_in = 
+resharper_instance_members_qualify_declared_in =
 resharper_modifiers_order = public private protected internal static extern new virtual abstract sealed override readonly unsafe volatile async
 resharper_place_accessorholder_attribute_on_same_line = false
 resharper_place_simple_initializer_on_single_line = false

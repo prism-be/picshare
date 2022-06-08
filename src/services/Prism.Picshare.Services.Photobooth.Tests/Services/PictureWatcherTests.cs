@@ -24,6 +24,71 @@ namespace Prism.Picshare.Services.Photobooth.Tests.Services;
 
 public class PictureWatcherTests
 {
+
+    [Fact]
+    public async Task Execute_Missing_PHOTOBOOTH_ORGANISATION()
+    {
+        // Arrange
+        var inMemorySettings = new Dictionary<string, string>
+        {
+            {
+                "PHOTOBOOTH_SESSION", Guid.NewGuid().ToString()
+            }
+        };
+
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        var logger = new Mock<ILogger<PictureWatcher>>();
+        var env = new HostingEnvironment
+        {
+            ContentRootPath = Path.GetTempPath()
+        };
+
+        var daprClient = new Mock<DaprClient>();
+
+        var watcher = new PictureWatcher(logger.Object, env, config, daprClient.Object);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<MissingConfigurationException>(async () => await watcher.StartAsync(CancellationToken.None));
+
+        // Assert
+        Assert.Equal("Environment variable PHOTOBOOTH_ORGANISATION not found, cannot continue.", ex.Message);
+    }
+
+    [Fact]
+    public async Task Execute_Missing_PHOTOBOOTH_SESSION()
+    {
+        // Arrange
+        var inMemorySettings = new Dictionary<string, string>
+        {
+            {
+                "PHOTOBOOTH_ORGANISATION", Guid.NewGuid().ToString()
+            }
+        };
+
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        var logger = new Mock<ILogger<PictureWatcher>>();
+        var env = new HostingEnvironment
+        {
+            ContentRootPath = Path.GetTempPath()
+        };
+
+        var daprClient = new Mock<DaprClient>();
+
+        var watcher = new PictureWatcher(logger.Object, env, config, daprClient.Object);
+
+        // Act
+        var ex = await Assert.ThrowsAsync<MissingConfigurationException>(async () => await watcher.StartAsync(CancellationToken.None));
+
+        // Assert
+        Assert.Equal("Environment variable PHOTOBOOTH_SESSION not found, cannot continue.", ex.Message);
+    }
+
     [Fact]
     public async Task Execute_Ok()
     {
@@ -63,70 +128,6 @@ public class PictureWatcherTests
         Assert.Equal(sessionId, watcher.SessionId);
     }
 
-    [Fact]
-    public async Task Execute_Missing_PHOTOBOOTH_SESSION()
-    {
-        // Arrange
-        var inMemorySettings = new Dictionary<string, string>
-        {
-            {
-                "PHOTOBOOTH_ORGANISATION", Guid.NewGuid().ToString()
-            }
-        };
-
-        var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(inMemorySettings)
-            .Build();
-
-        var logger = new Mock<ILogger<PictureWatcher>>();
-        var env = new HostingEnvironment
-        {
-            ContentRootPath = Path.GetTempPath()
-        };
-
-        var daprClient = new Mock<DaprClient>();
-
-        var watcher = new PictureWatcher(logger.Object, env, config, daprClient.Object);
-
-        // Act
-        var ex = await Assert.ThrowsAsync<MissingConfigurationException>(async () => await watcher.StartAsync(CancellationToken.None));
-
-        // Assert
-        Assert.Equal("Environment variable PHOTOBOOTH_SESSION not found, cannot continue.", ex.Message);
-    }
-
-    [Fact]
-    public async Task Execute_Missing_PHOTOBOOTH_ORGANISATION()
-    {
-        // Arrange
-        var inMemorySettings = new Dictionary<string, string>
-        {
-            {
-                "PHOTOBOOTH_SESSION", Guid.NewGuid().ToString()
-            }
-        };
-
-        var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(inMemorySettings)
-            .Build();
-
-        var logger = new Mock<ILogger<PictureWatcher>>();
-        var env = new HostingEnvironment
-        {
-            ContentRootPath = Path.GetTempPath()
-        };
-
-        var daprClient = new Mock<DaprClient>();
-
-        var watcher = new PictureWatcher(logger.Object, env, config, daprClient.Object);
-
-        // Act
-        var ex = await Assert.ThrowsAsync<MissingConfigurationException>(async () => await watcher.StartAsync(CancellationToken.None));
-
-        // Assert
-        Assert.Equal("Environment variable PHOTOBOOTH_ORGANISATION not found, cannot continue.", ex.Message);
-    }
-    
     [Fact]
     public async Task ProcessPictureAsync_Ok()
     {

@@ -14,7 +14,7 @@ public class Organisation
 
     public Organisation()
     {
-        this.Id = Guid.NewGuid();
+        Id = Guid.NewGuid();
     }
 
     [JsonPropertyName("id")]

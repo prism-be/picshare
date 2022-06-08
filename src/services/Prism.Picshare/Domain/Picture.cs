@@ -14,10 +14,13 @@ public class Picture
 
     public Picture()
     {
-        this.Id = Guid.NewGuid();
-        this.Source = PictureSource.Unknown;
-        this.CreationDate = DateTime.UtcNow;
+        Id = Guid.NewGuid();
+        Source = PictureSource.Unknown;
+        CreationDate = DateTime.UtcNow;
     }
+
+    [JsonPropertyName("published")]
+    public bool Published { get; set; }
 
     [JsonPropertyName("creationDate")]
     public DateTime CreationDate { get; set; }
@@ -27,9 +30,6 @@ public class Picture
 
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
-
-    [JsonPropertyName("published")]
-    public bool Published { get; set; }
 
     [JsonPropertyName("source")]
     public PictureSource Source { get; set; }

@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -29,13 +28,12 @@ public class NotifyPictureTakenHandlerTests
             Id = Guid.NewGuid()
         };
 
-
         var all = new Mock<IClientProxy>();
         var clients = new Mock<IHubClients>();
         clients.Setup(x => x.All).Returns(all.Object);
         var hub = new Mock<IHubContext<PhotoboothHub>>();
         hub.Setup(x => x.Clients).Returns(clients.Object);
-        
+
         var logger = new Mock<ILogger<NotifyPictureTakenHandler>>();
 
         var handler = new NotifyPictureTakenHandler(hub.Object, logger.Object);

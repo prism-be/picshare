@@ -22,7 +22,10 @@ public class ValidationBehaviorTests
     public async Task Handle_Invalid()
     {
         // Arrange
-        var validators = new List<IValidator<DummyRequest>> { new DummyRequestValidator() };
+        var validators = new List<IValidator<DummyRequest>>
+        {
+            new DummyRequestValidator()
+        };
 
         var validationBehavior = new ValidationBehavior<DummyRequest, DummyResponse>(validators);
 
@@ -51,7 +54,10 @@ public class ValidationBehaviorTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var validators = new List<IValidator<DummyRequest>> { new DummyRequestValidator() };
+        var validators = new List<IValidator<DummyRequest>>
+        {
+            new DummyRequestValidator()
+        };
 
         var validationBehavior = new ValidationBehavior<DummyRequest, DummyResponse>(validators);
 

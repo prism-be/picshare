@@ -17,19 +17,19 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 
     public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
     {
-        this._validators = validators;
+        _validators = validators;
     }
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        if (!this._validators.Any())
+        if (!_validators.Any())
         {
             return await next();
         }
 
         var context = new ValidationContext<TRequest>(request);
 
-        var errorsDictionary = this._validators
+        var errorsDictionary = _validators
             .Select(x => x.Validate(context))
             .SelectMany(x => x.Errors)
             .Where(x => x != null)
@@ -38,7 +38,8 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
                 x => x.ErrorMessage,
                 (propertyName, errorMessages) => new
                 {
-                    Key = propertyName, Values = errorMessages.Distinct().ToArray()
+                    Key = propertyName,
+                    Values = errorMessages.Distinct().ToArray()
                 })
             .ToDictionary(x => x.Key, x => x.Values);
 
