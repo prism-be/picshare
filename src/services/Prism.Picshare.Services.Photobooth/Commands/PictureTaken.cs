@@ -40,7 +40,9 @@ public class PictureTakenHandler : IRequestHandler<PictureTaken, PhotoboothPictu
 
         var photoboothPicture = new PhotoboothPicture
         {
-            Id = Guid.NewGuid(), OrganisationId = request.OrganisationId, SessionId = request.SessionId
+            Id = Guid.NewGuid(),
+            OrganisationId = request.OrganisationId,
+            SessionId = request.SessionId
         };
 
         await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture, cancellationToken);

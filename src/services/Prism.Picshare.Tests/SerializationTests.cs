@@ -15,12 +15,42 @@ namespace Prism.Picshare.Tests;
 public class SerializationTests
 {
     [Fact]
+    public void Album_Ok()
+    {
+        // Arrange
+        var source = new Album
+        {
+            Id = Guid.NewGuid(),
+            Name = Guid.NewGuid().ToString(),
+            OrganisationId = Guid.NewGuid()
+        };
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
     public void Organisation_Ok()
     {
         // Arrange
         var source = new Organisation
         {
-            Id = Guid.NewGuid(), Name = Guid.NewGuid().ToString()
+            Id = Guid.NewGuid(),
+            Name = Guid.NewGuid().ToString()
+        };
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
+    public void Picture_Ok()
+    {
+        // Arrange
+        var source = new Picture
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = Guid.NewGuid(),
+            Source = PictureSource.Upload,
+            CreationDate = DateTime.Today
         };
 
         CheckSerialization(source);
@@ -33,18 +63,6 @@ public class SerializationTests
 
         // Assert
         destination.Should().BeEquivalentTo(source);
-    }
-
-    [Fact]
-    public void Picture_Ok()
-    {
-        // Arrange
-        var source = new Picture
-        {
-            Id = Guid.NewGuid(), OrganisationId = Guid.NewGuid(), Source = PictureSource.Upload, CreationDate = DateTime.Today
-        };
-
-        CheckSerialization(source);
     }
 
     private static T? SerializeAndDeserialize<T>(T source)

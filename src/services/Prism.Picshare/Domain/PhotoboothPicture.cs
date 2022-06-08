@@ -16,9 +16,9 @@ public class PhotoboothPicture
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
 
-    [JsonPropertyName("originalFileName")]
-    public string? OriginalFileName { get; set; }
-
     [JsonPropertyName("sessionId")]
     public Guid SessionId { get; set; }
+
+    [JsonPropertyName("originalFileName")]
+    public string? OriginalFileName { get; set; }
 }

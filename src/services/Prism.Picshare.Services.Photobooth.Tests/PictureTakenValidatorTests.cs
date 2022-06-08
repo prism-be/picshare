@@ -12,19 +12,6 @@ namespace Prism.Picshare.Services.Photobooth.Tests;
 
 public class PictureTakenValidatorTests
 {
-    [Fact]
-    public void Validate_Ok()
-    {
-        // Arrange
-        var validator = new PictureTakenValidator();
-        var pictureTaken = new PictureTaken(Guid.NewGuid(), Guid.NewGuid());
-
-        // Act
-        var result = validator.Validate(pictureTaken);
-
-        // Assert
-        Assert.True(result.IsValid);
-    }
 
     [Fact]
     public void Validate_Empty_Organisation()
@@ -52,5 +39,19 @@ public class PictureTakenValidatorTests
 
         // Assert
         Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void Validate_Ok()
+    {
+        // Arrange
+        var validator = new PictureTakenValidator();
+        var pictureTaken = new PictureTaken(Guid.NewGuid(), Guid.NewGuid());
+
+        // Act
+        var result = validator.Validate(pictureTaken);
+
+        // Assert
+        Assert.True(result.IsValid);
     }
 }

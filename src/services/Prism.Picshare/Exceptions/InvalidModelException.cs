@@ -18,13 +18,13 @@ public class InvalidModelException : Exception
 
     public InvalidModelException(string message, Dictionary<string, string[]> validations) : base(message)
     {
-        this.Validations = validations;
+        Validations = validations;
     }
 
     [ExcludeFromCodeCoverage]
     protected InvalidModelException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
-        this.Validations = info.GetValue(nameof(this.Validations), typeof(Dictionary<string, string[]>)) as Dictionary<string, string[]> ?? new Dictionary<string, string[]>();
+        Validations = info.GetValue(nameof(Validations), typeof(Dictionary<string, string[]>)) as Dictionary<string, string[]> ?? new Dictionary<string, string[]>();
     }
 
     public Dictionary<string, string[]> Validations { get; set; }
@@ -33,6 +33,6 @@ public class InvalidModelException : Exception
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         base.GetObjectData(info, context);
-        this.Validations = info.GetValue(nameof(this.Validations), typeof(Dictionary<string, string[]>)) as Dictionary<string, string[]> ?? new Dictionary<string, string[]>();
+        Validations = info.GetValue(nameof(Validations), typeof(Dictionary<string, string[]>)) as Dictionary<string, string[]> ?? new Dictionary<string, string[]>();
     }
 }

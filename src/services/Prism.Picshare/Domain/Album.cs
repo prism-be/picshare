@@ -11,22 +11,22 @@ namespace Prism.Picshare.Domain;
 public class Album
 {
     public const string Store = "album-store";
-    
-    public Album(List<Guid> pictures)
+
+    public Album()
     {
-        this.Pictures = pictures;
-        this.Name = string.Empty;
+        Pictures = new List<Guid>();
+        Name = string.Empty;
     }
 
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; }
 
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
 
     [JsonPropertyName("pictures")]
     public List<Guid> Pictures { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }

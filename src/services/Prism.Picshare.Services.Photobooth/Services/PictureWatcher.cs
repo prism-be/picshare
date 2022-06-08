@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr;
 using Dapr.Client;
 using Polly;
 using Prism.Picshare.Domain;
@@ -17,9 +16,9 @@ public class PictureWatcher : BackgroundService
 {
     private readonly IConfiguration _config;
     private readonly DaprClient _daprClient;
+    private readonly string? _destinationPath;
     private readonly IHostEnvironment _env;
     private readonly ILogger<PictureWatcher> _logger;
-    private readonly string? _destinationPath;
 
     public PictureWatcher(ILogger<PictureWatcher> logger, IHostEnvironment env, IConfiguration config, DaprClient daprClient)
     {
@@ -27,13 +26,57 @@ public class PictureWatcher : BackgroundService
         _env = env;
         _config = config;
         _daprClient = daprClient;
-        
+
         _destinationPath = Path.Combine(_env.ContentRootPath, "wwwroot", "pictures");
         Directory.CreateDirectory(_destinationPath);
     }
 
     public Guid OrganisationId { get; private set; }
     public Guid SessionId { get; private set; }
+
+    public async Task ProcessPictureAsync(string fullPath)
+    {
+        _logger.LogInformation("Processing a picture taken request: {fullPath}", fullPath);
+
+        var photoboothPicture = new PhotoboothPicture
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = OrganisationId,
+            SessionId = SessionId,
+            OriginalFileName = Path.GetFileName(fullPath)
+        };
+
+        byte[]? data = null;
+
+        do
+        {
+            try
+            {
+                data = await File.ReadAllBytesAsync(fullPath);
+                var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
+                File.Move(fullPath, destination);
+                _logger.LogInformation("File moved to local storage: {destination}", destination);
+            }
+            catch (IOException exception)
+            {
+                _logger.LogError(exception, "Error when reading the picture {photoboothPicture}", photoboothPicture.Id);
+                Thread.Sleep(250);
+            }
+        } while (data == null);
+
+        await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
+
+        var uploadPolicy = Policy.Handle<Exception>()
+            .RetryForever(onRetry: exception =>
+            {
+                _logger.LogError(exception, "Error when uploading the picture {photoboothPicture}", photoboothPicture.Id);
+            });
+
+        await uploadPolicy.Execute(async () =>
+        {
+            await UploadFile(photoboothPicture, data!);
+        });
+    }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -81,34 +124,6 @@ public class PictureWatcher : BackgroundService
     {
         var task = ProcessPictureAsync(e.FullPath);
         task.Wait();
-    }
-
-    public async Task ProcessPictureAsync(string fullPath)
-    {
-        _logger.LogInformation("Processing a picture taken request: {fullPath}", fullPath);
-
-        var photoboothPicture = new PhotoboothPicture
-        {
-            Id = Guid.NewGuid(), OrganisationId = OrganisationId, SessionId = SessionId, OriginalFileName = Path.GetFileName(fullPath)
-        };
-
-        var data = await File.ReadAllBytesAsync(fullPath);
-        var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
-        File.Move(fullPath, destination);
-        _logger.LogInformation("File moved to local storage: {destination}", destination);
-        
-        await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
-
-        var policy = Policy.Handle<DaprException>()
-            .RetryForever(onRetry: exception =>
-            {
-                _logger.LogError(exception, "Error when uploading the picture {photoboothPicture}", photoboothPicture.Id);
-            });
-
-        await policy.Execute(async () =>
-        {
-            await UploadFile(photoboothPicture, data);
-        });
     }
 
     private async Task UploadFile(PhotoboothPicture photoboothPicture, byte[] data)
