@@ -51,7 +51,7 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.31.0
+          version: 7.1.9
 
       - name: Install Packages
         working-directory: src/clients/photobooth
