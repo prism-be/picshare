@@ -40,18 +40,25 @@ public class PictureWatcher : BackgroundService
     {
         var task = Task.Run(async () =>
         {
-            if (string.IsNullOrWhiteSpace(_pictureSourcePath))
+            try
             {
-                _logger.LogWarning("Cannot poll the source path");
-                return;
+                if (string.IsNullOrWhiteSpace(_pictureSourcePath))
+                {
+                    _logger.LogWarning("Cannot poll the source path");
+                    return;
+                }
+
+                _logger.LogDebug("Checking new files in {path}", _pictureSourcePath);
+
+                foreach (var file in Directory.GetFiles(_pictureSourcePath))
+                {
+                    _logger.LogInformation("New file found : {file}", file);
+                    await ProcessPictureAsync(file);
+                }
             }
-
-            _logger.LogDebug("Checking new files in {path}", _pictureSourcePath);
-
-            foreach (var file in Directory.GetFiles(_pictureSourcePath))
+            catch (Exception ex)
             {
-                _logger.LogInformation("New file found : {file}", file);
-                await ProcessPictureAsync(file);
+                _logger.LogCritical(ex, "Error occured when checking new files");
             }
         });
 
@@ -72,34 +79,45 @@ public class PictureWatcher : BackgroundService
 
         byte[]? data = null;
 
-        do
+        var retry = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(250), OnRetry);
+
+        try
         {
-            try
+            await retry.ExecuteAsync(async () =>
             {
                 data = await File.ReadAllBytesAsync(fullPath);
                 var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
                 File.Move(fullPath, destination);
                 _logger.LogInformation("File moved to local storage: {destination}", destination);
-            }
-            catch (IOException exception)
-            {
-                _logger.LogError(exception, "Error when reading the picture {photoboothPicture}", photoboothPicture.Id);
-                Thread.Sleep(250);
-            }
-        } while (data == null);
+            });
+        }
+        catch (IOException exception)
+        {
+            _logger.LogError(exception, "Error when reading the picture {photoboothPicture}", photoboothPicture.Id);
+            return;
+        }
+
+        if (data == null)
+        {
+            return;
+        }
 
         await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
 
         var uploadPolicy = Policy.Handle<Exception>()
-            .RetryForever(onRetry: exception =>
-            {
-                _logger.LogError(exception, "Error when uploading the picture {photoboothPicture}", photoboothPicture.Id);
-            });
+            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), OnRetry);
 
-        await uploadPolicy.Execute(async () =>
+        await uploadPolicy.ExecuteAsync(async () =>
         {
-            await UploadFile(photoboothPicture, data!);
+            await UploadFile(photoboothPicture, data);
         });
+    }
+
+    private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
+    {
+        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
