@@ -104,7 +104,7 @@ public class PictureWatcher : BackgroundService
             return;
         }
 
-        await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
+        await _daprClient.PublishEventAsync(DaprConfiguration.Photobooth.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
 
         var uploadPolicy = Policy.Handle<Exception>()
             .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), OnRetry);

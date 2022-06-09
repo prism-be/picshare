@@ -9,4 +9,9 @@ namespace Prism.Picshare;
 public static class DaprConfiguration
 {
     public const string PubSub = "pubsub";
+
+    public static class Photobooth
+    {
+        public const string PubSub = "pubsub-photobooth";
+    }
 }
