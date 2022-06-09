@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="PictureWatcher.cs" company="Prism">
-//  Copyright (c) Prism. All rights reserved.
+//  <copyright file = "PictureWatcher.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
@@ -19,6 +19,8 @@ public class PictureWatcher : BackgroundService
     private readonly string? _destinationPath;
     private readonly IHostEnvironment _env;
     private readonly ILogger<PictureWatcher> _logger;
+    private string? _pictureSourcePath;
+    private Timer? _timer;
 
     public PictureWatcher(ILogger<PictureWatcher> logger, IHostEnvironment env, IConfiguration config, DaprClient daprClient)
     {
@@ -33,6 +35,28 @@ public class PictureWatcher : BackgroundService
 
     public Guid OrganisationId { get; private set; }
     public Guid SessionId { get; private set; }
+
+    public void CheckFiles(object? state)
+    {
+        var task = Task.Run(async () =>
+        {
+            if (string.IsNullOrWhiteSpace(_pictureSourcePath))
+            {
+                _logger.LogWarning("Cannot poll the source path");
+                return;
+            }
+
+            _logger.LogDebug("Checking new files in {path}", _pictureSourcePath);
+
+            foreach (var file in Directory.GetFiles(_pictureSourcePath))
+            {
+                _logger.LogInformation("New file found : {file}", file);
+                await ProcessPictureAsync(file);
+            }
+        });
+
+        task.Wait();
+    }
 
     public async Task ProcessPictureAsync(string fullPath)
     {
@@ -78,7 +102,7 @@ public class PictureWatcher : BackgroundService
         });
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var organisationId = _config.GetValue<string>("PHOTOBOOTH_ORGANISATION");
 
@@ -102,27 +126,23 @@ public class PictureWatcher : BackgroundService
 
         SessionId = Guid.Parse(sessionId);
 
-        var path = _config.GetValue<string>("PHOTOBOOTH_PICTURES_SOURCE");
+        _pictureSourcePath = _config.GetValue<string>("PHOTOBOOTH_PICTURES_SOURCE");
 
-        if (string.IsNullOrWhiteSpace(path))
+        if (string.IsNullOrWhiteSpace(_pictureSourcePath))
         {
-            path = Path.Combine(_env.ContentRootPath, "pictures-source");
-            _logger.LogWarning("Environment variable PHOTOBOOTH_PICTURES_SOURCE not found, defaulting to {path}", path);
+            _pictureSourcePath = Path.Combine(_env.ContentRootPath, "pictures-source");
+            _logger.LogWarning("Environment variable PHOTOBOOTH_PICTURES_SOURCE not found, defaulting to {path}", _pictureSourcePath);
         }
 
-        _logger.LogInformation("Starting a background processor on {path}", path);
-        Directory.CreateDirectory(path);
+        _logger.LogInformation("Starting a background processor on {path}", _pictureSourcePath);
+        Directory.CreateDirectory(_pictureSourcePath);
 
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            foreach (var file in Directory.GetFiles(path))
-            {
-                _logger.LogInformation("New file found : {file}", file);
-                await ProcessPictureAsync(file);
-            }
+        _timer = new Timer(CheckFiles);
+        _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(1));
 
-            Thread.Sleep(1000);
-        }
+        _logger.LogInformation("Execute is done !");
+
+        return Task.CompletedTask;
     }
 
     private async Task UploadFile(PhotoboothPicture photoboothPicture, byte[] data)
