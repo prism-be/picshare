@@ -13,19 +13,27 @@ services:
     ports:
       - "3001:80"
     depends_on:
+      - redis
       - placement
     networks:
       - hello-dapr
+    volumes:
+      - "./pictures/:/app/pictures"
     environment:
       - ALLOWED_ORIGINS=http://localhost:3000
+      - PHOTOBOOTH_ORGANISATION=23a47be4-a501-4641-b73a-b497813b8e06
+      - PHOTOBOOTH_SESSION=bb077631-61f2-4ca3-bedf-41ef6e492107
+      - PHOTOBOOTH_PICTURES_SOURCE=/app/pictures
   
   backend-dapr:
     image: "daprio/daprd:edge"
     command: [
       "./daprd",
-      "-app-id", "nodeapp",
+      "-app-id", "picshare-photobooth",
       "-app-port", "80",
-      "-placement-host-address", "placement:50006"
+      "-placement-host-address", "placement:50006",
+      "--components-path", "/components",
+      "--dapr-http-max-request-size", "30"
     ]
     volumes:
       - "./components/:/components"
@@ -40,6 +48,12 @@ services:
       - "50006:50006"
     networks:
       - hello-dapr
-
+  
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6380:6379"
+    networks:
+      - hello-dapr
 networks:
   hello-dapr:

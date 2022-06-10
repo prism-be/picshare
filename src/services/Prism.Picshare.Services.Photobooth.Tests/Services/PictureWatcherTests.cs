@@ -161,7 +161,7 @@ public class PictureWatcherTests
         await watcher.ProcessPictureAsync(file);
 
         // Assert
-        daprClient.Verify(x => x.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, It.IsAny<PhotoboothPicture>(), It.IsAny<CancellationToken>()), Times.Once);
+        daprClient.Verify(x => x.PublishEventAsync(DaprConfiguration.Photobooth.PubSub, Topics.Photobooth.PictureTaken, It.IsAny<PhotoboothPicture>(), It.IsAny<CancellationToken>()), Times.Once);
         daprClient.Verify(x => x.InvokeBindingAsync("datastore", "create", It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()), Times.Once);
         daprClient.Verify(x => x.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureUploaded, It.IsAny<PhotoboothPicture>(), It.IsAny<CancellationToken>()), Times.Once);
     }

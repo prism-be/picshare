@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="PictureWatcher.cs" company="Prism">
-//  Copyright (c) Prism. All rights reserved.
+//  <copyright file = "PictureWatcher.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
@@ -19,6 +19,8 @@ public class PictureWatcher : BackgroundService
     private readonly string? _destinationPath;
     private readonly IHostEnvironment _env;
     private readonly ILogger<PictureWatcher> _logger;
+    private string? _pictureSourcePath;
+    private Timer? _timer;
 
     public PictureWatcher(ILogger<PictureWatcher> logger, IHostEnvironment env, IConfiguration config, DaprClient daprClient)
     {
@@ -34,6 +36,35 @@ public class PictureWatcher : BackgroundService
     public Guid OrganisationId { get; private set; }
     public Guid SessionId { get; private set; }
 
+    public void CheckFiles(object? state)
+    {
+        var task = Task.Run(async () =>
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(_pictureSourcePath))
+                {
+                    _logger.LogWarning("Cannot poll the source path");
+                    return;
+                }
+
+                _logger.LogDebug("Checking new files in {path}", _pictureSourcePath);
+
+                foreach (var file in Directory.GetFiles(_pictureSourcePath))
+                {
+                    _logger.LogInformation("New file found : {file}", file);
+                    await ProcessPictureAsync(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Error occured when checking new files");
+            }
+        });
+
+        task.Wait();
+    }
+
     public async Task ProcessPictureAsync(string fullPath)
     {
         _logger.LogInformation("Processing a picture taken request: {fullPath}", fullPath);
@@ -48,34 +79,45 @@ public class PictureWatcher : BackgroundService
 
         byte[]? data = null;
 
-        do
+        var retry = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(250), OnRetry);
+
+        try
         {
-            try
+            await retry.ExecuteAsync(async () =>
             {
                 data = await File.ReadAllBytesAsync(fullPath);
                 var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
                 File.Move(fullPath, destination);
                 _logger.LogInformation("File moved to local storage: {destination}", destination);
-            }
-            catch (IOException exception)
-            {
-                _logger.LogError(exception, "Error when reading the picture {photoboothPicture}", photoboothPicture.Id);
-                Thread.Sleep(250);
-            }
-        } while (data == null);
+            });
+        }
+        catch (IOException exception)
+        {
+            _logger.LogError(exception, "Error when reading the picture {photoboothPicture}", photoboothPicture.Id);
+            return;
+        }
 
-        await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
+        if (data == null)
+        {
+            return;
+        }
+
+        await _daprClient.PublishEventAsync(DaprConfiguration.Photobooth.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
 
         var uploadPolicy = Policy.Handle<Exception>()
-            .RetryForever(onRetry: exception =>
-            {
-                _logger.LogError(exception, "Error when uploading the picture {photoboothPicture}", photoboothPicture.Id);
-            });
+            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), OnRetry);
 
-        await uploadPolicy.Execute(async () =>
+        await uploadPolicy.ExecuteAsync(async () =>
         {
-            await UploadFile(photoboothPicture, data!);
+            await UploadFile(photoboothPicture, data);
         });
+    }
+
+    private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
+    {
+        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -102,28 +144,23 @@ public class PictureWatcher : BackgroundService
 
         SessionId = Guid.Parse(sessionId);
 
-        var path = _config.GetValue<string>("PHOTOBOOTH_PICTURES_SOURCE");
+        _pictureSourcePath = _config.GetValue<string>("PHOTOBOOTH_PICTURES_SOURCE");
 
-        if (string.IsNullOrWhiteSpace(path))
+        if (string.IsNullOrWhiteSpace(_pictureSourcePath))
         {
-            path = Path.Combine(_env.ContentRootPath, "pictures-source");
-            _logger.LogWarning("Environment variable PHOTOBOOTH_PICTURES_SOURCE not found, defaulting to {path}", path);
+            _pictureSourcePath = Path.Combine(_env.ContentRootPath, "pictures-source");
+            _logger.LogWarning("Environment variable PHOTOBOOTH_PICTURES_SOURCE not found, defaulting to {path}", _pictureSourcePath);
         }
 
-        _logger.LogInformation("Starting a background processor on {path}", path);
-        Directory.CreateDirectory(path);
+        _logger.LogInformation("Starting a background processor on {path}", _pictureSourcePath);
+        Directory.CreateDirectory(_pictureSourcePath);
 
-        var watcher = new FileSystemWatcher(path);
-        watcher.Created += NewPictureCreated;
-        watcher.EnableRaisingEvents = true;
+        _timer = new Timer(CheckFiles);
+        _timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
+        _logger.LogInformation("Execute is done !");
 
         return Task.CompletedTask;
-    }
-
-    private void NewPictureCreated(object sender, FileSystemEventArgs e)
-    {
-        var task = ProcessPictureAsync(e.FullPath);
-        task.Wait();
     }
 
     private async Task UploadFile(PhotoboothPicture photoboothPicture, byte[] data)

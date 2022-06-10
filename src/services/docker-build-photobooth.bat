@@ -1,0 +1,1 @@
+docker build . --file Prism.Picshare.Services.Photobooth/Dockerfile --tag simonbaudart/picshare:service-photobooth-latest
