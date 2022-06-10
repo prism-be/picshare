@@ -59,7 +59,7 @@ const Home: NextPage = () => {
 
                         connection.on('PictureUploaded', (photoboothPicture: any) => {
                             console.log(photoboothPicture);
-                            setFrontPictureUrl(config.publicFrontUrl + "/taken/" + photoboothPicture.sessionId + "/" + photoboothPicture.id);
+                            setFrontPictureUrl(config.publicFrontUrl + "/taken/" + photoboothPicture.organisationId + "/" +photoboothPicture.sessionId + "/" + photoboothPicture.id);
                             clearTimeout(timer);
                             timer = setTimeout(() => {
                                 setPictureUrl(null);

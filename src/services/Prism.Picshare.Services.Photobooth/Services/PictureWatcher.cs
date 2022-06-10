@@ -169,7 +169,7 @@ public class PictureWatcher : BackgroundService
 
         var blobName = $"{OrganisationId}/{photoboothPicture.Id}/source";
 
-        await _daprClient.InvokeBindingAsync("datastore", "create", dataBase64, new Dictionary<string, string>
+        await _daprClient.InvokeBindingAsync(DaprConfiguration.DataStore, "create", dataBase64, new Dictionary<string, string>
         {
             {
                 "blobName", blobName
