@@ -13,7 +13,6 @@ public static class DaprConfiguration
 
     public static class Photobooth
     {
-        // ReSharper disable once MemberHidesStaticFromOuterClass
-        public const string PubSub = "pubsub-photobooth";
+        public const string InternalPubSub = "pubsub-photobooth";
     }
 }

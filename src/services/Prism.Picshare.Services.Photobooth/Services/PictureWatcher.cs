@@ -9,6 +9,7 @@ using Polly;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Exceptions;
+using static System.GC;
 
 namespace Prism.Picshare.Services.Photobooth.Services;
 
@@ -65,6 +66,13 @@ public class PictureWatcher : BackgroundService
         task.Wait();
     }
 
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        _timer?.Dispose();
+    }
+
     public async Task ProcessPictureAsync(string fullPath)
     {
         _logger.LogInformation("Processing a picture taken request: {fullPath}", fullPath);
@@ -104,7 +112,7 @@ public class PictureWatcher : BackgroundService
             return;
         }
 
-        await _daprClient.PublishEventAsync(DaprConfiguration.Photobooth.PubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
+        await _daprClient.PublishEventAsync(DaprConfiguration.Photobooth.InternalPubSub, Topics.Photobooth.PictureTaken, photoboothPicture);
 
         var uploadPolicy = Policy.Handle<Exception>()
             .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), OnRetry);
@@ -113,11 +121,6 @@ public class PictureWatcher : BackgroundService
         {
             await UploadFile(photoboothPicture, data);
         });
-    }
-
-    private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
-    {
-        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -161,6 +164,11 @@ public class PictureWatcher : BackgroundService
         _logger.LogInformation("Execute is done !");
 
         return Task.CompletedTask;
+    }
+
+    private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
+    {
+        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
     }
 
     private async Task UploadFile(PhotoboothPicture photoboothPicture, byte[] data)
