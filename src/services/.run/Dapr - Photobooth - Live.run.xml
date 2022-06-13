@@ -6,10 +6,11 @@
     <option name="PASS_PARENT_ENVS" value="1" />
     <envs>
       <env name="APPLICATIONINSIGHTS_CONNECTION_STRING" value="InstrumentationKey=13af93e4-ef71-471f-a2a0-a5b81248d581;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/" />
+      <env name="APPLICATIONINSIGHTS_ROLE_NAME" value="photobooth-live" />
       <env name="PHOTOBOOTH_ORGANISATION" value="23a47be4-a501-4641-b73a-b497813b8e06" />
       <env name="PHOTOBOOTH_PICTURES_SOURCE" value="C:\tmp\picshare\source" />
       <env name="PHOTOBOOTH_SESSION" value="bb077631-61f2-4ca3-bedf-41ef6e492107" />
-      <env name="APPLICATIONINSIGHTS_ROLE_NAME" value="photobooth-live" />
+      <env name="APPLICATIONINSIGHTS_INSTRUMENTATION_KEY" value="13af93e4-ef71-471f-a2a0-a5b81248d581" />
     </envs>
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <method v="2">
