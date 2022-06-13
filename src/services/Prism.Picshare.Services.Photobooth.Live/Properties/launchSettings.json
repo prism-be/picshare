@@ -1,10 +1,10 @@
 ﻿{
   "profiles": {
-    "Prism.Picshare.Services.Photobooth": {
+    "Prism.Picshare.Services.Photobooth.Live": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5047",
+      "applicationUrl": "http://localhost:5048",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

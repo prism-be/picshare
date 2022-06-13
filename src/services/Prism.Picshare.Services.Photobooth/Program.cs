@@ -86,7 +86,7 @@ app.MapHub<PhotoboothHub>("/hubs/photobooth");
 
 // PubSub Events
 app.MapPost(Topics.Photobooth.PictureTaken,
-    [Topic(DaprConfiguration.Photobooth.PubSub, Topics.Photobooth.PictureTaken)]
+    [Topic(DaprConfiguration.Photobooth.InternalPubSub, Topics.Photobooth.PictureTaken)]
     async ([FromBody] PhotoboothPicture picture, IMediator mediator)
         => Results.Ok(await mediator.Send(new NotifyPictureTaken(picture))));
 
