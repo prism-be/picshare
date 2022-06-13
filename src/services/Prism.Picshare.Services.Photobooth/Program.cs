@@ -78,8 +78,15 @@ app.UseHealthChecks("/health");
 app.MapPost("/take", async ([FromBody] PictureTaken request, IMediator mediator)
     => Results.Ok(await mediator.Send(request)));
 
-app.MapGet("/pictures/{pictureId:guid}", ([FromRoute] Guid pictureId, IHostEnvironment env)
-    => Results.File(Path.Combine(env.ContentRootPath, "wwwroot", "pictures", pictureId.ToString())));
+app.MapGet("/pictures/{pictureId:guid}", ([FromRoute] Guid pictureId, IHostEnvironment env, ILogger<Program> logger)
+    =>
+{
+    var file = Path.Combine(env.ContentRootPath, "wwwroot", "pictures", pictureId.ToString());
+    
+    logger.LogInformation("Display picture at path : {file}", file);
+    
+    return Results.File(file);
+});
 
 // SignalR
 app.MapHub<PhotoboothHub>("/hubs/photobooth");

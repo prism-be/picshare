@@ -88,7 +88,7 @@ const Home: NextPage = () => {
         <div>
             {pictureUrl && <div className="w-full p-3 h-screen">
                 <div className="w-full h-full">
-                    <Image src={pictureUrl} layout={"fill"}
+                    <img src={pictureUrl}
                            className="object-contain  w-full h-full"
                            alt={"test"}/>
                 </div>
