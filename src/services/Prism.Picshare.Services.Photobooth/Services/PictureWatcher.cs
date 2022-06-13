@@ -85,7 +85,7 @@ public class PictureWatcher : BackgroundService
             OriginalFileName = Path.GetFileName(fullPath)
         };
 
-        byte[]? data = null;
+        byte[]? data;
 
         var retry = Policy
             .Handle<Exception>()
@@ -93,12 +93,13 @@ public class PictureWatcher : BackgroundService
 
         try
         {
-            await retry.ExecuteAsync(async () =>
+            data = await retry.ExecuteAsync(async () =>
             {
-                data = await File.ReadAllBytesAsync(fullPath);
+                var binaryData = await File.ReadAllBytesAsync(fullPath);
                 var destination = Path.Combine(_destinationPath!, photoboothPicture.Id.ToString());
                 File.Move(fullPath, destination);
                 _logger.LogInformation("File moved to local storage: {destination}", destination);
+                return binaryData;
             });
         }
         catch (IOException exception)
