@@ -88,12 +88,12 @@ const Home: NextPage = () => {
         <div>
             {pictureUrl && <div className="w-full p-3 h-screen">
                 <div className="w-full h-full">
-                    <Image src={pictureUrl} layout={"fill"}
+                    <img src={pictureUrl}
                            className="object-contain  w-full h-full"
                            alt={"test"}/>
                 </div>
                 {frontPictureUrl && <div className={"absolute top-5 left-5"}>
-                    <QRCodeSVG size={128} value={frontPictureUrl}/>
+                    <QRCodeSVG size={256} value={frontPictureUrl}/>
                 </div>
                 }
             </div>}
