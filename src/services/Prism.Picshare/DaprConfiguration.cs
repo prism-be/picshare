@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="DaprConfiguration.cs" company="Prism">
-//  Copyright (c) Prism. All rights reserved.
+//  <copyright file = "DaprConfiguration.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
@@ -14,5 +14,11 @@ public static class DaprConfiguration
     public static class Photobooth
     {
         public const string InternalPubSub = "pubsub-photobooth";
+    }
+
+    public static class BindingOperation
+    {
+        public const string Create = "create";
+        public const string Get = "get";
     }
 }

@@ -1,12 +1,4 @@
 ﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:11230",
-      "sslPort": 44315
-    }
-  },
   "profiles": {
     "Prism.Picshare.Services.Photobooth": {
       "commandName": "Project",

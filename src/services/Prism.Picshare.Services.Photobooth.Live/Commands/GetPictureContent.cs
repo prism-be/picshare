@@ -10,7 +10,7 @@ using MediatR;
 
 namespace Prism.Picshare.Services.Photobooth.Live.Commands;
 
-public record GetPictureContent(Guid OrganisationId, Guid PictureId) : IRequest<byte[]>;
+public record GetPictureContent(Guid OrganisationId, Guid PictureId) : IRequest<byte[]?>;
 
 public class GetPictureContentValidator : AbstractValidator<GetPictureContent>
 {
@@ -21,7 +21,7 @@ public class GetPictureContentValidator : AbstractValidator<GetPictureContent>
     }
 }
 
-public class GetPictureContentValidatorHandler : IRequestHandler<GetPictureContent, byte[]>
+public class GetPictureContentValidatorHandler : IRequestHandler<GetPictureContent, byte[]?>
 {
     private readonly DaprClient _daprClient;
     private readonly ILogger<GetPictureContentValidatorHandler> _logger;
@@ -32,8 +32,22 @@ public class GetPictureContentValidatorHandler : IRequestHandler<GetPictureConte
         _logger = logger;
     }
 
-    public Task<byte[]> Handle(GetPictureContent request, CancellationToken cancellationToken)
+    public async Task<byte[]?> Handle(GetPictureContent request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Processing request : {request}", request);
+
+        var bindingRequest = new BindingRequest(DaprConfiguration.DataStore, DaprConfiguration.BindingOperation.Get);
+        bindingRequest.Metadata.Add("blobName", $"{request.OrganisationId}/{request.PictureId}/source");
+        bindingRequest.Metadata.Add("fileName", $"{request.OrganisationId}/{request.PictureId}/source");
+
+        var response = await _daprClient.InvokeBindingAsync(bindingRequest, cancellationToken);
+
+        if (response == null)
+        {
+            _logger.LogInformation("No picture data found for the request : {request}", request);
+            return null;
+        }
+
+        return response.Data.ToArray();
     }
 }

@@ -32,7 +32,7 @@ public class GetPictureContentValidatorHandlerTests
         var result = await handler.Handle(new GetPictureContent(Guid.NewGuid(), Guid.NewGuid()), default);
 
         // Assert
-        result.Should().Equal(Array.Empty<byte>());
+        result.Should().BeNull();
     }
 
     [Fact]

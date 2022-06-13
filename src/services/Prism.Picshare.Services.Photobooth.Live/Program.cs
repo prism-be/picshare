@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Net.Mime;
 using FluentValidation;
 using Grpc.Net.Client;
 using MediatR;
@@ -35,4 +36,11 @@ app.UseHealthChecks("/health");
 
 app.MapGet("/taken/{organisationId:guid}/{sessionId:guid}/{pictureId:guid}",
     async ([FromRoute] Guid organisationId, [FromRoute] Guid sessionId, [FromRoute] Guid pictureId, IMediator mediator)
-        => Results.File(await mediator.Send(new GetPictureContent(organisationId, pictureId))));
+        =>
+    {
+        var data = await mediator.Send(new GetPictureContent(organisationId, pictureId));
+        return data == null ? Results.NotFound() : Results.File(data, MediaTypeNames.Image.Jpeg);
+    });
+
+// Let's run it !
+await app.RunAsync();
