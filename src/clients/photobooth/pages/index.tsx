@@ -93,7 +93,7 @@ const Home: NextPage = () => {
                            alt={"test"}/>
                 </div>
                 {frontPictureUrl && <div className={"absolute top-5 left-5"}>
-                    <QRCodeSVG size={128} value={frontPictureUrl}/>
+                    <QRCodeSVG size={256} value={frontPictureUrl}/>
                 </div>
                 }
             </div>}
