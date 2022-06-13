@@ -10,9 +10,12 @@ using Grpc.Net.Client;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Behaviors;
+using Prism.Picshare.Insights;
 using Prism.Picshare.Services.Photobooth.Live.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddInsights();
 
 var applicationAssembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(applicationAssembly);
