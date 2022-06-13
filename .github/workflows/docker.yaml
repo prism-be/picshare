@@ -55,7 +55,7 @@ jobs:
         run: |
           docker push simonbaudart/picshare:service-photobooth-latest
           docker push simonbaudart/picshare:service-photobooth-${{env.VERSION_INFORMATIONAL}}
+          docker push simonbaudart/picshare:service-photobooth-live-latest
+          docker push simonbaudart/picshare:service-photobooth-live-${{env.VERSION_INFORMATIONAL}}
           docker push simonbaudart/picshare:client-photobooth-latest
           docker push simonbaudart/picshare:client-photobooth-${{env.VERSION_INFORMATIONAL}}
-          docker push simonbaudart/picshare:client-photobooth-live-latest
-          docker push simonbaudart/picshare:client-photobooth-live-${{env.VERSION_INFORMATIONAL}}
