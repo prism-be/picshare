@@ -35,6 +35,10 @@ jobs:
       - name: Build the Docker image - Services - Photobooth
         working-directory: src/services
         run: docker build . --file Prism.Picshare.Services.Photobooth/Dockerfile --tag simonbaudart/picshare:service-photobooth-latest --tag simonbaudart/picshare:service-photobooth-${{env.VERSION_INFORMATIONAL}}
+
+      - name: Build the Docker image - Services - Photobooth - Live
+        working-directory: src/services
+        run: docker build . --file Prism.Picshare.Services.Photobooth.Live/Dockerfile --tag simonbaudart/picshare:service-photobooth-live-latest --tag simonbaudart/picshare:service-photobooth-live-${{env.VERSION_INFORMATIONAL}}
         
       - name: Build the Docker image - Clients - Photobooth
         working-directory: src/clients/photobooth
