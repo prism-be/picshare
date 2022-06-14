@@ -108,7 +108,7 @@ const Home: NextPage = () => {
                     <h2 className={"text-4xl pt-10 underline"}>Mode d&apos;emploi</h2>
                     <ul className={"text-2xl pt-5"}>
                         <li>
-                            Positionnez vous au niveau de l'arche.
+                            Positionnez vous au niveau de l&apos;arche.
                         </li>
                         <li>
                             Choisissez un volontaire pour prendre la télécommande
