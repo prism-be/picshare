@@ -9,10 +9,19 @@ using FluentValidation;
 using Grpc.Net.Client;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Prism.Picshare.Behaviors;
+using Prism.Picshare.Insights;
 using Prism.Picshare.Services.Photobooth.Live.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.ConfigureLogging((_, loggingBuilder) =>
+{
+    loggingBuilder.AddApplicationInsights();
+    loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(typeof(Program).FullName, LogLevel.Trace);
+});
+builder.Services.AddInsights();
 
 var applicationAssembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(applicationAssembly);
@@ -35,10 +44,13 @@ var app = builder.Build();
 app.UseHealthChecks("/health");
 
 app.MapGet("/taken/{organisationId:guid}/{sessionId:guid}/{pictureId:guid}",
-    async ([FromRoute] Guid organisationId, [FromRoute] Guid sessionId, [FromRoute] Guid pictureId, IMediator mediator)
+    async ([FromRoute] Guid organisationId, [FromRoute] Guid sessionId, [FromRoute] Guid pictureId, IMediator mediator, ILogger<Program> logger)
         =>
     {
-        var data = await mediator.Send(new GetPictureContent(organisationId, pictureId));
+        var request = new GetPictureContent(organisationId, pictureId);
+        logger.LogInformation("Processing request : {request}", request);
+        
+        var data = await mediator.Send(request);
         return data == null ? Results.NotFound() : Results.File(data, MediaTypeNames.Image.Jpeg);
     });
 
