@@ -49,6 +49,7 @@ const Home: NextPage = () => {
 
                         connection.on('PictureTaken', (photoboothPicture: any) => {
                             console.log(photoboothPicture);
+                            setFrontPictureUrl(null);
                             setPictureUrl(config.publicBackendUrl + "/pictures/" + photoboothPicture.id)
                             clearTimeout(timer);
                             timer = setTimeout(() => {
@@ -92,8 +93,8 @@ const Home: NextPage = () => {
                            className="object-contain  w-full h-full"
                            alt={"test"}/>
                 </div>
-                {frontPictureUrl && <div className={"absolute top-5 left-5"}>
-                    <QRCodeSVG size={256} value={frontPictureUrl}/>
+                {frontPictureUrl && <div className={"absolute top-5 left-5 p-3 bg-white"}>
+                    <QRCodeSVG size={192} value={frontPictureUrl}/>
                 </div>
                 }
             </div>}
@@ -104,18 +105,18 @@ const Home: NextPage = () => {
                     Bonjour et bienvenue !
                 </h1>
                 <div>
-                    <h2 className={"text-4xl underline"}>Mode d&apos;emploi</h2>
+                    <h2 className={"text-4xl pt-10 underline"}>Mode d&apos;emploi</h2>
                     <ul className={"text-2xl pt-5"}>
                         <li>
-                            Positionnez vous au niveau de la ligne au sol
+                            Positionnez vous au niveau de l&apos;arche.
                         </li>
                         <li>
                             Choisissez un volontaire pour prendre la télécommande
                         </li>
                         <li>
-                            Souriez et appuyez sur le bouton !
+                            Faites votre plus beau sourire et appuyez sur le bouton !
                         </li>
-                        <li className={"pt-5 italic text-xl"}>
+                        <li className={"pt-10 italic text-xl"}>
                             La photo reste affichée maximum 2 minutes et le QR code vous permet de la retrouver sur
                             votre téléphone.
                         </li>
