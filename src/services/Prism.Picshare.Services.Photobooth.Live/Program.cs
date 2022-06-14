@@ -16,11 +16,6 @@ using Prism.Picshare.Services.Photobooth.Live.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureLogging((_, loggingBuilder) =>
-{
-    loggingBuilder.AddApplicationInsights();
-    loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(typeof(Program).FullName, LogLevel.Trace);
-});
 builder.Services.AddInsights();
 
 var applicationAssembly = typeof(Program).Assembly;

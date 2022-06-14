@@ -13,11 +13,14 @@ using Prism.Picshare;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Insights;
 using Prism.Picshare.Services.Photobooth.Commands;
 using Prism.Picshare.Services.Photobooth.Hubs;
 using Prism.Picshare.Services.Photobooth.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddInsights();
 
 var applicationAssembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(applicationAssembly);

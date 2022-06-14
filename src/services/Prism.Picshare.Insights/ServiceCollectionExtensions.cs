@@ -22,9 +22,4 @@ public static class ServiceCollectionExtensions
             opt.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
         });
     }
-
-    public static void AddInsights(this ILoggingBuilder builder)
-    {
-        builder.AddApplicationInsights();
-    }
 }
