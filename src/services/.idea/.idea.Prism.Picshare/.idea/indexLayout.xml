@@ -7,6 +7,7 @@
       <Path>../clients/photobooth</Path>
       <Path>HttpRequests</Path>
       <Path>components</Path>
+      <Path>dapr</Path>
     </attachedFolders>
     <explicitIncludes />
     <explicitExcludes />
