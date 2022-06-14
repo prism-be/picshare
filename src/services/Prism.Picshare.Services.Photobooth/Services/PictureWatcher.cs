@@ -51,7 +51,7 @@ public class PictureWatcher : BackgroundService
 
                 _logger.LogDebug("Checking new files in {path}", _pictureSourcePath);
 
-                foreach (var file in Directory.GetFiles(_pictureSourcePath))
+                foreach (var file in Directory.GetFiles(_pictureSourcePath, "*.JPG"))
                 {
                     _logger.LogInformation("New file found : {file}", file);
                     await ProcessPictureAsync(file);
