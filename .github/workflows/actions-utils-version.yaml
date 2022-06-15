@@ -1,0 +1,29 @@
+﻿name: Get Version From Tag
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      informationalVersion:
+        description: "The informational version with the PRE tag"
+        value: ${{ jobs.compute-version.outputs.informationalVersion }}
+      assemblyVersion:
+        description: "The assembly version without the PRE tag"
+        value: ${{ jobs.compute-version.outputs.assemblyVersion }}
+        
+jobs:
+  compute-version:
+    name: Generate output
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      output1: ${{ steps.step1.outputs.informationalVersion }}
+      output2: ${{ steps.step2.outputs.assemblyVersion }}
+    steps:
+      - name: Checkout Repository
+        id: checkout
+        uses: actions/checkout@v2
+      - id: compute
+        run: |
+          TAG=`git describe --tags --abbrev=0`
+          echo "The latest tag is $TAG"
+          

@@ -1,0 +1,13 @@
+﻿name: CD - Libs - Main
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses : ./.github/workflows/actions-cd-dotnet-lib.yaml
+    with:
+      projectPath: ./src/libs/Prism.Picshare
