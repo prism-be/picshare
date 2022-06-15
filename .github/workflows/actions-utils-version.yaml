@@ -28,8 +28,8 @@ jobs:
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
       - id: compute
         run: |
-          echo "Major : ${{ steps.extract.outputs.MAJOR }}"
-          echo "Minor : ${{ steps.extract.outputs.MINOR }}"
-          echo "Patch : ${{ steps.extract.outputs.PATCH }}"
-          echo "Commits : ${{ steps.extract.outputs.NUMBER_OF_COMMITS_SINCE_TAG }}"
+          echo "Major : ${{ env.MAJOR }}"
+          echo "Minor : ${{ env.MINOR }}"
+          echo "Patch : ${{ env.PATCH }}"
+          echo "Commits : ${{ env.NUMBER_OF_COMMITS_SINCE_TAG }}"
           
