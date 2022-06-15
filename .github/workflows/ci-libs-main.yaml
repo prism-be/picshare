@@ -1,0 +1,19 @@
+﻿name: CI - Libs - Main
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+  path:
+    - ./src/libs/Prism.Picshare
+
+jobs:
+  build-libs-main:
+    uses : ./.github/workflows/actions/ci-dotnet.yaml
+    with:
+      projectPath: ./src/libs/Prism.Picshare
+      sonarProjectKey: prism-be_picshare-libs-main
+      sonarProjectName: Prism.Picshare
