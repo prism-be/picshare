@@ -10,6 +10,7 @@ jobs:
   version:
     uses: ./.github/workflows/actions-utils-version.yaml
   display:
+    runs-on: ubuntu
     needs: version
     steps:
       - run: echo ${{ needs.version.outputs.informationalVersion }} ${{ needs.version.outputs.assemblyVersion }}
