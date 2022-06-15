@@ -24,8 +24,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Mandatory to use the extract version from tag action
+      - id: extract
+        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
       - id: compute
         run: |
-          TAG=`git describe --tags --abbrev=0`
-          echo "The latest tag is $TAG"
+          echo "Major : ${{ steps.extract.outputs.MAJOR }}"
+          echo "Minor : ${{ steps.extract.outputs.MINOR }}"
+          echo "Patch : ${{ steps.extract.outputs.PATCH }}"
+          echo "Commits : ${{ steps.extract.outputs.NUMBER_OF_COMMITS_SINCE_TAG }}"
           
