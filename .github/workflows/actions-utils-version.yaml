@@ -22,6 +22,8 @@ jobs:
       - name: Checkout Repository
         id: checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Mandatory to use the extract version from tag action
       - id: compute
         run: |
           TAG=`git describe --tags --abbrev=0`
