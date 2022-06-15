@@ -5,10 +5,12 @@ on:
   push:
     branches:
       - main
+    path:
+      - src/libs/Prism.Picshare/**
   pull_request:
     types: [ opened, synchronize, reopened ]
-  path:
-    - ./src/libs/Prism.Picshare
+    path:
+      - src/libs/Prism.Picshare/**
 
 jobs:
   build-libs-main:
