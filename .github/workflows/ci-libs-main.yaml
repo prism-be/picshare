@@ -20,3 +20,6 @@ jobs:
       projectPath: ./src/libs/Prism.Picshare
       sonarProjectKey: prism-be_picshare-libs-main
       sonarProjectName: Prism.Picshare
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

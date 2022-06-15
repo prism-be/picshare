@@ -10,7 +10,11 @@
       sonarProjectName:
         required: true
         type: string
-    secrets: inherit
+    secrets:
+      SONAR_TOKEN:
+        required: true
+      GITHUB_TOKEN:
+        required: true
     
 jobs:
   build-libs-main:
