@@ -14,7 +14,7 @@ on:
 
 jobs:
   build-libs-main:
-    uses : ./.github/workflows/actions/ci-dotnet.yaml
+    uses : ./.github/workflows/actions-ci-dotnet.yaml
     with:
       projectPath: ./src/libs/Prism.Picshare
       sonarProjectKey: prism-be_picshare-libs-main
