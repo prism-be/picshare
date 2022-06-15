@@ -1,0 +1,44 @@
+﻿on:
+  workflow_call:
+    inputs:
+      projectPath:
+        required: true
+        type: string
+      sonarProjectKey:
+        required: true
+        type: string
+      sonarProjectName:
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        required: true
+    
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x
+
+      - name: Trick for Sonar
+        run: rm -f ./sonar-project.properties
+
+      - name: Build and Analyze
+        uses: highbyte/sonarscan-dotnet@v2.1.2
+        with:
+          sonarProjectKey: ${{ inputs.sonarProjectKey }}
+          sonarProjectName: ${{ inputs.sonarProjectName }}
+          sonarOrganization: prism-be
+          dotnetBuildArguments: ${{ inputs.projectPath }}
+          dotnetTestArguments: ${{ inputs.projectPath }} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

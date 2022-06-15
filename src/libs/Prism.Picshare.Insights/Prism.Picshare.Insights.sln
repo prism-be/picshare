@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights", "Prism.Picshare.Insights\Prism.Picshare.Insights.csproj", "{BB5D3A75-D24A-476C-B75B-9EFC7A5F9BDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights.Tests", "Prism.Picshare.Insights.Tests\Prism.Picshare.Insights.Tests.csproj", "{40999120-6958-46A3-A49C-253A50179786}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB5D3A75-D24A-476C-B75B-9EFC7A5F9BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB5D3A75-D24A-476C-B75B-9EFC7A5F9BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB5D3A75-D24A-476C-B75B-9EFC7A5F9BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB5D3A75-D24A-476C-B75B-9EFC7A5F9BDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40999120-6958-46A3-A49C-253A50179786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40999120-6958-46A3-A49C-253A50179786}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40999120-6958-46A3-A49C-253A50179786}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40999120-6958-46A3-A49C-253A50179786}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
