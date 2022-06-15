@@ -14,7 +14,7 @@ on:
       - src/libs/Prism.Picshare/**
 
 jobs:
-  build-libs-main:
+  build:
     uses : ./.github/workflows/actions-ci-dotnet.yaml
     with:
       projectPath: ./src/libs/Prism.Picshare
