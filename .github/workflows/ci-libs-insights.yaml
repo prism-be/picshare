@@ -1,0 +1,23 @@
+﻿name: CI - Libs - Insights
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    path:
+      - src/libs/Prism.Picshare.Insights/**
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    path:
+      - src/libs/Prism.Picshare.Insights/**
+
+jobs:
+  build:
+    uses : ./.github/workflows/actions-ci-dotnet.yaml
+    with:
+      projectPath: ./src/libs/Prism.Picshare.Insights
+      sonarProjectKey: prism-be_picshare-libs-insights
+      sonarProjectName: Prism.Picshare.Insights
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

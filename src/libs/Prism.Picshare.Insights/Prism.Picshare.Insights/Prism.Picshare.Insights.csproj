@@ -4,6 +4,12 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Prism.Picshare.Insights</Title>
+        <Authors>PRISM</Authors>
+        <Copyright>PRISM</Copyright>
+        <PackageIcon>logo-small.png</PackageIcon>
+        <RepositoryUrl>https://github.com/prism-be/picshare/tree/main/src/libs/Prism.Picshare.Insights</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +20,13 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="logo-small.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>
