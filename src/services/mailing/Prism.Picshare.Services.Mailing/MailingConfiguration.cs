@@ -18,7 +18,6 @@ public class MailingConfiguration
     }
 
     public int SmtpPort { get; set; }
-
     public string RootUri { get; set; }
     public string SmtpPassword { get; set; }
     public string SmtpServer { get; set; }
