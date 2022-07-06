@@ -1,4 +1,4 @@
-﻿name: CI - Dotnet
+﻿name: CI - Services
 
 on:
   workflow_dispatch:

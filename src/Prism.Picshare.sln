@@ -12,6 +12,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights.Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "insights", "insights", "{66BAE5D2-F98F-4344-A72D-1723162D9172}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{A02333E8-4F7B-4388-B3ED-38C5585A767D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "authentication", "authentication", "{ADE60765-24A6-42AE-A0B0-6E95A5D1A677}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Authentication", "services\authentication\Prism.Picshare.Services.Authentication\Prism.Picshare.Services.Authentication.csproj", "{A6B0AD8D-7558-4249-98D4-AA133A20A816}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Authentication.Tests", "services\authentication\Prism.Picshare.Services.Authentication.Tests\Prism.Picshare.Services.Authentication.Tests.csproj", "{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +42,14 @@ Global
 		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6B0AD8D-7558-4249-98D4-AA133A20A816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6B0AD8D-7558-4249-98D4-AA133A20A816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6B0AD8D-7558-4249-98D4-AA133A20A816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6B0AD8D-7558-4249-98D4-AA133A20A816}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{800BA4A7-4E72-4415-B092-ED706EAB95EC} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
@@ -41,5 +57,8 @@ Global
 		{66BAE5D2-F98F-4344-A72D-1723162D9172} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE} = {66BAE5D2-F98F-4344-A72D-1723162D9172}
 		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E} = {66BAE5D2-F98F-4344-A72D-1723162D9172}
+		{ADE60765-24A6-42AE-A0B0-6E95A5D1A677} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
+		{A6B0AD8D-7558-4249-98D4-AA133A20A816} = {ADE60765-24A6-42AE-A0B0-6E95A5D1A677}
+		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC} = {ADE60765-24A6-42AE-A0B0-6E95A5D1A677}
 	EndGlobalSection
 EndGlobal
