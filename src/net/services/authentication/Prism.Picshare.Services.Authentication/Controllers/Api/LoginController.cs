@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "SubscribeController.cs" company = "Prism">
+//  <copyright file = "LoginController.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -14,19 +14,35 @@ namespace Prism.Picshare.Services.Authentication.Controllers.Api;
 public class LoginController : Controller
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<LoginController> _logger;
 
-    public LoginController(IMediator mediator, ILogger<LoginController> logger)
+    public LoginController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
+    }
+
+    [HttpPost("/api/authentication/login")]
+    public async Task<IActionResult> Login([FromBody] AuthenticationRequest request)
+    {
+        var result = await _mediator.Send(request);
+
+        if (result == ResponseCodes.Ok)
+        {
+            var token = await _mediator.Send(new GenerateTokenRequest(request.Login));
+
+            if (token != null)
+            {
+                return Ok(token);
+            }
+
+            return BadRequest();
+        }
+
+        return Unauthorized();
     }
 
     [HttpPost("/api/authentication/register")]
     public async Task<IActionResult> Register([FromBody] RegisterAccountRequest request)
     {
-        _logger.LogInformation("Processing incoming request : subscribe - {login} - {organisation}", request.Login, request.Organisation);
-        
         var responseCode = await _mediator.Send(request);
 
         if (responseCode == ResponseCodes.Ok)
