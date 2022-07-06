@@ -103,7 +103,7 @@ public class AuthenticationRequestTests
     public void Validate_Empty_Login()
     {
         // Arrange
-        var request = new AuthenticationRequest(Guid.Empty.ToString(), Guid.NewGuid().ToString());
+        var request = new AuthenticationRequest(string.Empty, Guid.NewGuid().ToString());
 
         // Act
         var validator = new AuthenticationRequestValidator();
@@ -117,7 +117,7 @@ public class AuthenticationRequestTests
     public void Validate_Empty_Password()
     {
         // Arrange
-        var request = new AuthenticationRequest(Guid.NewGuid().ToString(), Guid.Empty.ToString());
+        var request = new AuthenticationRequest(Guid.NewGuid().ToString(), string.Empty);
 
         // Act
         var validator = new AuthenticationRequestValidator();
