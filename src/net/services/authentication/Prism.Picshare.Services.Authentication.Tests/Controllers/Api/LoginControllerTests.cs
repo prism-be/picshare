@@ -28,7 +28,7 @@ public class LoginControllerTests
         mediator.Setup(x => x.Send(It.IsAny<RegisterAccountRequest>(), default)).ReturnsAsync(code);
 
         // Act
-        var controller = new LoginController(mediator.Object, Mock.Of<ILogger<LoginController>>());
+        var controller = new LoginController(mediator.Object);
         var result = await controller.Register(new RegisterAccountRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(),Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
 
         // Assert

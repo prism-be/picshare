@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 var applicationAssembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(applicationAssembly);
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(applicationAssembly);
 
 builder.Logging.AddInsights();
