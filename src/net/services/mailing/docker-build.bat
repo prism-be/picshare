@@ -1,0 +1,1 @@
+docker build ../../ --file Prism.Picshare.Services.Mailing/Dockerfile --tag simonbaudart/picshare:service-mailing-latest

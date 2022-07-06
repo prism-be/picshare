@@ -1,1 +1,0 @@
-docker build . --file Prism.Picshare.Services.Authentication/Dockerfile --tag simonbaudart/picshare:service-authentication-latest --build-arg NUGET_AUTH_TOKEN=%1
