@@ -5,8 +5,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/clients/**'
   pull_request:
     types: [ opened, synchronize, reopened ]
+    paths:
+      - 'src/clients/**'
     
 jobs:
   build-and-analyze:
