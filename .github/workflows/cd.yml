@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     
 jobs:
-  publish-services-authentication:
+  services-authentication:
     uses: ./.github/workflows/cd-docker.yml
     with:
       dockerFile: ./services/authentication/Prism.Picshare.Services.Authentication/Dockerfile
@@ -16,7 +16,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
-  publish-services-mailing:
+  services-mailing:
     uses: ./.github/workflows/cd-docker.yml
     with:
       dockerFile: ./services/mailing/Prism.Picshare.Services.Mailing/Dockerfile
@@ -26,7 +26,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
-  publish-services-pictures:
+  services-pictures:
     uses: ./.github/workflows/cd-docker.yml
     with:
       dockerFile: ./services/pictures/Prism.Picshare.Services.Pictures/Dockerfile
@@ -36,7 +36,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
-  publish-clients-front-public:
+  clients-front-public:
     uses: ./.github/workflows/cd-docker.yml
     with:
       dockerFile: ./Dockerfile
