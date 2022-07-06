@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - 'src/libs/*'
-      - 'src/services/*'
+      - 'src/libs/**'
+      - 'src/services/**'
   pull_request:
     types: [ opened, synchronize, reopened ]
     paths:
-      - 'src/libs/*'
-      - 'src/services/*'
+      - 'src/libs/**'
+      - 'src/services/**'
     
 jobs:
   build-and-analyze:
