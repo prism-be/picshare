@@ -23,7 +23,21 @@ public class LoginController : Controller
     [HttpPost("/api/authentication/login")]
     public async Task<IActionResult> Login([FromBody] AuthenticationRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _mediator.Send(request);
+
+        if (result == ResponseCodes.Ok)
+        {
+            var token = await _mediator.Send(new GenerateTokenRequest(request.Login));
+
+            if (token != null)
+            {
+                return Ok(token);
+            }
+
+            return BadRequest();
+        }
+
+        return Unauthorized();
     }
 
     [HttpPost("/api/authentication/register")]
