@@ -6,6 +6,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{05024BD0-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Tests", "libs\Prism.Picshare.Tests\Prism.Picshare.Tests.csproj", "{9AA872E3-8569-4820-948E-B7C3F908AA16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights", "libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj", "{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights.Tests", "libs\Prism.Picshare.Insights.Tests\Prism.Picshare.Insights.Tests.csproj", "{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "insights", "insights", "{66BAE5D2-F98F-4344-A72D-1723162D9172}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +26,20 @@ Global
 		{9AA872E3-8569-4820-948E-B7C3F908AA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AA872E3-8569-4820-948E-B7C3F908AA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AA872E3-8569-4820-948E-B7C3F908AA16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{800BA4A7-4E72-4415-B092-ED706EAB95EC} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{9AA872E3-8569-4820-948E-B7C3F908AA16} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
+		{66BAE5D2-F98F-4344-A72D-1723162D9172} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
+		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE} = {66BAE5D2-F98F-4344-A72D-1723162D9172}
+		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E} = {66BAE5D2-F98F-4344-A72D-1723162D9172}
 	EndGlobalSection
 EndGlobal
