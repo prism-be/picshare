@@ -18,6 +18,7 @@ public class GenerateTokenRequestValidator : AbstractValidator<GenerateTokenRequ
 {
     public GenerateTokenRequestValidator()
     {
+        RuleFor(x => x.Login).NotEmpty().MaximumLength(Constants.MaxShortStringLength);
     }
 }
 
