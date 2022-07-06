@@ -14,7 +14,6 @@ namespace Prism.Picshare.Tests;
 
 public class SerializationTests
 {
-
     [Fact]
     public void Album_Ok()
     {
@@ -96,6 +95,20 @@ public class SerializationTests
             CreationDate = DateTime.Today,
             Views = 42,
             Name = Guid.NewGuid().ToString()
+        };
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
+    public void Token_Ok()
+    {
+        // Arrange
+        var source = new Token
+        {
+            AccessToken = Guid.NewGuid().ToString(),
+            RefreshToken = Guid.NewGuid().ToString(),
+            Expires = Random.Shared.Next(42)
         };
 
         CheckSerialization(source);

@@ -73,6 +73,7 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
         credentials = new Credentials
         {
             Id = Security.GenerateIdentifier(),
+            OrganisationId = organisation.Id,
             Login = request.Login,
             PasswordHash = Argon2.Hash(request.Password)
         };
