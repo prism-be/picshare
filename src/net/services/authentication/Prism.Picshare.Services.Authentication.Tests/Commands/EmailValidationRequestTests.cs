@@ -20,13 +20,13 @@ public class EmailValidationRequestTests
     public async Task Handle_NotFound()
     {
         // Arrange
-        var logger = new Mock<ILogger<EmailValidationRequestHandler>>();
+        var logger = new Mock<ILogger<EmailValidatedRequestHandler>>();
         var daprClient = new Mock<DaprClient>();
 
-        var request = new EmailValidationRequest(Guid.NewGuid(), Guid.NewGuid());
+        var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
 
         // Act
-        var handler = new EmailValidationRequestHandler(logger.Object, daprClient.Object);
+        var handler = new EmailValidatedRequestHandler(logger.Object, daprClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -37,10 +37,10 @@ public class EmailValidationRequestTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var logger = new Mock<ILogger<EmailValidationRequestHandler>>();
+        var logger = new Mock<ILogger<EmailValidatedRequestHandler>>();
         var daprClient = new Mock<DaprClient>();
 
-        var request = new EmailValidationRequest(Guid.NewGuid(), Guid.NewGuid());
+        var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
         daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(request.OrganisationId, request.UserId), new User
         {
             OrganisationId = request.OrganisationId,
@@ -48,7 +48,7 @@ public class EmailValidationRequestTests
         });
 
         // Act
-        var handler = new EmailValidationRequestHandler(logger.Object, daprClient.Object);
+        var handler = new EmailValidatedRequestHandler(logger.Object, daprClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -60,10 +60,10 @@ public class EmailValidationRequestTests
     public async Task Validator_Empty_Id()
     {
         // Arrange
-        var request = new EmailValidationRequest(Guid.NewGuid(), Guid.Empty);
+        var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.Empty);
 
         // Act
-        var validator = new EmailValidationRequestValidator();
+        var validator = new EmailValidatedRequestValidator();
         var result = await validator.ValidateAsync(request);
 
         // Assert
@@ -74,10 +74,10 @@ public class EmailValidationRequestTests
     public async Task Validator_Empty_Organisation()
     {
         // Arrange
-        var request = new EmailValidationRequest(Guid.Empty, Guid.NewGuid());
+        var request = new EmailValidatedRequest(Guid.Empty, Guid.NewGuid());
 
         // Act
-        var validator = new EmailValidationRequestValidator();
+        var validator = new EmailValidatedRequestValidator();
         var result = await validator.ValidateAsync(request);
 
         // Assert
@@ -88,10 +88,10 @@ public class EmailValidationRequestTests
     public async Task Validator_Ok()
     {
         // Arrange
-        var request = new EmailValidationRequest(Guid.NewGuid(), Guid.NewGuid());
+        var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
 
         // Act
-        var validator = new EmailValidationRequestValidator();
+        var validator = new EmailValidatedRequestValidator();
         var result = await validator.ValidateAsync(request);
 
         // Assert

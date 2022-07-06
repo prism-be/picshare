@@ -12,29 +12,29 @@ using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
-public record EmailValidationRequest(Guid OrganisationId, Guid UserId) : IRequest<ResponseCodes>;
+public record EmailValidatedRequest(Guid OrganisationId, Guid UserId) : IRequest<ResponseCodes>;
 
-public class EmailValidationRequestValidator : AbstractValidator<EmailValidationRequest>
+public class EmailValidatedRequestValidator : AbstractValidator<EmailValidatedRequest>
 {
-    public EmailValidationRequestValidator()
+    public EmailValidatedRequestValidator()
     {
         RuleFor(x => x.OrganisationId).NotEmpty();
         RuleFor(x => x.UserId).NotEmpty();
     }
 }
 
-public class EmailValidationRequestHandler : IRequestHandler<EmailValidationRequest, ResponseCodes>
+public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedRequest, ResponseCodes>
 {
     private readonly DaprClient _daprClient;
-    private readonly ILogger<EmailValidationRequestHandler> _logger;
+    private readonly ILogger<EmailValidatedRequestHandler> _logger;
 
-    public EmailValidationRequestHandler(ILogger<EmailValidationRequestHandler> logger, DaprClient daprClient)
+    public EmailValidatedRequestHandler(ILogger<EmailValidatedRequestHandler> logger, DaprClient daprClient)
     {
         _logger = logger;
         _daprClient = daprClient;
     }
 
-    public async Task<ResponseCodes> Handle(EmailValidationRequest request, CancellationToken cancellationToken)
+    public async Task<ResponseCodes> Handle(EmailValidatedRequest request, CancellationToken cancellationToken)
     {
         var key = EntityReference.ComputeKey(request.OrganisationId, request.UserId);
         var user = await _daprClient.GetStateAsync<User>(Stores.Users, key, cancellationToken: cancellationToken);

@@ -29,7 +29,7 @@ public class EmailValidatedControllerTests
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<EmailValidationRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResponseCodes.UserNotFound);
+        mediator.Setup(x => x.Send(It.IsAny<EmailValidatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResponseCodes.UserNotFound);
 
         // Act
         var controller = new EmailValidatedController(mediator.Object);
@@ -37,7 +37,7 @@ public class EmailValidatedControllerTests
 
         // Assert
         result.Should().BeAssignableTo<NotFoundResult>();
-        mediator.Verify(x => x.Send(It.Is<EmailValidationRequest>(r => r.UserId == user.Id && r.OrganisationId == user.OrganisationId), It.IsAny<CancellationToken>()), Times.Once);
+        mediator.Verify(x => x.Send(It.Is<EmailValidatedRequest>(r => r.UserId == user.Id && r.OrganisationId == user.OrganisationId), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class EmailValidatedControllerTests
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<EmailValidationRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResponseCodes.Ok);
+        mediator.Setup(x => x.Send(It.IsAny<EmailValidatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResponseCodes.Ok);
 
         // Act
         var controller = new EmailValidatedController(mediator.Object);
@@ -59,6 +59,6 @@ public class EmailValidatedControllerTests
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
-        mediator.Verify(x => x.Send(It.Is<EmailValidationRequest>(r => r.UserId == user.Id && r.OrganisationId == user.OrganisationId), It.IsAny<CancellationToken>()), Times.Once);
+        mediator.Verify(x => x.Send(It.Is<EmailValidatedRequest>(r => r.UserId == user.Id && r.OrganisationId == user.OrganisationId), It.IsAny<CancellationToken>()), Times.Once);
     }
 }
