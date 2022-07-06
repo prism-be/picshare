@@ -20,6 +20,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Aut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Authentication.Tests", "services\authentication\Prism.Picshare.Services.Authentication.Tests\Prism.Picshare.Services.Authentication.Tests.csproj", "{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mailing", "mailing", "{270ADA3E-0378-429A-AB6D-FBA5EE9BE865}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Mailing", "services\mailing\Prism.Picshare.Services.Mailing\Prism.Picshare.Services.Mailing.csproj", "{336E7557-FB88-4842-BA6D-59D9585D18CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Mailing.Tests", "services\mailing\Prism.Picshare.Services.Mailing.Tests\Prism.Picshare.Services.Mailing.Tests.csproj", "{DEEAE735-8C51-4847-AE76-E7C9ED738F63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +56,14 @@ Global
 		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{336E7557-FB88-4842-BA6D-59D9585D18CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{336E7557-FB88-4842-BA6D-59D9585D18CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{336E7557-FB88-4842-BA6D-59D9585D18CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{336E7557-FB88-4842-BA6D-59D9585D18CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEEAE735-8C51-4847-AE76-E7C9ED738F63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEEAE735-8C51-4847-AE76-E7C9ED738F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEEAE735-8C51-4847-AE76-E7C9ED738F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEEAE735-8C51-4847-AE76-E7C9ED738F63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{800BA4A7-4E72-4415-B092-ED706EAB95EC} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
@@ -60,5 +74,8 @@ Global
 		{ADE60765-24A6-42AE-A0B0-6E95A5D1A677} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
 		{A6B0AD8D-7558-4249-98D4-AA133A20A816} = {ADE60765-24A6-42AE-A0B0-6E95A5D1A677}
 		{AF5D312E-5B1D-4F8E-8E6F-0FB4EE622ADC} = {ADE60765-24A6-42AE-A0B0-6E95A5D1A677}
+		{270ADA3E-0378-429A-AB6D-FBA5EE9BE865} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
+		{336E7557-FB88-4842-BA6D-59D9585D18CE} = {270ADA3E-0378-429A-AB6D-FBA5EE9BE865}
+		{DEEAE735-8C51-4847-AE76-E7C9ED738F63} = {270ADA3E-0378-429A-AB6D-FBA5EE9BE865}
 	EndGlobalSection
 EndGlobal
