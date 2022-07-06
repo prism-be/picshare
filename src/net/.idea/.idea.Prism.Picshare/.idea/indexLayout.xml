@@ -4,6 +4,7 @@
     <attachedFolders>
       <Path>../../.github/workflows</Path>
       <Path>../clients/front</Path>
+      <Path>../dapr</Path>
     </attachedFolders>
     <explicitIncludes />
     <explicitExcludes />
