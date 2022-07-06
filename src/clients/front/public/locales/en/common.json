@@ -1,0 +1,15 @@
+﻿{
+  "header": {
+    "title": "Picshare By PRISM"
+  },
+  "subscribe": {
+    "title": "Welcome to Picshare By PRISM"
+  },
+  "form": {
+    "validation": {
+      "required": "This field is required",
+      "email": "This is not a valid email",
+      "passwordMatch": "The specified password does not match"
+    }
+  }
+}

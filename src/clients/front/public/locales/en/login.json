@@ -1,0 +1,44 @@
+﻿{
+  "login": {
+    "title": "Sign in into your account",
+    "or": "or",
+    "register": "register a new account",
+    "form": {
+      "email": "Email address",
+      "password": "Password",
+      "remember": "Remember Me",
+      "forget": "Forget your password?",
+      "go": "Sign In"
+    }
+  },
+  "register": {
+    "title": "Create a new account",
+    "or": "or",
+    "login": "log into an existing account",
+    "form": {
+      "login": "Login",
+      "email": "Email address",
+      "name": "Your name",
+      "organisation": "Your organisation",
+      "password": "Password",
+      "passwordCheck": "Password, again :)",
+      "go": "Create Account"
+    },
+    "success": {
+      "title": "Thank you for your registration !",
+      "message": "Your account creation has been submitted. You should receive an email with a confirmation link."
+    },
+    "error": {
+      "userAlreadyExists": "The username already exist, please choose another one.",
+      "organisationAlreadyExists": "The organisation already exist, please choose another one."
+    }
+  },
+  "validation": {
+    "title": "Confirm your email",
+    "help": "To process the validation, please click on the button below.",
+    "button": "Confirm my email",
+    "loading": "Validation in progress",
+    "error": "Your email cannot be validated, the return code is : ",
+    "success" : "Thank you, your email is validated, you will be redirected to the login page."
+  }
+}
