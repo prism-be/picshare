@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       
       - name: Extract Version
-          uses: damienaicheh/extract-version-from-tag-action@v1.0.0
+        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v2.0.1
