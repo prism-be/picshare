@@ -8,6 +8,9 @@ namespace Prism.Picshare.Services.Authentication.Configuration;
 
 public class JwtConfiguration
 {
+    public const string Audience = "picshare-front";
+    public const string Issuer = "picshare-authentication";
+    
     public JwtConfiguration()
     {
         PrivateKey = PublicKey = string.Empty;
