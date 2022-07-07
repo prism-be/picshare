@@ -11,9 +11,9 @@ using Dapr.Client;
 using FluentValidation;
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
+using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 

@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\libs\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj" />
       <ProjectReference Include="..\..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj" />
       <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>

@@ -6,6 +6,7 @@
 
 using Dapr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
@@ -14,6 +15,7 @@ using Prism.Picshare.Services.Authentication.Commands;
 
 namespace Prism.Picshare.Services.Authentication.Controllers.Events;
 
+[AllowAnonymous]
 public class EmailValidatedController : Controller
 {
     private readonly IMediator _mediator;

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Services.Authentication.Commands;
 
@@ -19,6 +20,7 @@ public class LoginController : Controller
         _mediator = mediator;
     }
 
+    [AllowAnonymous]
     [HttpPost("/api/authentication/login")]
     public async Task<IActionResult> Login([FromBody] AuthenticationRequest request)
     {
@@ -38,7 +40,8 @@ public class LoginController : Controller
 
         return Unauthorized();
     }
-
+    
+    [AllowAnonymous]
     [HttpPost("/api/authentication/register")]
     public async Task<IActionResult> Register([FromBody] RegisterAccountRequest request)
     {

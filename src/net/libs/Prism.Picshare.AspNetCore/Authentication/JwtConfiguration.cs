@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Services.Authentication.Configuration;
+namespace Prism.Picshare.AspNetCore.Authentication;
 
 public class JwtConfiguration
 {

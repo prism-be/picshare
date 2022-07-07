@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Pic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Pictures.Tests", "services\pictures\Prism.Picshare.Services.Pictures.Tests\Prism.Picshare.Services.Pictures.Tests.csproj", "{EAB081E8-399F-4716-8B87-F89EB7492979}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AspNetCore", "libs\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj", "{CA0C2B00-EB03-44E0-9540-8370A8AD4151}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{EAB081E8-399F-4716-8B87-F89EB7492979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAB081E8-399F-4716-8B87-F89EB7492979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAB081E8-399F-4716-8B87-F89EB7492979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{800BA4A7-4E72-4415-B092-ED706EAB95EC} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
@@ -94,5 +100,6 @@ Global
 		{DF145F6E-241F-4FE7-AC49-B910458BD903} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
 		{75DE15AB-C4B3-4777-B770-A62FFE7E5EAA} = {DF145F6E-241F-4FE7-AC49-B910458BD903}
 		{EAB081E8-399F-4716-8B87-F89EB7492979} = {DF145F6E-241F-4FE7-AC49-B910458BD903}
+		{CA0C2B00-EB03-44E0-9540-8370A8AD4151} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 	EndGlobalSection
 EndGlobal

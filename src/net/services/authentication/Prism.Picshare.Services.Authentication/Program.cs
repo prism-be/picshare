@@ -8,9 +8,9 @@ using FluentValidation;
 using Grpc.Net.Client;
 using MediatR;
 using Prism.Picshare;
+using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,14 +33,20 @@ builder.Services.AddDaprClient(config =>
 
 var config = new JwtConfiguration
 {
-    PrivateKey = EnvironmentConfiguration.GetMandatoryConfiguration("JWT_PRIVATE_KEY")
+    PrivateKey = EnvironmentConfiguration.GetMandatoryConfiguration("JWT_PRIVATE_KEY"),
+    PublicKey = EnvironmentConfiguration.GetMandatoryConfiguration("JWT_PUBLIC_KEY")
 };
 builder.Services.AddSingleton(config);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddPicshareAuthentication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseAuthentication()
+    .UseAuthorization();
 
 app.UseExceptionLogger();
 
@@ -48,6 +54,7 @@ app.MapSubscribeHandler();
 app.UseCloudEvents();
 app.UseHealthChecks("/health");
 
-app.MapControllers();
+app.MapControllers()
+    .RequireAuthorization();
 
 app.Run();
