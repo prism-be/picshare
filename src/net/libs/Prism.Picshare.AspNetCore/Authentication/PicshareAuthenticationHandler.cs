@@ -30,10 +30,10 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
         _jwtConfiguration = jwtConfiguration;
         _logger = logger.CreateLogger(typeof(PicshareAuthenticationHandler));
     }
-
+    
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (Request.Path.StartsWithSegments("/dapr", StringComparison.InvariantCultureIgnoreCase) || Request.Path.StartsWithSegments(Topics.RoutePrefix))
+        if (Request.Path.StartsWithSegments("/dapr", StringComparison.InvariantCultureIgnoreCase) || Request.Path.StartsWithSegments("/events"))
         {
             _logger.LogDebug("Allowing access to the path {path}", Request.Path);
             return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new GenericIdentity("dapr")), "path")));
@@ -91,7 +91,8 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
                 CryptoProviderFactory = new CryptoProviderFactory
                 {
                     CacheSignatureProviders = false
-                }
+                },
+                ClockSkew = TimeSpan.Zero
             };
 
             var handler = new JwtSecurityTokenHandler();
