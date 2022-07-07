@@ -12,11 +12,13 @@ using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Mailing.Commands;
 using Prism.Picshare.Services.Mailing.Model;
 using Xunit;
+using Stores = Prism.Picshare.Services.Mailing.Model.Stores;
 
 namespace Prism.Picshare.Services.Mailing.Tests.Commands;
 
@@ -77,7 +79,7 @@ public class RegisterConfirmationValidationTests
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
-        daprClient.VerifyPublishEvent<User>(DaprConfiguration.PubSub, Topics.Email.Validated);
+        daprClient.VerifyPublishEvent<User>(Publishers.PubSub, Topics.Email.Validated);
         daprClient.VerifySaveState<MailAction<User>>(Stores.MailActions);
     }
 

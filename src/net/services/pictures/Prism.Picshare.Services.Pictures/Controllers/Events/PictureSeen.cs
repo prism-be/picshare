@@ -7,6 +7,7 @@
 using Dapr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
@@ -25,7 +26,7 @@ public class PictureSeen : Controller
     }
 
     [HttpPost(Topics.Pictures.Seen)]
-    [Topic(DaprConfiguration.PubSub, Topics.Pictures.Seen)]
+    [Topic(Publishers.PubSub, Topics.Pictures.Seen)]
     public async Task<IActionResult> Handle([FromBody] EntityReference picture)
     {
         _logger.LogInformation("Process picture seen : {pictureId}", picture.Id);
