@@ -7,7 +7,6 @@
 using FluentValidation;
 using Grpc.Net.Client;
 using MediatR;
-using Prism.Picshare;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;
@@ -30,13 +29,6 @@ builder.Services.AddDaprClient(config =>
         MaxSendMessageSize = 30 * 1024 * 1024
     });
 });
-
-var config = new JwtConfiguration
-{
-    PrivateKey = EnvironmentConfiguration.GetMandatoryConfiguration("JWT_PRIVATE_KEY"),
-    PublicKey = EnvironmentConfiguration.GetMandatoryConfiguration("JWT_PUBLIC_KEY")
-};
-builder.Services.AddSingleton(config);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
