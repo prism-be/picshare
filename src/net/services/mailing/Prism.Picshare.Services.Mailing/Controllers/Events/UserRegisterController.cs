@@ -7,6 +7,7 @@
 using Dapr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Mailing.Commands;
@@ -24,7 +25,7 @@ public class UserRegisterController: Controller
         _mediator = mediator;
     }
 
-    [Topic(DaprConfiguration.PubSub, Topics.User.Register)]
+    [Topic(Publishers.PubSub, Topics.User.Register)]
     [HttpPost("events/" + Topics.User.Register)]
     public async Task<IActionResult> Handle([FromBody] User user)
     {

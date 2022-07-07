@@ -4,17 +4,14 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
 using Dapr.Client;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
@@ -25,7 +22,7 @@ public record RegisterAccountRequest(
     [property: JsonPropertyName("password")]
     string Password,
     [property: JsonPropertyName("organisation")]
-    string Organisation) : IRequest<ResponseCodes>;
+    string Organisation) : IRequest<ResultCodes>;
 
 public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccountRequest>
 {
@@ -39,7 +36,7 @@ public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccount
     }
 }
 
-public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest, ResponseCodes>
+public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest, ResultCodes>
 {
     private readonly DaprClient _daprClient;
 
@@ -48,20 +45,20 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
         _daprClient = daprClient;
     }
 
-    public async Task<ResponseCodes> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
+    public async Task<ResultCodes> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
         var organisationId = await _daprClient.GetStateAsync<Guid>(Stores.OrganisationsName, request.Organisation, cancellationToken: cancellationToken);
 
         if (organisationId != Guid.Empty)
         {
-            return ResponseCodes.ExistingOrganisation;
+            return ResultCodes.ExistingOrganisation;
         }
 
         var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
 
         if (credentials != default)
         {
-            return ResponseCodes.ExistingUsername;
+            return ResultCodes.ExistingUsername;
         }
 
         var organisation = new Organisation
@@ -91,8 +88,8 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
         await _daprClient.SaveStateAsync(Stores.Organisations, organisation.Id.ToString(), organisation, cancellationToken: cancellationToken);
         await _daprClient.SaveStateAsync(Stores.Credentials, credentials.Login, credentials, cancellationToken: cancellationToken);
         await _daprClient.SaveStateAsync(Stores.Users, user.Key, user, cancellationToken: cancellationToken);
-        await _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.User.Register, user, cancellationToken);
+        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.User.Register, user, cancellationToken);
 
-        return ResponseCodes.Ok;
+        return ResultCodes.Ok;
     }
 }

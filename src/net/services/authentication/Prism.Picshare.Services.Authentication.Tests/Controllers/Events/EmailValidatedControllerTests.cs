@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
-using Prism.Picshare.Services.Authentication.Configuration;
 using Prism.Picshare.Services.Authentication.Controllers.Events;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Controllers.Events;
@@ -29,7 +28,7 @@ public class EmailValidatedControllerTests
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<EmailValidatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResponseCodes.UserNotFound);
+        mediator.Setup(x => x.Send(It.IsAny<EmailValidatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResultCodes.UserNotFound);
 
         // Act
         var controller = new EmailValidatedController(mediator.Object);
@@ -51,7 +50,7 @@ public class EmailValidatedControllerTests
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<EmailValidatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResponseCodes.Ok);
+        mediator.Setup(x => x.Send(It.IsAny<EmailValidatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(ResultCodes.Ok);
 
         // Act
         var controller = new EmailValidatedController(mediator.Object);

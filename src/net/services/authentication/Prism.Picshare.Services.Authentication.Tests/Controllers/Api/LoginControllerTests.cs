@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
-using Prism.Picshare.Services.Authentication.Configuration;
 using Prism.Picshare.Services.Authentication.Controllers.Api;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Controllers.Api;
@@ -23,7 +22,7 @@ public class LoginControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<AuthenticationRequest>(), default)).ReturnsAsync(ResponseCodes.InvalidCredentials);
+        mediator.Setup(x => x.Send(It.IsAny<AuthenticationRequest>(), default)).ReturnsAsync(ResultCodes.InvalidCredentials);
 
         // Act
         var controller = new LoginController(mediator.Object);
@@ -38,7 +37,7 @@ public class LoginControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<AuthenticationRequest>(), default)).ReturnsAsync(ResponseCodes.Ok);
+        mediator.Setup(x => x.Send(It.IsAny<AuthenticationRequest>(), default)).ReturnsAsync(ResultCodes.Ok);
 
         // Act
         var controller = new LoginController(mediator.Object);
@@ -54,7 +53,7 @@ public class LoginControllerTests
         // Arrange
         var accessToken = Guid.NewGuid().ToString();
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<AuthenticationRequest>(), default)).ReturnsAsync(ResponseCodes.Ok);
+        mediator.Setup(x => x.Send(It.IsAny<AuthenticationRequest>(), default)).ReturnsAsync(ResultCodes.Ok);
         mediator.Setup(x => x.Send(It.IsAny<GenerateTokenRequest>(), default)).ReturnsAsync(new Token
         {
             AccessToken = accessToken
@@ -71,10 +70,10 @@ public class LoginControllerTests
     }
 
     [Theory]
-    [InlineData(ResponseCodes.Ok, typeof(NoContentResult))]
-    [InlineData(ResponseCodes.ExistingOrganisation, typeof(ConflictObjectResult))]
-    [InlineData(ResponseCodes.ExistingUsername, typeof(ConflictObjectResult))]
-    public async Task Register(ResponseCodes code, Type responseType)
+    [InlineData(ResultCodes.Ok, typeof(NoContentResult))]
+    [InlineData(ResultCodes.ExistingOrganisation, typeof(ConflictObjectResult))]
+    [InlineData(ResultCodes.ExistingUsername, typeof(ConflictObjectResult))]
+    public async Task Register(ResultCodes code, Type responseType)
     {
         // Arrange
         var mediator = new Mock<IMediator>();

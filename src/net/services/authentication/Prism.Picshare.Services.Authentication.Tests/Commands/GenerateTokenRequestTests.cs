@@ -12,6 +12,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
 using Prism.Picshare.Services.Authentication.Configuration;

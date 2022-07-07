@@ -9,9 +9,9 @@ using FluentAssertions;
 using Isopoh.Cryptography.Argon2;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -42,7 +42,7 @@ public class AuthenticationRequestTests
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.InvalidCredentials);
+        result.Should().Be(ResultCodes.InvalidCredentials);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class AuthenticationRequestTests
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.InvalidCredentials);
+        result.Should().Be(ResultCodes.InvalidCredentials);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class AuthenticationRequestTests
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.Ok);
+        result.Should().Be(ResultCodes.Ok);
     }
 
     [Fact]

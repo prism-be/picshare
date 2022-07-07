@@ -8,9 +8,9 @@ using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -30,7 +30,7 @@ public class EmailValidationRequestTests
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.UserNotFound);
+        result.Should().Be(ResultCodes.UserNotFound);
     }
     
     [Fact]
@@ -52,7 +52,7 @@ public class EmailValidationRequestTests
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.Ok);
+        result.Should().Be(ResultCodes.Ok);
         daprClient.VerifySaveState<User>(Stores.Users);
     }
 

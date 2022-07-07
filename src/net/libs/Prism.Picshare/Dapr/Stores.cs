@@ -9,8 +9,9 @@ namespace Prism.Picshare.Dapr;
 public static class Stores
 {
     public const string Albums = "statealbums";
-    public const string Commands = "statecommands";
+    public const string Credentials = "statecredentials";
     public const string Organisations = "stateorganisations";
+    public const string OrganisationsName = "stateorganisationsnames";
     public const string Pictures = "statepictures";
     public const string Users = "stateusers";
 }

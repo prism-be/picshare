@@ -8,12 +8,12 @@ using Dapr.Client;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
-public record AuthenticationRequest(string Login, string Password) : IRequest<ResponseCodes>;
+public record AuthenticationRequest(string Login, string Password) : IRequest<ResultCodes>;
 
 public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRequest>
 {
@@ -24,7 +24,7 @@ public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRe
     }
 }
 
-public class AuthenticationRequestHandler : IRequestHandler<AuthenticationRequest, ResponseCodes>
+public class AuthenticationRequestHandler : IRequestHandler<AuthenticationRequest, ResultCodes>
 {
     private readonly ILogger<AuthenticationRequestHandler> _logger;
     private readonly DaprClient _daprClient;
@@ -35,23 +35,23 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
         _daprClient = daprClient;
     }
 
-    public async Task<ResponseCodes> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
+    public async Task<ResultCodes> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
     {
         var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
 
         if (credentials == null)
         {
             _logger.LogInformation("Credentials not found for login : {login}", request.Login);
-            return ResponseCodes.InvalidCredentials;
+            return ResultCodes.InvalidCredentials;
         }
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
             _logger.LogInformation("Authentication success for credentials : {id}", credentials.Id);
-            return ResponseCodes.Ok;
+            return ResultCodes.Ok;
         }
         
         _logger.LogInformation("Authentication failed for credentials : {id}", credentials.Id);
-        return ResponseCodes.InvalidCredentials;
+        return ResultCodes.InvalidCredentials;
     }
 }

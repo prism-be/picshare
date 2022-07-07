@@ -7,9 +7,11 @@
 using Dapr.Client;
 using FluentValidation;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Mailing.Model;
+using Stores = Prism.Picshare.Services.Mailing.Model.Stores;
 
 namespace Prism.Picshare.Services.Mailing.Commands;
 
@@ -53,7 +55,7 @@ public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterCon
         state.Consumed = true;
         state.ConfirmationDate = DateTime.UtcNow;
 
-        var taskPublish = _daprClient.PublishEventAsync(DaprConfiguration.PubSub, Topics.Email.Validated, state.Data, cancellationToken);
+        var taskPublish = _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Email.Validated, state.Data, cancellationToken);
         var taskSave = _daprClient.SaveStateAsync(Stores.MailActions, state.Key, state, cancellationToken: cancellationToken);
 
         Task.WaitAll(new[]

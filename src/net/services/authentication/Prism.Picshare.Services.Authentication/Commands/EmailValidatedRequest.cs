@@ -7,12 +7,12 @@
 using Dapr.Client;
 using FluentValidation;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
-public record EmailValidatedRequest(Guid OrganisationId, Guid UserId) : IRequest<ResponseCodes>;
+public record EmailValidatedRequest(Guid OrganisationId, Guid UserId) : IRequest<ResultCodes>;
 
 public class EmailValidatedRequestValidator : AbstractValidator<EmailValidatedRequest>
 {
@@ -23,7 +23,7 @@ public class EmailValidatedRequestValidator : AbstractValidator<EmailValidatedRe
     }
 }
 
-public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedRequest, ResponseCodes>
+public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedRequest, ResultCodes>
 {
     private readonly DaprClient _daprClient;
     private readonly ILogger<EmailValidatedRequestHandler> _logger;
@@ -34,7 +34,7 @@ public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedReques
         _daprClient = daprClient;
     }
 
-    public async Task<ResponseCodes> Handle(EmailValidatedRequest request, CancellationToken cancellationToken)
+    public async Task<ResultCodes> Handle(EmailValidatedRequest request, CancellationToken cancellationToken)
     {
         var key = EntityReference.ComputeKey(request.OrganisationId, request.UserId);
         var user = await _daprClient.GetStateAsync<User>(Stores.Users, key, cancellationToken: cancellationToken);
@@ -43,12 +43,12 @@ public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedReques
         {
             _logger.LogWarning("The user with reference {key} does not exists", key);
 
-            return ResponseCodes.UserNotFound;
+            return ResultCodes.UserNotFound;
         }
 
         user.EmailValidated = true;
         await _daprClient.SaveStateAsync(Stores.Users, key, user, cancellationToken: cancellationToken);
 
-        return ResponseCodes.Ok;
+        return ResultCodes.Ok;
     }
 }

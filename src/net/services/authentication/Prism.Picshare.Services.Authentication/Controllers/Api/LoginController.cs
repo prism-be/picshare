@@ -7,7 +7,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Services.Authentication.Commands;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Controllers.Api;
 
@@ -25,7 +24,7 @@ public class LoginController : Controller
     {
         var result = await _mediator.Send(request);
 
-        if (result == ResponseCodes.Ok)
+        if (result == ResultCodes.Ok)
         {
             var token = await _mediator.Send(new GenerateTokenRequest(request.Login));
 
@@ -45,7 +44,7 @@ public class LoginController : Controller
     {
         var responseCode = await _mediator.Send(request);
 
-        if (responseCode == ResponseCodes.Ok)
+        if (responseCode == ResultCodes.Ok)
         {
             return NoContent();
         }

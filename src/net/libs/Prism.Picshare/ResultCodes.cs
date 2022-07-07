@@ -1,16 +1,19 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "StatusCodes.cs" company = "Prism">
+//  <copyright file = "ResultCodes.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Services.Authentication.Configuration;
+namespace Prism.Picshare;
 
-public enum ResponseCodes
+public enum ResultCodes
 {
-    Ok = 0,
+    Unknown = 0,
+    Ok = 200,
     InvalidCredentials = 40101,
+    MailActionNotFound = 40401,
     UserNotFound = 40402,
-    ExistingOrganisation = 40901,
-    ExistingUsername = 40902
+    MailActionAlreadyConsumed = 40901,
+    ExistingOrganisation = 40902,
+    ExistingUsername = 40903
 }

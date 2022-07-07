@@ -7,10 +7,10 @@
 using Dapr.Client;
 using FluentAssertions;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Authentication.Commands;
-using Prism.Picshare.Services.Authentication.Configuration;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -30,10 +30,10 @@ public class RegisterAccountRequestTests
             CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.Ok);
+        result.Should().Be(ResultCodes.Ok);
         daprClient.VerifySaveState<Organisation>(Stores.Organisations);
         daprClient.VerifySaveState<User>(Stores.Users);
-        daprClient.VerifyPublishEvent<User>(DaprConfiguration.PubSub, Topics.User.Register);
+        daprClient.VerifyPublishEvent<User>(Publishers.PubSub, Topics.User.Register);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class RegisterAccountRequestTests
             CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.ExistingOrganisation);
+        result.Should().Be(ResultCodes.ExistingOrganisation);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class RegisterAccountRequestTests
             CancellationToken.None);
 
         // Assert
-        result.Should().Be(ResponseCodes.ExistingUsername);
+        result.Should().Be(ResultCodes.ExistingUsername);
     }
 
     [Fact]

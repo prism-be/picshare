@@ -7,6 +7,7 @@
 using Dapr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Albums;
@@ -26,7 +27,7 @@ public class PhotoboothPictureUploaded : Controller
     }
 
     [HttpPost(Topics.Photobooth.Picture.Uploaded)]
-    [Topic(DaprConfiguration.PubSub, Topics.Photobooth.Picture.Uploaded)]
+    [Topic(Publishers.PubSub, Topics.Photobooth.Picture.Uploaded)]
     public async Task<IActionResult> Handle([FromBody] PhotoboothPicture photoboothPicture)
     {
         _logger.LogInformation("Process photobooth picture upload : {pictureId}", photoboothPicture.Id);
