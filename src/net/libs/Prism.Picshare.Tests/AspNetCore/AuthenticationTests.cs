@@ -21,7 +21,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
-using Prism.Picshare.Exceptions;
 using Xunit;
 
 namespace Prism.Picshare.Tests.AspNetCore;
