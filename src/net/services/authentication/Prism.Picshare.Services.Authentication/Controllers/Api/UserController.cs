@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Prism.Picshare.Services.Authentication.Controllers.Api;
@@ -12,8 +11,12 @@ namespace Prism.Picshare.Services.Authentication.Controllers.Api;
 public class UserController : Controller
 {
     [HttpGet("/api/authentication/user/check")]
-    public async Task<IActionResult> Check()
+    public IActionResult Check()
     {
-        return Ok(this.User.Identity?.Name);
+        return Ok(new
+        {
+            authenticated = User.Identity?.IsAuthenticated,
+            name = User.Claims.SingleOrDefault(x => x.Type == "Name")?.Value
+        });
     }
 }
