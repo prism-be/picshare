@@ -84,7 +84,7 @@ const Register = () => {
                     <div className="text-center mt-24">
                         <div className="flex items-center justify-center">
                         </div>
-                        <h2 className="text-4xl tracking-tight">
+                        <h2 className="text-4xl text-teal-600 tracking-tight">
                             {t("register.title")}
                         </h2>
                         <span className="text-sm">{t("register.or")}&nbsp;

@@ -1,5 +1,5 @@
 ﻿import {useEffect} from "react";
-import Router from "next/router";
+import Router, {useRouter} from "next/router";
 import useSWR from 'swr'
 import {getData} from "./ajaxHelper";
 
@@ -10,18 +10,17 @@ export default function useUser({
     const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
     const {data: user, mutate: mutateUser} = useSWR(prefix + "/api/authentication/user/check", getData);
 
+    const router = useRouter();
+    
     useEffect(() => {
-        // if no redirect needed, just return (example: already on /dashboard)
-        // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
-        if (!redirectTo || !user) return;
+        if (!redirectTo || !user) {
+            return;
+        }
+        
+        console.log(user);
 
-        if (
-            // If redirectTo is set, redirect if the user was not found.
-            (redirectTo && !redirectIfFound && !user?.authenticated) ||
-            // If redirectIfFound is also set, redirect if the user was found
-            (redirectIfFound && user?.authenticated)
-        ) {
-            Router.push(redirectTo);
+        if ((redirectTo && !redirectIfFound && !user.data.authenticated) ||(redirectIfFound && user.data.authenticated)) {
+            router.push(redirectTo);
         }
     }, [user, redirectIfFound, redirectTo]);
 

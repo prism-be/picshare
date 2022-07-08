@@ -4,11 +4,13 @@
     "or": "or",
     "register": "register a new account",
     "form": {
-      "email": "Email address",
+      "login": "Login",
       "password": "Password",
-      "remember": "Remember Me",
       "forget": "Forget your password?",
       "go": "Sign In"
+    },
+    "error" : {
+      "invalidCredentials": "The provided credentials are incorrect, please try again."
     }
   },
   "register": {
