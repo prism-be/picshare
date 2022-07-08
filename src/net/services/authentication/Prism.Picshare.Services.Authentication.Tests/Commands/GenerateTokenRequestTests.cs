@@ -5,12 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
 using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Dapr;
@@ -21,7 +18,6 @@ namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
 public class GenerateTokenRequestTests
 {
-
     private readonly JwtConfiguration _jwtConfiguration = new()
     {
         PrivateKey =
@@ -80,8 +76,10 @@ public class GenerateTokenRequestTests
         result.AccessToken.Should().NotBeEmpty();
         result.RefreshToken.Should().NotBeNull();
         result.RefreshToken.Should().NotBeEmpty();
-        ValidateToken(_jwtConfiguration.PublicKey, result.AccessToken).Should().BeTrue();
-        ValidateToken(_jwtConfiguration.PublicKey, result.RefreshToken).Should().BeTrue();
+        ValidateToken(_jwtConfiguration.PublicKey, result.AccessToken, false).Should().BeTrue();
+        ValidateToken(_jwtConfiguration.PublicKey, result.AccessToken, true).Should().BeFalse();
+        ValidateToken(_jwtConfiguration.PublicKey, result.RefreshToken, true).Should().BeTrue();
+        ValidateToken(_jwtConfiguration.PublicKey, result.RefreshToken, false).Should().BeFalse();
     }
 
     [Fact]
@@ -137,38 +135,8 @@ public class GenerateTokenRequestTests
         result.IsValid.Should().BeTrue();
     }
 
-    private bool ValidateToken(string publicKey, string token)
+    private bool ValidateToken(string publicKey, string token, bool isRefreshToken)
     {
-        var publicKeyBytes = Convert.FromBase64String(publicKey);
-
-        using var rsa = RSA.Create();
-        rsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
-
-        var validationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "picshare-authentication",
-            ValidAudience = "picshare-front",
-            IssuerSigningKey = new RsaSecurityKey(rsa),
-            CryptoProviderFactory = new CryptoProviderFactory
-            {
-                CacheSignatureProviders = false
-            }
-        };
-
-        try
-        {
-            var handler = new JwtSecurityTokenHandler();
-            handler.ValidateToken(token, validationParameters, out _);
-        }
-        catch
-        {
-            return false;
-        }
-
-        return true;
+        return TokenGenerator.ValidateToken(publicKey, token, Mock.Of<ILogger>(), isRefreshToken) != null;
     }
 }

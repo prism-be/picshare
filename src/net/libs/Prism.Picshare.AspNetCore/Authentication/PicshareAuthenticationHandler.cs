@@ -4,17 +4,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using Prism.Picshare.Exceptions;
 
 namespace Prism.Picshare.AspNetCore.Authentication;
 
@@ -52,7 +48,7 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
 
         var bearer = header.Substring(header.IndexOf(' ')).Trim();
 
-        var claimsPrincipal = ValidateToken(bearer);
+        var claimsPrincipal = TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, bearer, _logger, false);
 
         if (claimsPrincipal == null)
         {
@@ -64,43 +60,5 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
 
-    private ClaimsPrincipal? ValidateToken(string token)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(_jwtConfiguration.PublicKey))
-            {
-                throw new MissingConfigurationException("The configuration of jwtConfiguration.PublicKey is empty", "JWT_PUBLIC_KEY");
-            }
-
-            var publicKeyBytes = Convert.FromBase64String(_jwtConfiguration.PublicKey);
-
-            using var rsa = RSA.Create();
-            rsa.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
-
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = JwtConfiguration.Issuer,
-                ValidAudience = JwtConfiguration.Audience,
-                IssuerSigningKey = new RsaSecurityKey(rsa),
-                CryptoProviderFactory = new CryptoProviderFactory
-                {
-                    CacheSignatureProviders = false
-                },
-                ClockSkew = TimeSpan.Zero
-            };
-
-            var handler = new JwtSecurityTokenHandler();
-            return handler.ValidateToken(token, validationParameters, out _);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Error occured when validating bearer");
-            return null;
-        }
-    }
+    
 }

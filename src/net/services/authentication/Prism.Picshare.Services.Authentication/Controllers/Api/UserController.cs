@@ -35,4 +35,22 @@ public class UserController : Controller
             name = _userContextAccessor.Name
         });
     }
+    
+    [HttpGet("/api/authentication/user/refresh")]
+    public IActionResult Refresh()
+    {
+        if (!_userContextAccessor.IsAuthenticated)
+        {
+            return Unauthorized(new
+            {
+                authenticated = _userContextAccessor.IsAuthenticated,
+            });
+        }
+
+        return Ok(new
+        {
+            authenticated = _userContextAccessor.IsAuthenticated,
+            name = _userContextAccessor.Name
+        });
+    }
 }
