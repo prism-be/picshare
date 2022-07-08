@@ -16,7 +16,7 @@ const Home: NextPage = () => {
 
     const {t} = useTranslation('common')
 
-    if (!user || user.isLoggedIn === false) {
+    if (!user || user.authenticated === false) {
         return <Loader title={t("header.title")}/>
     }
 
