@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Services.Authentication.Contracts;
@@ -19,6 +20,7 @@ public class UserController : Controller
         _userContextAccessor = userContextAccessor;
     }
 
+    [AllowAnonymous]
     [HttpGet("/api/authentication/user/check")]
     public IActionResult Check()
     {
