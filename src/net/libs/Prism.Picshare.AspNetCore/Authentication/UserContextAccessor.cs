@@ -5,11 +5,18 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Http;
-using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.AspNetCore.Authentication;
 
-public class UserContextAccessor
+public interface IUserContextAccessor
+{
+    bool IsAuthenticated { get; }
+    Guid Id { get; }
+    Guid OrganisationId { get; }
+    string Name { get; }
+}
+
+public class UserContextAccessor : IUserContextAccessor
 {
     private readonly IHttpContextAccessor _contextAccessor;
 
@@ -18,11 +25,11 @@ public class UserContextAccessor
         _contextAccessor = contextAccessor;
     }
 
-    public User GetCurrent()
-    {
-        return new User
-        {
-            Name = _contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty,
-        };
-    }
+    public bool IsAuthenticated => _contextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
+
+    public Guid Id => Guid.Parse(_contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
+
+    public Guid OrganisationId => Guid.Parse(_contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
+
+    public string Name => _contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
 }

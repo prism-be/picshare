@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using Prism.Picshare.Events;
 using Prism.Picshare.Exceptions;
 
 namespace Prism.Picshare.AspNetCore.Authentication;
@@ -30,7 +29,7 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
         _jwtConfiguration = jwtConfiguration;
         _logger = logger.CreateLogger(typeof(PicshareAuthenticationHandler));
     }
-    
+
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         if (Request.Path.StartsWithSegments("/dapr", StringComparison.InvariantCultureIgnoreCase) || Request.Path.StartsWithSegments("/events"))

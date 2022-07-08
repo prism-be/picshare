@@ -21,5 +21,7 @@ public static class ServiceCollectionExtensions
 
         services.AddAuthentication(options => options.DefaultScheme = AuthSchemeConstants.PicshareAuthenticationScheme)
             .AddScheme<PicshareAuthenticationScheme, PicshareAuthenticationHandler>(AuthSchemeConstants.PicshareAuthenticationScheme, _ => { });
+
+        services.AddScoped<IUserContextAccessor, UserContextAccessor>();
     }
 }

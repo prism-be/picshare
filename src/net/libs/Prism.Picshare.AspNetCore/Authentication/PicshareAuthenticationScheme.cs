@@ -8,6 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Prism.Picshare.AspNetCore.Authentication;
 
-public class PicshareAuthenticationScheme :AuthenticationSchemeOptions
+public class PicshareAuthenticationScheme : AuthenticationSchemeOptions
 {
 }

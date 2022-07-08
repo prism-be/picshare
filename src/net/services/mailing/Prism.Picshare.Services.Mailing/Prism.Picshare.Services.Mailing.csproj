@@ -9,22 +9,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Dapr.AspNetCore" Version="1.7.0" />
-      <PackageReference Include="DotLiquid" Version="2.2.656" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.1.0" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Dapr.AspNetCore" Version="1.7.0"/>
+        <PackageReference Include="DotLiquid" Version="2.2.656"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.1.0"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Templates\en-register-confirmation.txt" />
-      <Content Include="Templates\en-register-confirmation.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+        <None Remove="Templates\en-register-confirmation.txt"/>
+        <Content Include="Templates\en-register-confirmation.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj" />
-      <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj" />
+        <ProjectReference Include="..\..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj"/>
+        <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj"/>
     </ItemGroup>
 
 </Project>

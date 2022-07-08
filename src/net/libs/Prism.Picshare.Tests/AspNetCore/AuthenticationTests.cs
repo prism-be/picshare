@@ -39,6 +39,7 @@ public class Authentication
     public void AddPicshareAuthentication_Ok()
     {
         // Arrange
+        Environment.SetEnvironmentVariable("JWT_PUBLIC_KEY", Guid.NewGuid().ToString());
         var services = new ServiceCollection();
 
         // Act
