@@ -4,8 +4,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
+using Prism.Picshare.Services.Authentication.Contracts;
 
 namespace Prism.Picshare.Services.Authentication.Controllers.Api;
 
@@ -18,21 +20,22 @@ public class UserController : Controller
         _userContextAccessor = userContextAccessor;
     }
 
+    [AllowAnonymous]
     [HttpGet("/api/authentication/user/check")]
     public IActionResult Check()
     {
         if (!_userContextAccessor.IsAuthenticated)
         {
-            return Unauthorized(new
+            return Ok(new UserAuthentication
             {
-                authenticated = _userContextAccessor.IsAuthenticated,
+                Authenticated = false
             });
         }
 
-        return Ok(new
+        return Ok(new UserAuthentication
         {
-            authenticated = _userContextAccessor.IsAuthenticated,
-            name = _userContextAccessor.Name
+            Authenticated = _userContextAccessor.IsAuthenticated,
+            Name = _userContextAccessor.Name
         });
     }
 }

@@ -10,7 +10,15 @@ const nextConfig = {
     images: {
         domains: ['localhost']
     },
-    i18n
+    i18n,
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:3080/api/:path*'
+            }
+        ]
+    }
 }
 
 module.exports = nextConfig

@@ -8,6 +8,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
+using Prism.Picshare.Services.Authentication.Contracts;
 using Prism.Picshare.Services.Authentication.Controllers.Api;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Controllers.Api;
@@ -28,6 +29,7 @@ public class UserControllerTests
 
         // Assert
         result.Should().BeAssignableTo<OkObjectResult>();
+        (((UserAuthentication)((OkObjectResult)result).Value!)).Authenticated.Should().BeTrue();
     }
 
     [Fact]
@@ -43,6 +45,7 @@ public class UserControllerTests
         var result = controller.Check();
 
         // Assert
-        result.Should().BeAssignableTo<UnauthorizedObjectResult>();
+        result.Should().BeAssignableTo<OkObjectResult>();
+        (((UserAuthentication)((OkObjectResult)result).Value!)).Authenticated.Should().BeFalse();
     }
 }

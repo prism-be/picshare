@@ -1,12 +1,114 @@
-﻿export async function getData(route: string): Promise<Response> {
-    const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
-    return fetch(prefix + route, {
+﻿interface ObjectResult
+{
+    status: number;
+    data: any | undefined;
+}
+
+const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
+
+export async function getData(route: string): Promise<ObjectResult> {
+    const response = await fetch(prefix + route, {
         method: "GET",
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': getAuthorization()
         },
-
-        //make sure to serialize your JSON body
     });
+    
+    if (response.status === 401)
+    {
+        if (await performRefreshToken())
+        {
+            return getData(route);
+        }
+    }
+
+    if (response.status === 200)
+    {
+        return {
+            status: response.status,
+            data: await response.json()
+        }
+    }
+
+    return {
+        status: response.status,
+        data: undefined
+    }
+}
+
+const performRefreshToken = async (): Promise<boolean> => {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (refreshToken)
+    {
+        const refreshResponse = await fetch(prefix + '/api/authentication/refresh', {
+            method: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + refreshToken
+            }
+        });
+
+        if (refreshResponse.status === 200)
+        {
+            const data = await refreshResponse.json();
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            
+            return true;
+        }
+
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        
+        return false;
+    }
+    
+    return false;
+}
+
+export async function postData(route: string, body: any): Promise<any> {
+    const response = await fetch(prefix + route, {
+        body: JSON.stringify(body),
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': getAuthorization()
+        },
+    });
+
+    if (response.status === 401)
+    {
+        if (await performRefreshToken())
+        {
+            return postData(route, body);
+        }
+    }
+
+    if (response.status === 200)
+    {
+        return {
+            status: response.status,
+            data: await response.json()
+        }
+    }
+
+    return {
+        status: response.status,
+        data: undefined
+    }
+}
+
+const getAuthorization = (): string => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (accessToken) {
+        return 'Bearer ' + accessToken;
+    }
+
+    return '';
 }

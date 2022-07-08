@@ -53,8 +53,6 @@ const Register = () => {
             body: JSON.stringify(data)
         });
 
-        console.log(response);
-
         if (response.status === 204) {
             setSuccess(true);
             return;
@@ -84,7 +82,7 @@ const Register = () => {
                     <div className="text-center mt-24">
                         <div className="flex items-center justify-center">
                         </div>
-                        <h2 className="text-4xl tracking-tight">
+                        <h2 className="text-4xl text-teal-600 tracking-tight">
                             {t("register.title")}
                         </h2>
                         <span className="text-sm">{t("register.or")}&nbsp;
