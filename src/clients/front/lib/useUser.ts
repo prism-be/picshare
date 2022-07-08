@@ -17,8 +17,6 @@ export default function useUser({
             return;
         }
         
-        console.log(user);
-
         if ((redirectTo && !redirectIfFound && !user.data.authenticated) ||(redirectIfFound && user.data.authenticated)) {
             router.push(redirectTo);
         }

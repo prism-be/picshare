@@ -53,8 +53,6 @@ const Register = () => {
             body: JSON.stringify(data)
         });
 
-        console.log(response);
-
         if (response.status === 204) {
             setSuccess(true);
             return;

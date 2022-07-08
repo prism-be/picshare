@@ -4,9 +4,9 @@
     data: any | undefined;
 }
 
-export async function getData(route: string): Promise<ObjectResult> {
-    const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
+const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
 
+export async function getData(route: string): Promise<ObjectResult> {
     const response = await fetch(prefix + route, {
         method: "GET",
         headers: {
@@ -15,6 +15,14 @@ export async function getData(route: string): Promise<ObjectResult> {
             'Authorization': getAuthorization()
         },
     });
+    
+    if (response.status === 401)
+    {
+        if (await performRefreshToken())
+        {
+            return getData(route);
+        }
+    }
 
     if (response.status === 200)
     {
@@ -30,9 +38,39 @@ export async function getData(route: string): Promise<ObjectResult> {
     }
 }
 
-export async function postData(route: string, body: any): Promise<any> {
-    const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
+const performRefreshToken = async (): Promise<boolean> => {
+    const refreshToken = localStorage.getItem('refreshToken');
 
+    if (refreshToken)
+    {
+        const refreshResponse = await fetch(prefix + '/api/authentication/refresh', {
+            method: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + refreshToken
+            }
+        });
+
+        if (refreshResponse.status === 200)
+        {
+            const data = await refreshResponse.json();
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            
+            return true;
+        }
+
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        
+        return false;
+    }
+    
+    return false;
+}
+
+export async function postData(route: string, body: any): Promise<any> {
     const response = await fetch(prefix + route, {
         body: JSON.stringify(body),
         method: "POST",
@@ -42,6 +80,14 @@ export async function postData(route: string, body: any): Promise<any> {
             'Authorization': getAuthorization()
         },
     });
+
+    if (response.status === 401)
+    {
+        if (await performRefreshToken())
+        {
+            return postData(route, body);
+        }
+    }
 
     if (response.status === 200)
     {
