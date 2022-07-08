@@ -43,7 +43,7 @@ public class LoginController : Controller
 
     [AllowAnonymous]
     [HttpPost("/api/authentication/refresh")]
-    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
     {
         var token = await _mediator.Send(request);
 

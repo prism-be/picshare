@@ -5,10 +5,8 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
-using Prism.Picshare.Services.Authentication.Commands;
 
 namespace Prism.Picshare.Services.Authentication.Controllers.Api;
 
