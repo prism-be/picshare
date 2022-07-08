@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
@@ -21,7 +22,7 @@ public class UserControllerTests
         var userContextAcessor = new Mock<IUserContextAccessor>();
         userContextAcessor.Setup(x => x.Name).Returns("Hello World !");
         userContextAcessor.Setup(x => x.IsAuthenticated).Returns(true);
-        var controller = new UserController(userContextAcessor.Object);
+        var controller = new UserController(userContextAcessor.Object, Mock.Of<IMediator>());
 
         // Act
         var result = controller.Check();
@@ -36,7 +37,8 @@ public class UserControllerTests
         // Arrange
         var userContextAcessor = new Mock<IUserContextAccessor>();
         userContextAcessor.Setup(x => x.IsAuthenticated).Returns(false);
-        var controller = new UserController(userContextAcessor.Object);
+        
+        var controller = new UserController(userContextAcessor.Object, Mock.Of<IMediator>());
 
         // Act
         var result = controller.Check();

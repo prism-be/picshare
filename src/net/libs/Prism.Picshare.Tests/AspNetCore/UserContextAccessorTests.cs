@@ -49,9 +49,6 @@ public class UserContextAccessorTests
     public void Authenticated_Not_Authenticated()
     {
         // Arrange
-        var id = Guid.NewGuid();
-        var organisationId = Guid.NewGuid();
-        var name = Guid.NewGuid().ToString();
         var httpContext = new DefaultHttpContext();
 
         var contextAccessor = new Mock<IHttpContextAccessor>();

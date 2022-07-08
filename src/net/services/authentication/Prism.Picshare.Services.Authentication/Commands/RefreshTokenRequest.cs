@@ -12,7 +12,7 @@ using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
-public record RefreshTokenRequest(Guid Id, Guid OrganisationId) : IRequest<Token?>;
+public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>;
 
 public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, Token?>
 {
@@ -29,7 +29,14 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
 
     public async Task<Token?> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
     {
-        var key = EntityReference.ComputeKey(request.OrganisationId, request.Id);
+        var principal = TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, request.RefreshToken, _logger, true);
+
+        if (principal == null)
+        {
+            return null;
+        }
+
+        var key = principal.Claims.SingleOrDefault(x => x.Type == "Key")?.Value ?? Guid.Empty.ToString();
         var user = await _daprClient.GetStateAsync<User>(Stores.Users, key, cancellationToken: cancellationToken);
 
         if (user == null)

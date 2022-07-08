@@ -40,7 +40,21 @@ public class LoginController : Controller
 
         return Unauthorized();
     }
-    
+
+    [AllowAnonymous]
+    [HttpPost("/api/authentication/refresh")]
+    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
+    {
+        var token = await _mediator.Send(request);
+
+        if (token != null)
+        {
+            return Ok(token);
+        }
+
+        return Unauthorized();
+    }
+
     [AllowAnonymous]
     [HttpPost("/api/authentication/register")]
     public async Task<IActionResult> Register([FromBody] RegisterAccountRequest request)
