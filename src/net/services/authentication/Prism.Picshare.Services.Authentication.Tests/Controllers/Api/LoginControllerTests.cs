@@ -69,6 +69,44 @@ public class LoginControllerTests
         token.AccessToken.Should().Be(accessToken);
     }
 
+    [Fact]
+    public async Task Refresh_Ok()
+    {
+        // Arrange
+        var accessToken = Guid.NewGuid().ToString();
+        var refreshToken = Guid.NewGuid().ToString();
+        var mediator = new Mock<IMediator>();
+        mediator.Setup(x => x.Send(It.IsAny<RefreshTokenRequest>(), default)).ReturnsAsync(new Token
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
+        });
+
+        // Act
+        var controller = new LoginController(mediator.Object);
+        var result = await controller.Refresh(new RefreshTokenRequest(Guid.NewGuid().ToString()));
+
+        // Assert
+        result.Should().BeAssignableTo<OkObjectResult>();
+        var token = (Token)((OkObjectResult)result).Value!;
+        token.AccessToken.Should().Be(accessToken);
+        token.RefreshToken.Should().Be(refreshToken);
+    }
+
+    [Fact]
+    public async Task Refresh_Unauthorized()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+
+        // Act
+        var controller = new LoginController(mediator.Object);
+        var result = await controller.Refresh(new RefreshTokenRequest(Guid.NewGuid().ToString()));
+
+        // Assert
+        result.Should().BeAssignableTo<UnauthorizedResult>();
+    }
+
     [Theory]
     [InlineData(ResultCodes.Ok, typeof(NoContentResult))]
     [InlineData(ResultCodes.ExistingOrganisation, typeof(ConflictObjectResult))]

@@ -1,15 +1,20 @@
 ﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Dapr - Authentication" type="RunNativeExe" factoryName="Native Executable">
-    <option name="EXE_PATH" value="$PROJECT_DIR$/../../../../../../dapr/dapr.exe" />
-    <option name="PROGRAM_PARAMETERS" value="run -a service-authentication -p 5114 -d ../../../../dapr/components --dapr-http-max-request-size 30 -- dotnet run" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/services/authentication/Prism.Picshare.Services.Authentication" />
-    <option name="PASS_PARENT_ENVS" value="1" />
-    <envs>
-      <env name="JWT_PRIVATE_KEY" value="MIICXAIBAAKBgQC7mfR1xgcrRJ+ceZlWpbbXy9dllF9FUXgQU4SuJfby6nXskt2tNX4AOF0dqm/1E1pwy79RhetS/Cj6slnasfwhCI9cwDYVSM1SYsYxr5WXR+KmPUQGC2Upcxt1pB5qj9ow5qq/zOIJ3xwuD+q6VVlAqvF1vKClX/DINToa1I/XbQIDAQABAoGAJdEcGV2o9kzoC+frRC81k3yw1/Y32kZY+JmNZnmatU8UJHNaol7lHnA+PQutc+7JzXEVCP8A+AKC1D59pHs6gql24dCD1Ca9FfS5qTd4SIawUYqcL0OPSVkJPhL+/wVJVOLQG7ALiOhmyNZADSKCj/fKb3bQZH57Sj5osPqGZ4ECQQDwXyBhYwKXZTP4uYTpWX5or/NGF9t1vNdo5tzkspvOFmW81bbGoVg8wzshVmT9cLKlVFHMls1pDWqhCboGHevhAkEAx8x+MGb4haCwQVMnLmthCQmnB7n5uADv2KoVA0zXc7k/reRVgW7aSj4bKNnBrHqdhG8ELDCc02leSESe1J59DQJAevP9yTLvGWgADKNA9Gf9vCj8ZIdBj9kXyqYEqcse3W0hf1VGWBYh33rx3RynLeieyOj3qpIc4jalq1ghWo2loQJBALtMo5tCXIYAjlqe1iM4/H1ZdCDVIhlxn2awgwRV+7/7kIu2esXconxo3lMcV+gWBiZJYFMAu3Og2obK9U6CyN0CQDyfKjEQ4mveAMeYlnDTJmc2CaOVQ2je8SJd5dCwUZbF3nZPgWeuJ/R8jzQy+qxN3ICxRa+D1+ATNm0rmfnb25k=" />
-    </envs>
-    <option name="USE_EXTERNAL_CONSOLE" value="0" />
-    <method v="2">
-      <option name="Build Solution" enabled="true" />
-    </method>
-  </configuration>
+    <configuration default="false" name="Dapr - Authentication" type="RunNativeExe" factoryName="Native Executable">
+        <option name="EXE_PATH" value="$PROJECT_DIR$/../../../../../../dapr/dapr.exe"/>
+        <option name="PROGRAM_PARAMETERS"
+                value="run -a service-authentication -p 5114 -d ../../../../dapr/components --dapr-http-max-request-size 30 -- dotnet run"/>
+        <option name="WORKING_DIRECTORY"
+                value="$PROJECT_DIR$/services/authentication/Prism.Picshare.Services.Authentication"/>
+        <option name="PASS_PARENT_ENVS" value="1"/>
+        <envs>
+            <env name="JWT_PRIVATE_KEY"
+                 value="MIICXAIBAAKBgQC7mfR1xgcrRJ+ceZlWpbbXy9dllF9FUXgQU4SuJfby6nXskt2tNX4AOF0dqm/1E1pwy79RhetS/Cj6slnasfwhCI9cwDYVSM1SYsYxr5WXR+KmPUQGC2Upcxt1pB5qj9ow5qq/zOIJ3xwuD+q6VVlAqvF1vKClX/DINToa1I/XbQIDAQABAoGAJdEcGV2o9kzoC+frRC81k3yw1/Y32kZY+JmNZnmatU8UJHNaol7lHnA+PQutc+7JzXEVCP8A+AKC1D59pHs6gql24dCD1Ca9FfS5qTd4SIawUYqcL0OPSVkJPhL+/wVJVOLQG7ALiOhmyNZADSKCj/fKb3bQZH57Sj5osPqGZ4ECQQDwXyBhYwKXZTP4uYTpWX5or/NGF9t1vNdo5tzkspvOFmW81bbGoVg8wzshVmT9cLKlVFHMls1pDWqhCboGHevhAkEAx8x+MGb4haCwQVMnLmthCQmnB7n5uADv2KoVA0zXc7k/reRVgW7aSj4bKNnBrHqdhG8ELDCc02leSESe1J59DQJAevP9yTLvGWgADKNA9Gf9vCj8ZIdBj9kXyqYEqcse3W0hf1VGWBYh33rx3RynLeieyOj3qpIc4jalq1ghWo2loQJBALtMo5tCXIYAjlqe1iM4/H1ZdCDVIhlxn2awgwRV+7/7kIu2esXconxo3lMcV+gWBiZJYFMAu3Og2obK9U6CyN0CQDyfKjEQ4mveAMeYlnDTJmc2CaOVQ2je8SJd5dCwUZbF3nZPgWeuJ/R8jzQy+qxN3ICxRa+D1+ATNm0rmfnb25k="/>
+            <env name="JWT_PUBLIC_KEY"
+                 value="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7mfR1xgcrRJ+ceZlWpbbXy9dllF9FUXgQU4SuJfby6nXskt2tNX4AOF0dqm/1E1pwy79RhetS/Cj6slnasfwhCI9cwDYVSM1SYsYxr5WXR+KmPUQGC2Upcxt1pB5qj9ow5qq/zOIJ3xwuD+q6VVlAqvF1vKClX/DINToa1I/XbQIDAQAB"/>
+        </envs>
+        <option name="USE_EXTERNAL_CONSOLE" value="0"/>
+        <method v="2">
+            <option name="Build Solution" enabled="true"/>
+        </method>
+    </configuration>
 </component>

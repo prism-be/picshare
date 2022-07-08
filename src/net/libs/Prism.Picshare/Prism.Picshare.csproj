@@ -14,9 +14,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapr.Client" Version="1.7.0" />
-        <PackageReference Include="FluentValidation" Version="11.0.2" />
-        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="Dapr.Client" Version="1.7.0"/>
+        <PackageReference Include="FluentValidation" Version="11.1.0"/>
+        <PackageReference Include="MediatR" Version="10.0.1"/>
     </ItemGroup>
 
 </Project>

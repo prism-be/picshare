@@ -13,7 +13,13 @@ using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
-public record AuthenticationRequest(string Login, string Password) : IRequest<ResultCodes>;
+public record AuthenticationRequest(string Login, string Password) : IRequest<ResultCodes>
+{
+    public override string? ToString()
+    {
+        return base.ToString()?.Replace(Password, string.Empty.PadRight(Password.Length, '*'));
+    }
+}
 
 public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRequest>
 {

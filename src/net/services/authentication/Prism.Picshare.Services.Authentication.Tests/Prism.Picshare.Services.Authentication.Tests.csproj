@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Prism.Picshare.Services.Authentication\Prism.Picshare.Services.Authentication.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Services.Authentication\Prism.Picshare.Services.Authentication.csproj" />
     </ItemGroup>
 
 </Project>

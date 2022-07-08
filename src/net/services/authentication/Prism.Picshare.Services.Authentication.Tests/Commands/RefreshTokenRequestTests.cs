@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "GenerateTokenRequestTests.cs" company = "Prism">
+//  <copyright file = "RefreshTokenRequestTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -16,7 +16,7 @@ using Prism.Picshare.Services.Authentication.Commands;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
-public class GenerateTokenRequestTests
+public class RefreshTokenRequestTests
 {
     private readonly JwtConfiguration _jwtConfiguration = new()
     {
@@ -27,47 +27,52 @@ public class GenerateTokenRequestTests
     };
 
     [Fact]
-    public async Task Handle_Credentials_Not_Found()
+    public async Task RefreshTokenRequestHandler_Invalid_Token()
     {
         // Arrange
-        var login = Guid.NewGuid().ToString();
+        var organisationId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var user = new User
+        {
+            Id = userId,
+            OrganisationId = organisationId
+        };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
         var daprClient = new Mock<DaprClient>();
+        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
+
+        var refreshToken = TokenGenerator.GenerateAccessToken(_jwtConfiguration.PrivateKey, user);
 
         // Act
-        var handler = new GenerateTokenRequestHandler(logger.Object, daprClient.Object, _jwtConfiguration);
-        var result = await handler.Handle(new GenerateTokenRequest(login), CancellationToken.None);
+        var handler = new RefreshTokenRequestHandler(daprClient.Object, _jwtConfiguration, logger.Object);
+        var result = await handler.Handle(new RefreshTokenRequest(refreshToken), CancellationToken.None);
 
         // Assert
         result.Should().BeNull();
     }
 
     [Fact]
-    public async Task Handle_Ok()
+    public async Task RefreshTokenRequestHandler_Ok()
     {
         // Arrange
-        var login = Guid.NewGuid().ToString();
         var organisationId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-
-        var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
-        {
-            Id = userId,
-            OrganisationId = organisationId,
-            Login = login
-        });
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        var user = new User
         {
             Id = userId,
             OrganisationId = organisationId
-        });
+        };
+
+        var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
+        var daprClient = new Mock<DaprClient>();
+        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
+
+        var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
 
         // Act
-        var handler = new GenerateTokenRequestHandler(logger.Object, daprClient.Object, _jwtConfiguration);
-        var result = await handler.Handle(new GenerateTokenRequest(login), CancellationToken.None);
+        var handler = new RefreshTokenRequestHandler(daprClient.Object, _jwtConfiguration, logger.Object);
+        var result = await handler.Handle(new RefreshTokenRequest(refreshToken), CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -83,56 +88,28 @@ public class GenerateTokenRequestTests
     }
 
     [Fact]
-    public async Task Handle_User_Not_Found()
+    public async Task RefreshTokenRequestHandler_Unknown_User()
     {
         // Arrange
-        var login = Guid.NewGuid().ToString();
         var organisationId = Guid.NewGuid();
         var userId = Guid.NewGuid();
+        var user = new User
+        {
+            Id = userId,
+            OrganisationId = organisationId
+        };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
         var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
-        {
-            Id = userId,
-            OrganisationId = organisationId,
-            Login = login
-        });
+
+        var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
 
         // Act
-        var handler = new GenerateTokenRequestHandler(logger.Object, daprClient.Object, _jwtConfiguration);
-        var result = await handler.Handle(new GenerateTokenRequest(login), CancellationToken.None);
+        var handler = new RefreshTokenRequestHandler(daprClient.Object, _jwtConfiguration, logger.Object);
+        var result = await handler.Handle(new RefreshTokenRequest(refreshToken), CancellationToken.None);
 
         // Assert
         result.Should().BeNull();
-    }
-
-    [Fact]
-    public void Validate_Empty()
-    {
-        // Arrange
-        var request = new GenerateTokenRequest(String.Empty);
-
-        // Act
-        var validator = new GenerateTokenRequestValidator();
-        var result = validator.Validate(request);
-
-        // Assert
-        result.IsValid.Should().BeFalse();
-    }
-
-    [Fact]
-    public void Validate_Ok()
-    {
-        // Arrange
-        var request = new GenerateTokenRequest(Guid.NewGuid().ToString());
-
-        // Act
-        var validator = new GenerateTokenRequestValidator();
-        var result = validator.Validate(request);
-
-        // Assert
-        result.IsValid.Should().BeTrue();
     }
 
     private static bool ValidateToken(string publicKey, string token, bool isRefreshToken)
