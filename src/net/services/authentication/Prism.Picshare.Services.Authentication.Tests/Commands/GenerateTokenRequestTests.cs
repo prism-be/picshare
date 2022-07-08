@@ -135,7 +135,7 @@ public class GenerateTokenRequestTests
         result.IsValid.Should().BeTrue();
     }
 
-    private bool ValidateToken(string publicKey, string token, bool isRefreshToken)
+    private static bool ValidateToken(string publicKey, string token, bool isRefreshToken)
     {
         return TokenGenerator.ValidateToken(publicKey, token, Mock.Of<ILogger>(), isRefreshToken) != null;
     }

@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
 
@@ -13,12 +12,10 @@ namespace Prism.Picshare.Services.Authentication.Controllers.Api;
 public class UserController : Controller
 {
     private readonly IUserContextAccessor _userContextAccessor;
-    private readonly IMediator _mediator;
 
-    public UserController(IUserContextAccessor userContextAccessor, IMediator mediator)
+    public UserController(IUserContextAccessor userContextAccessor)
     {
         _userContextAccessor = userContextAccessor;
-        _mediator = mediator;
     }
 
     [HttpGet("/api/authentication/user/check")]

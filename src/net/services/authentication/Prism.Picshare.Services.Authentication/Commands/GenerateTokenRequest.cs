@@ -63,8 +63,4 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
 
         return token;
     }
-
-    
-
-    
 }

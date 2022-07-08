@@ -107,7 +107,7 @@ public class Authentication
         var context = new DefaultHttpContext();
         context.Request.Path = "/api/authenticate/user";
 
-        context.Request.Headers.Add(HeaderNames.Authorization, "Bearer " + GenerateFakeBearer().Substring(10));
+        context.Request.Headers.Add(HeaderNames.Authorization, "Bearer " + GenerateFakeBearer()[10..]);
 
         var handler = new PicshareAuthenticationHandler(options.Object, new NullLoggerFactory(), UrlEncoder.Default, Mock.Of<ISystemClock>(),
             _jwtConfiguration);
