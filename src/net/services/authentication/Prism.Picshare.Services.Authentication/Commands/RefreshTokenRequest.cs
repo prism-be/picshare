@@ -12,7 +12,13 @@ using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Authentication.Commands;
 
-public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>;
+public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>
+{
+    public override string? ToString()
+    {
+        return base.ToString()?.Replace(RefreshToken, "***");
+    }
+}
 
 public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, Token?>
 {
