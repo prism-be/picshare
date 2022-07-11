@@ -39,7 +39,7 @@ public class UploadController : Controller
         var data = memoryStream.ToArray();
 
         await _mediator.Send(new UploadPicture(_userContextAccessor.OrganisationId, pictureId, data));
-        await _mediator.Send(new InitializePicture(_userContextAccessor.OrganisationId, pictureId, PictureSource.Upload));
+        await _mediator.Send(new InitializePicture(_userContextAccessor.OrganisationId, _userContextAccessor.Id, pictureId, PictureSource.Upload));
         await _mediator.Send(new SetPictureName(_userContextAccessor.OrganisationId, pictureId, HttpUtility.HtmlEncode(file.FileName)));
 
         return Ok();

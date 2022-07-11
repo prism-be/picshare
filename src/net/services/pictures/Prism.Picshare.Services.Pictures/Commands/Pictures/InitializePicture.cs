@@ -12,7 +12,7 @@ using Prism.Picshare.Events;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
 
-public record InitializePicture(Guid OrganisationId, Guid PictureId, PictureSource Source) : IRequest<Picture>;
+public record InitializePicture(Guid OrganisationId, Guid Owner, Guid PictureId, PictureSource Source) : IRequest<Picture>;
 
 public class InitializePictureHandler : IRequestHandler<InitializePicture, Picture>
 {
@@ -30,7 +30,8 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
             OrganisationId = request.OrganisationId,
             Id = request.PictureId,
             Source = request.Source,
-            Published = true
+            Published = true,
+            Owner = request.Owner
         };
 
         await _daprClient.SaveStateAsync(picture, cancellationToken);
