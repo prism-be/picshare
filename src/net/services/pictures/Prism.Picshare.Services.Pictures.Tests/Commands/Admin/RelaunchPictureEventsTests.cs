@@ -20,7 +20,7 @@ using Xunit;
 
 namespace Prism.Picshare.Services.Pictures.Tests.Commands.Admin;
 
-public class RelaunchUpdatedTests
+public class RelaunchPictureEventsTests
 {
     [Fact]
     public async Task Handle_Ok()
@@ -48,8 +48,8 @@ public class RelaunchUpdatedTests
             });
 
         // Act
-        var handler = new RelaunchUpdatedHandler(daprClient.Object);
-        var result = await handler.Handle(new RelaunchUpdated(organisationId), CancellationToken.None);
+        var handler = new RelaunchPictureEventsHandler(daprClient.Object);
+        var result = await handler.Handle(new RelaunchPictureEvents(organisationId, Topics.Pictures.Updated), CancellationToken.None);
 
         // Assert
         result.Should().Be(Unit.Value);
@@ -64,8 +64,8 @@ public class RelaunchUpdatedTests
         var daprClient = new Mock<DaprClient>();
 
         // Act
-        var handler = new RelaunchUpdatedHandler(daprClient.Object);
-        var result = await handler.Handle(new RelaunchUpdated(organisationId), CancellationToken.None);
+        var handler = new RelaunchPictureEventsHandler(daprClient.Object);
+        var result = await handler.Handle(new RelaunchPictureEvents(organisationId, Topics.Pictures.Updated), CancellationToken.None);
 
         // Assert
         result.Should().Be(Unit.Value);
