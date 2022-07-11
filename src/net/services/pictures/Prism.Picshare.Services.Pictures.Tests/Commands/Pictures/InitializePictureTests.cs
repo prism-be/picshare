@@ -14,6 +14,7 @@ using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
+using Prism.Picshare.UnitTests;
 using Xunit;
 using Stores = Prism.Picshare.Services.Pictures.Configuration.Stores;
 

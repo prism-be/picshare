@@ -1,16 +1,13 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "TestsExtensions.cs" company = "Prism">
+//  <copyright file = "MockDaprClientExtensions.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading;
 using Dapr.Client;
-using MediatR;
 using Moq;
 
-namespace Prism.Picshare.Services.Pictures.Tests;
+namespace Prism.Picshare.UnitTests;
 
 public static class TestsExtensions
 {
@@ -29,17 +26,5 @@ public static class TestsExtensions
     {
         mock.Verify(x => x.SaveStateAsync(expectedStore, It.IsAny<string>(), It.IsAny<TExpected>(), It.IsAny<StateOptions>(), It.IsAny<IReadOnlyDictionary<string, string>>(), default),
             Times.Once);
-    }
-
-    public static void VerifySend<TExpected>(this Mock<IMediator> mock)
-        where TExpected : IRequest
-    {
-        mock.Verify(x => x.Send(It.IsAny<TExpected>(), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    public static void VerifySend<TExpected, TResponse>(this Mock<IMediator> mock)
-        where TExpected : IRequest<TResponse>
-    {
-        mock.Verify(x => x.Send(It.IsAny<TExpected>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

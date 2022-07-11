@@ -42,7 +42,7 @@ public class PhotoboothPictureUploadedTests
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
-        mediator.Verify(x => x.Send(new InitializePicture(photoboothPicture.OrganisationId, Guid.NewGuid(), photoboothPicture.Id, PictureSource.Photobooth), default), Times.Once);
+        mediator.Verify(x => x.Send(new InitializePicture(photoboothPicture.OrganisationId, photoboothPicture.OrganisationId, photoboothPicture.Id, PictureSource.Photobooth), default), Times.Once);
         mediator.Verify(x => x.Send(new SetPictureName(photoboothPicture.OrganisationId, photoboothPicture.Id, photoboothPicture.OriginalFileName), default), Times.Once);
         mediator.Verify(x => x.Send(new AddPictureToAlbum(photoboothPicture.OrganisationId, photoboothPicture.SessionId, photoboothPicture.Id), default), Times.Once);
     }
