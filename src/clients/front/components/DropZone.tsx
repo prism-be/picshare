@@ -49,6 +49,7 @@ const DropZone = () => {
         setFiles(files);
 
         setInDropZone(false);
+        setPercentageDone(0);
 
         if (!inProgress) {
             setInProgress(true);
@@ -69,7 +70,7 @@ const DropZone = () => {
            }
         }
 
-        const percentage = Math.round(files.length / (currentFileIndex + 1) * 100);
+        const percentage = Math.round((currentFileIndex + 1) / files.length * 100);
         setPercentageDone(percentage);
         
         if (currentFileIndex == files.length)

@@ -108,8 +108,12 @@ export async function postData(route: string, body: any): Promise<any> {
 }
 
 export async function postFile(route: string, file: File): Promise<any> {
+    
+    const data = new FormData();
+    data.append('file', file, file.name);
+    
     const response = await fetch(prefix + route, {
-        body: file,
+        body: data,
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -129,7 +133,7 @@ export async function postFile(route: string, file: File): Promise<any> {
     {
         return {
             status: response.status,
-            data: await response.json()
+            data: undefined
         }
     }
 
