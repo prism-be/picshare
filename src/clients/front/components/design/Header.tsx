@@ -11,11 +11,11 @@ const Header = () => {
             <div className="flex">
                 <Link href="/">
                     <a className="m-auto pl-2 pr-2">
-                        <Image src="/favicon.png" height={32} width={32}></Image>
+                        <Image src="/images/logo-white.svg" height={42} width={42}></Image>
                     </a>
                 </Link>
             </div>
-            <div className="grow bg-blue-100">
+            <div className="grow bg-teal-600">
             </div>
             <div className="flex">
                 <div className="m-auto pl-2 pr-2">
