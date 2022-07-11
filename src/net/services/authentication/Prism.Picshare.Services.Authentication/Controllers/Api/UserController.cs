@@ -26,7 +26,7 @@ public class UserController : Controller
     {
         if (!_userContextAccessor.IsAuthenticated)
         {
-            return Ok(new UserAuthentication
+            return Unauthorized(new UserAuthentication
             {
                 Authenticated = false
             });

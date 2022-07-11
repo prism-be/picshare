@@ -43,20 +43,24 @@ const performRefreshToken = async (): Promise<boolean> => {
 
     if (refreshToken)
     {
+        const data = {
+            refreshToken
+        };
+        
         const refreshResponse = await fetch(prefix + '/api/authentication/refresh', {
-            method: "GET",
+            body: JSON.stringify(data),
+            method: "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + refreshToken
             }
         });
 
         if (refreshResponse.status === 200)
         {
-            const data = await refreshResponse.json();
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
+            const refreshData = await refreshResponse.json();
+            localStorage.setItem('accessToken', refreshData.accessToken);
+            localStorage.setItem('refreshToken', refreshData.refreshToken);
             
             return true;
         }

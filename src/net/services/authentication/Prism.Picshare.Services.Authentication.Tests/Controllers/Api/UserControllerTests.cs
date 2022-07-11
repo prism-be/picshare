@@ -45,7 +45,7 @@ public class UserControllerTests
         var result = controller.Check();
 
         // Assert
-        result.Should().BeAssignableTo<OkObjectResult>();
-        (((UserAuthentication)((OkObjectResult)result).Value!)).Authenticated.Should().BeFalse();
+        result.Should().BeAssignableTo<UnauthorizedObjectResult>();
+        (((UserAuthentication)((UnauthorizedObjectResult)result).Value!)).Authenticated.Should().BeFalse();
     }
 }

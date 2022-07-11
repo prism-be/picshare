@@ -5,7 +5,14 @@ import {getData} from "./ajaxHelper";
 
 const getUser = async (route: string) => {
     const response = await getData(route);
-    return response.data;
+    
+    if (response.status === 200) {
+        return response.data;
+    }
+    
+    return {
+        authenticated: false
+    };
 }
 
 export default function useUser({

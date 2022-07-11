@@ -3,6 +3,7 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import useUser from "../lib/useUser";
 import Loader from "../components/Loader";
 import {useTranslation} from "next-i18next";
+import Header from "../components/design/Header";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -22,11 +23,7 @@ const Home: NextPage = () => {
 
     return (
         <div>
-
-            <h1 className="text-3xl font-bold underline">
-                Hello world!
-            </h1>
-
+            <Header />
         </div>
     )
 }
