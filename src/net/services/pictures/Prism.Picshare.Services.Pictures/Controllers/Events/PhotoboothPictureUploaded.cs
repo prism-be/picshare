@@ -6,6 +6,7 @@
 
 using Dapr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
@@ -26,6 +27,7 @@ public class PhotoboothPictureUploaded : Controller
         _mediator = mediator;
     }
 
+    [AllowAnonymous]
     [HttpPost(Topics.Photobooth.Picture.Uploaded)]
     [Topic(Publishers.PubSub, Topics.Photobooth.Picture.Uploaded)]
     public async Task<IActionResult> Handle([FromBody] PhotoboothPicture photoboothPicture)

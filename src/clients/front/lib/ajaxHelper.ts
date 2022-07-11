@@ -113,7 +113,6 @@ export async function postFile(route: string, file: File): Promise<any> {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
             'Authorization': getAuthorization()
         },
     });
