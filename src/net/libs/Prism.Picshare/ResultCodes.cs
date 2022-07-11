@@ -13,6 +13,7 @@ public enum ResultCodes
     InvalidCredentials = 40101,
     MailActionNotFound = 40401,
     UserNotFound = 40402,
+    PictureNotFound = 40403,
     MailActionAlreadyConsumed = 40901,
     ExistingOrganisation = 40902,
     ExistingUsername = 40903

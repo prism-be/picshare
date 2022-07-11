@@ -25,7 +25,7 @@ public class PictureUploadedController : Controller
     }
 
     [AllowAnonymous]
-    [HttpPost(Topics.Photobooth.Picture.Uploaded)]
+    [HttpPost(Topics.RoutePrefix + Topics.Pictures.Uploaded)]
     [Topic(Publishers.PubSub, Topics.Pictures.Uploaded)]
     public async Task<IActionResult> PictureUploaded([FromBody] EntityReference entityReference)
     {
