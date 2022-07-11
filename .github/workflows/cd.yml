@@ -36,6 +36,16 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
+  services-processor:
+    uses: ./.github/workflows/cd-docker.yml
+    with:
+      dockerFile: ./services/processor/Prism.Picshare.Services.Processor/Dockerfile
+      imageTag: service-processor
+      workingDirectory: src/net/
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
   clients-front-public:
     uses: ./.github/workflows/cd-docker.yml
     with:

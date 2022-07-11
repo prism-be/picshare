@@ -1,0 +1,11 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Prism.Picshare.Services.Processor": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5112",
+      "environmentVariables": {
+      }
+    }
+  }
+}

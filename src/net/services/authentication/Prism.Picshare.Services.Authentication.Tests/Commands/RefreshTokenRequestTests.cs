@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics;
+using Acme.Dapr.Extensions.UnitTesting;
 using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;

@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Acme.Dapr.Extensions.UnitTesting;
 using Dapr.Client;
 using FluentAssertions;
 using Moq;

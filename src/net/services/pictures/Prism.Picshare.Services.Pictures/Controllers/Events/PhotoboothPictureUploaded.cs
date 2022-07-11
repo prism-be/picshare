@@ -34,7 +34,7 @@ public class PhotoboothPictureUploaded : Controller
     {
         _logger.LogInformation("Process photobooth picture upload : {pictureId}", photoboothPicture.Id);
 
-        await _mediator.Send(new InitializePicture(photoboothPicture.OrganisationId, photoboothPicture.Id, PictureSource.Photobooth));
+        await _mediator.Send(new InitializePicture(photoboothPicture.OrganisationId, photoboothPicture.OrganisationId, photoboothPicture.Id, PictureSource.Photobooth));
         await _mediator.Send(new SetPictureName(photoboothPicture.OrganisationId, photoboothPicture.Id, photoboothPicture.OriginalFileName ?? string.Empty));
         await _mediator.Send(new AddPictureToAlbum(photoboothPicture.OrganisationId, photoboothPicture.SessionId, photoboothPicture.Id));
 

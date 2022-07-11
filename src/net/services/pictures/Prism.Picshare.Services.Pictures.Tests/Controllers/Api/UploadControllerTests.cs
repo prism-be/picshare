@@ -17,6 +17,7 @@ using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
 using Prism.Picshare.Services.Pictures.Controllers.Api;
+using Prism.Picshare.UnitTests;
 using Xunit;
 
 namespace Prism.Picshare.Services.Pictures.Tests.Controllers.Api;

@@ -24,6 +24,9 @@ public class Picture : EntityReference
     [JsonPropertyName("creationDate")]
     public DateTime CreationDate { get; set; }
 
+    [JsonPropertyName("owner")]
+    public Guid Owner { get; set; }
+
     [JsonPropertyName("views")]
     public int Views { get; set; }
 

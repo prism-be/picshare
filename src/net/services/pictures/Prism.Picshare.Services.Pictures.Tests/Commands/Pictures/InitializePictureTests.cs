@@ -14,6 +14,7 @@ using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
+using Prism.Picshare.UnitTests;
 using Xunit;
 using Stores = Prism.Picshare.Services.Pictures.Configuration.Stores;
 
@@ -27,7 +28,8 @@ public class InitializePictureTests
         // Arrange
         var pictureId = Guid.NewGuid();
         var organisationId = Guid.NewGuid();
-        var request = new InitializePicture(organisationId, pictureId, PictureSource.Upload);
+        var owner = Guid.NewGuid();
+        var request = new InitializePicture(organisationId, owner, pictureId, PictureSource.Upload);
         var daprClient = new Mock<DaprClient>();
 
         // Act
