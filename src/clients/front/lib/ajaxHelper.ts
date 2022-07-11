@@ -58,9 +58,9 @@ const performRefreshToken = async (): Promise<boolean> => {
 
         if (refreshResponse.status === 200)
         {
-            const data = await refreshResponse.json();
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
+            const refreshData = await refreshResponse.json();
+            localStorage.setItem('accessToken', refreshData.accessToken);
+            localStorage.setItem('refreshToken', refreshData.refreshToken);
             
             return true;
         }
