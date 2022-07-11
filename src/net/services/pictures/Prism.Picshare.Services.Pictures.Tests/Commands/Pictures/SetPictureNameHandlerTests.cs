@@ -11,10 +11,12 @@ using System.Threading.Tasks;
 using Dapr.Client;
 using FluentAssertions;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
-using Prism.Picshare.Services.Pictures.Configuration;
 using Xunit;
+using Stores = Prism.Picshare.Services.Pictures.Configuration.Stores;
 
 namespace Prism.Picshare.Services.Pictures.Tests.Commands.Pictures;
 
@@ -34,7 +36,7 @@ public class SetPictureNameHandlerTests
         // Assert
         picture.Id.Should().Be(request.PictureId);
         picture.Name.Should().Be("Hellow World.png");
-        daprClient.Verify(x =>
-            x.SaveStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<Picture>(), It.IsAny<StateOptions>(), It.IsAny<IReadOnlyDictionary<string, string>>(), CancellationToken.None));
+        daprClient.VerifySaveState<Picture>(Stores.Pictures);
+        daprClient.VerifyPublishEvent<EntityReference>(Publishers.PubSub, Topics.Pictures.Updated);
     }
 }

@@ -6,7 +6,9 @@
 
 using Dapr.Client;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Events;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
 
@@ -32,6 +34,8 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
         };
 
         await _daprClient.SaveStateAsync(picture, cancellationToken);
+
+        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.Created, picture, cancellationToken);
 
         return picture;
     }

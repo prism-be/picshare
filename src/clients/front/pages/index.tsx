@@ -4,6 +4,7 @@ import useUser from "../lib/useUser";
 import Loader from "../components/Loader";
 import {useTranslation} from "next-i18next";
 import Header from "../components/design/Header";
+import DropZone from "../components/DropZone";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -17,13 +18,16 @@ const Home: NextPage = () => {
 
     const {t} = useTranslation('common')
 
-    if (!user || user.authenticated === false) {
+    if (!user || !user.authenticated) {
         return <Loader title={t("header.title")}/>
     }
 
     return (
         <div>
-            <Header />
+            <Header/>
+            <div className={"p-5"}>
+                <DropZone/>
+            </div>
         </div>
     )
 }

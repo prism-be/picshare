@@ -7,9 +7,9 @@
 using FluentValidation;
 using Grpc.Net.Client;
 using MediatR;
+using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;
-using Prism.Picshare.Services.Pictures.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,7 @@ builder.Logging.AddInsights();
 var applicationAssembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(applicationAssembly);
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(SaveCommandBehaviour<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(applicationAssembly);
 
 builder.Services.AddDaprClient(config =>
@@ -32,13 +32,19 @@ builder.Services.AddDaprClient(config =>
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddPicshareAuthentication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseAuthentication()
+    .UseAuthorization();
 
 app.MapSubscribeHandler();
 app.UseCloudEvents();
 app.UseHealthChecks("/health");
 
-app.MapControllers();
+app.MapControllers()
+    .RequireAuthorization();
 
 app.Run();

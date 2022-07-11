@@ -6,6 +6,7 @@
 
 using Dapr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
@@ -25,6 +26,7 @@ public class PictureSeen : Controller
         _mediator = mediator;
     }
 
+    [AllowAnonymous]
     [HttpPost(Topics.Pictures.Seen)]
     [Topic(Publishers.PubSub, Topics.Pictures.Seen)]
     public async Task<IActionResult> Handle([FromBody] EntityReference picture)
