@@ -8,7 +8,6 @@ using Dapr.Client;
 using FluentValidation;
 using ImageMagick;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Polly;
 using Prism.Picshare.Dapr;
 

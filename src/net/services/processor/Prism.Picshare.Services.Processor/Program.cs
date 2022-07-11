@@ -7,8 +7,6 @@
 using FluentValidation;
 using Grpc.Net.Client;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;

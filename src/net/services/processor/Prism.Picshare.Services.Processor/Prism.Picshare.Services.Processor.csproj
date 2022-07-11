@@ -9,23 +9,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\libs\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj" />
-      <ProjectReference Include="..\..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj" />
-      <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj" />
+        <ProjectReference Include="..\..\..\libs\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj"/>
+        <ProjectReference Include="..\..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj"/>
+        <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Dapr.AspNetCore" Version="1.8.0" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.1.0" />
-      <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="11.2.1" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-      <PackageReference Include="Polly" Version="7.2.3" />
+        <PackageReference Include="Dapr.AspNetCore" Version="1.8.0"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.1.0"/>
+        <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="11.2.1"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
+        <PackageReference Include="Polly" Version="7.2.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore">
-        <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.5\Microsoft.AspNetCore.dll</HintPath>
-      </Reference>
+        <Reference Include="Microsoft.AspNetCore">
+            <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.5\Microsoft.AspNetCore.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>
