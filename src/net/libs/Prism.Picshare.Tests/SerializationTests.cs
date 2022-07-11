@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using FluentAssertions;
 using Prism.Picshare.Domain;
@@ -14,6 +15,7 @@ namespace Prism.Picshare.Tests;
 
 public class SerializationTests
 {
+
     [Fact]
     public void Album_Ok()
     {
@@ -101,6 +103,48 @@ public class SerializationTests
             Views = 42,
             Name = Guid.NewGuid().ToString(),
             Published = true
+        };
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
+    public void PictureFlow_Ok()
+    {
+        // Arrange
+        var source = new Flow
+        {
+            OrganisationId = Guid.NewGuid(),
+            Pictures = new List<PictureSummary>()
+        };
+
+        source.Pictures.Add(new PictureSummary
+        {
+            Id = Guid.NewGuid()
+        });
+
+        source.Pictures.Add(new PictureSummary
+        {
+            Id = Guid.NewGuid()
+        });
+
+        source.Pictures.Add(new PictureSummary
+        {
+            Id = Guid.NewGuid()
+        });
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
+    public void PictureSummary_Ok()
+    {
+        // Arrange
+        var source = new PictureSummary
+        {
+            Id = Guid.NewGuid(),
+            Name = Guid.NewGuid().ToString(),
+            OrganisationId = Guid.NewGuid()
         };
 
         CheckSerialization(source);

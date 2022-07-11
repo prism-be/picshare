@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapr.Client;
@@ -17,7 +16,6 @@ using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
 using Prism.Picshare.UnitTests;
 using Xunit;
-using Stores = Prism.Picshare.Services.Pictures.Configuration.Stores;
 
 namespace Prism.Picshare.Services.Pictures.Tests.Commands.Pictures;
 
