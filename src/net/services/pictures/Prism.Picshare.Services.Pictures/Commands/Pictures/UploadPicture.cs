@@ -9,6 +9,8 @@ using FluentValidation;
 using MediatR;
 using Polly;
 using Prism.Picshare.Dapr;
+using Prism.Picshare.Domain;
+using Prism.Picshare.Events;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
 
@@ -44,6 +46,12 @@ public class UploadPictureHandler : IRequestHandler<UploadPicture>
         {
             await UploadFile(request);
         });
+
+        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.Uploaded, new EntityReference
+        {
+            OrganisationId = request.OrganisationId,
+            Id = request.Id
+        }, cancellationToken);
 
         return Unit.Value;
     }

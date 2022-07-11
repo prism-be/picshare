@@ -10,7 +10,6 @@ using MediatR;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;
-using Prism.Picshare.Services.Pictures.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
