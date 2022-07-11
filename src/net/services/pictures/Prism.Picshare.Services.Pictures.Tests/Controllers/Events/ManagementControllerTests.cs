@@ -19,6 +19,21 @@ namespace Prism.Picshare.Services.Pictures.Tests.Controllers.Events;
 
 public class ManagementControllerTests
 {
+
+    [Fact]
+    public async Task RelaunchUpdated_Ok()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+
+        // Act
+        var result = await new ManagementController(mediator.Object).RelaunchUpdated(Guid.NewGuid());
+
+        // Assert
+        result.Should().BeAssignableTo<OkResult>();
+        mediator.VerifySend<RelaunchUpdated>();
+    }
+
     [Fact]
     public async Task RelaunchUpload_Ok()
     {

@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using Dapr.Client;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Pictures.Configuration;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Albums;
 

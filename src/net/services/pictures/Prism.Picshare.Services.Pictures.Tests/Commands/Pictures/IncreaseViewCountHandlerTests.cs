@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using Dapr.Client;
 using FluentAssertions;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
-using Prism.Picshare.Services.Pictures.Configuration;
 using Xunit;
 
 namespace Prism.Picshare.Services.Pictures.Tests.Commands.Pictures;

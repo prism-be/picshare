@@ -36,6 +36,14 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
 
         await _daprClient.SaveStateAsync(picture, cancellationToken);
 
+        var flow = await _daprClient.GetStateFlowAsync(request.OrganisationId, cancellationToken);
+        flow.Pictures.Insert(0, new PictureSummary
+        {
+            OrganisationId = request.OrganisationId,
+            Id = request.PictureId
+        });
+        await _daprClient.SaveStateAsync(flow, cancellationToken);
+
         await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.Created, picture, cancellationToken);
 
         return picture;

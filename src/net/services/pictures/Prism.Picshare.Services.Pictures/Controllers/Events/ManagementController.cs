@@ -26,4 +26,11 @@ public class ManagementController : Controller
         await _mediator.Send(new RelaunchUpload(organisationId));
         return Ok();
     }
+    
+    [HttpPost("admin/{organisationId}/events/updated")]
+    public async Task<IActionResult> RelaunchUpdated([FromRoute] Guid organisationId)
+    {
+        await _mediator.Send(new RelaunchUpdated(organisationId));
+        return Ok();
+    }
 }
