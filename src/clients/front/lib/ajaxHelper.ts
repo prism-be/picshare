@@ -107,6 +107,39 @@ export async function postData(route: string, body: any): Promise<any> {
     }
 }
 
+export async function postFile(route: string, file: File): Promise<any> {
+    const response = await fetch(prefix + route, {
+        body: file,
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'Authorization': getAuthorization()
+        },
+    });
+
+    if (response.status === 401)
+    {
+        if (await performRefreshToken())
+        {
+            return postFile(route, file);
+        }
+    }
+
+    if (response.status === 200)
+    {
+        return {
+            status: response.status,
+            data: await response.json()
+        }
+    }
+
+    return {
+        status: response.status,
+        data: undefined
+    }
+}
+
 const getAuthorization = (): string => {
     const accessToken = localStorage.getItem('accessToken');
 
