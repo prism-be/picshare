@@ -22,7 +22,7 @@ public class UploadPictureValidator : AbstractValidator<UploadPicture>
     {
         RuleFor(x => x.OrganisationId).NotEmpty();
         RuleFor(x => x.Id).NotEmpty();
-        RuleFor(x => x.Data).NotEmpty();
+        RuleFor(x => x.Data).NotEmpty().Must(x => x.Any(c => c != 0));
     }
 }
 
