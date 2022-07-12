@@ -1,0 +1,58 @@
+﻿name: CD - Nightly
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    
+jobs:
+  services-authentication:
+    uses: ./.github/workflows/cd-docker-nightly.yml
+    with:
+      dockerFile: ./services/authentication/Prism.Picshare.Services.Authentication/Dockerfile
+      imageTag: service-authentication
+      workingDirectory: src/net/
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+  services-mailing:
+    uses: ./.github/workflows/cd-docker-nightly.yml
+    with:
+      dockerFile: ./services/mailing/Prism.Picshare.Services.Mailing/Dockerfile
+      imageTag: service-mailing
+      workingDirectory: src/net/
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+  services-pictures:
+    uses: ./.github/workflows/cd-docker-nightly.yml
+    with:
+      dockerFile: ./services/pictures/Prism.Picshare.Services.Pictures/Dockerfile
+      imageTag: service-pictures
+      workingDirectory: src/net/
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+  services-processor:
+    uses: ./.github/workflows/cd-docker-nightly.yml
+    with:
+      dockerFile: ./services/processor/Prism.Picshare.Services.Processor/Dockerfile
+      imageTag: service-processor
+      workingDirectory: src/net/
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+  clients-front-public:
+    uses: ./.github/workflows/cd-docker-nightly.yml
+    with:
+      dockerFile: ./Dockerfile
+      imageTag: client-front-public
+      workingDirectory: src/clients/front/
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
