@@ -40,7 +40,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
         return picture;
     }
 
-    private DateTime RetrieveDate(List<ExifData> exifs)
+    private static DateTime RetrieveDate(IReadOnlyCollection<ExifData> exifs)
     {
         return RetrieveDate(exifs, "DateTimeOriginal")
                ?? RetrieveDate(exifs, "DateTimeDigitized")
@@ -48,7 +48,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
                ?? DateTime.UtcNow;
     }
 
-    private DateTime? RetrieveDate(List<ExifData> exifs, string tag)
+    private static DateTime? RetrieveDate(IEnumerable<ExifData> exifs, string tag)
     {
         var exif = exifs.SingleOrDefault(x => x.Tag == tag);
 
@@ -68,7 +68,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
 
         value = splitted[0].Replace(':', '/') + " " + splitted[1];
 
-        if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime date))
+        if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date))
         {
             return date.ToUniversalTime();
         }

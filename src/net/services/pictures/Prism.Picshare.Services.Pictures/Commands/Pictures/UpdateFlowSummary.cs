@@ -31,6 +31,7 @@ public class UpdateFlowSummaryHandler : IRequestHandler<UpdateFlowSummary, Flow>
 
         if (existingSummary == null)
         {
+            _logger.LogInformation("The summary {id} does not exist in flow {flow}, adding", request.Summary.Id, request.Summary.OrganisationId);
             existingSummary = request.Summary;
             flow.Pictures.Add(existingSummary);
         }
