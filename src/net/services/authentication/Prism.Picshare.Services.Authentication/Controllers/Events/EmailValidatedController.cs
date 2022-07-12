@@ -27,7 +27,7 @@ public class EmailValidatedController : Controller
 
     [Topic(Publishers.PubSub, Topics.Email.Validated)]
     [HttpPost(Topics.RoutePrefix + Topics.Email.Validated)]
-    public async Task<IActionResult> Validate(User user)
+    public async Task<IActionResult> Validate([FromBody]User user)
     {
         var result = await _mediator.Send(new EmailValidatedRequest(user.OrganisationId, user.Id));
 
