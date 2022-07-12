@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text.Json;
 using Dapr.Client;
 using FluentValidation;
 using ImageMagick;
@@ -15,7 +16,7 @@ using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Processor.Commands;
 
-public record ReadMetaData(Guid OrganisationId, Guid PictureId): IRequest<ResultCodes>;
+public record ReadMetaData(Guid OrganisationId, Guid PictureId) : IRequest<ResultCodes>;
 
 public class ReadMetaDataValidator : AbstractValidator<ReadMetaData>
 {
@@ -40,7 +41,7 @@ public class ReadMetaDataHandler : IRequestHandler<ReadMetaData, ResultCodes>
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
         var response = await _daprClient.ReadPictureAsync(blobName, cancellationToken);
         var pictureData = response.Data.ToArray();
-        
+
         using var image = new MagickImage(pictureData);
         var profile = image.GetExifProfile();
 
@@ -58,13 +59,13 @@ public class ReadMetaDataHandler : IRequestHandler<ReadMetaData, ResultCodes>
                 {
                     Tag = exifValue.Tag.ToString(),
                     Type = exifValue.DataType.ToString(),
-                    Value = exifValue.ToString() ?? string.Empty
+                    Value = exifValue.GetValue()
                 });
             }
         }
 
         await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.ExifRead, picture, cancellationToken);
-        
+
         return ResultCodes.Ok;
     }
 }
