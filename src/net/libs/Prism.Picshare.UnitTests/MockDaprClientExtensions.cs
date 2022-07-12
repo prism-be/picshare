@@ -24,7 +24,12 @@ public static class TestsExtensions
 
     public static void VerifySaveState<TExpected>(this Mock<DaprClient> mock, string expectedStore)
     {
+        mock.VerifySaveState<TExpected>(expectedStore, Times.Once());
+    }
+
+    public static void VerifySaveState<TExpected>(this Mock<DaprClient> mock, string expectedStore, Times times)
+    {
         mock.Verify(x => x.SaveStateAsync(expectedStore, It.IsAny<string>(), It.IsAny<TExpected>(), It.IsAny<StateOptions>(), It.IsAny<IReadOnlyDictionary<string, string>>(), default),
-            Times.Once);
+            times);
     }
 }

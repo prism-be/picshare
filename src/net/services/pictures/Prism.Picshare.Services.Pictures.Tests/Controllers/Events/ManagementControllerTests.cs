@@ -21,6 +21,20 @@ public class ManagementControllerTests
 {
 
     [Fact]
+    public async Task RelaunchCreated_Ok()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+
+        // Act
+        var result = await new ManagementController(mediator.Object).RelaunchCreated(Guid.NewGuid());
+
+        // Assert
+        result.Should().BeAssignableTo<OkResult>();
+        mediator.VerifySend<RelaunchPictureEvents>();
+    }
+
+    [Fact]
     public async Task RelaunchUpdated_Ok()
     {
         // Arrange
@@ -31,7 +45,7 @@ public class ManagementControllerTests
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
-        mediator.VerifySend<RelaunchUpdated>();
+        mediator.VerifySend<RelaunchPictureEvents>();
     }
 
     [Fact]

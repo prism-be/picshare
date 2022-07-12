@@ -42,11 +42,7 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
     {
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
 
-        var bindingRequest = new BindingRequest(Stores.Data, "get");
-        bindingRequest.Metadata.Add("blobName", blobName);
-        bindingRequest.Metadata.Add("fileName", blobName);
-
-        var response = await _daprClient.InvokeBindingAsync(bindingRequest, cancellationToken);
+        var response = await _daprClient.ReadPictureAsync(blobName, cancellationToken);
 
         if (response == null)
         {
@@ -57,13 +53,24 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         var pictureData = response.Data.ToArray();
 
         using var image = new MagickImage(pictureData);
-        var size = new MagickGeometry(request.Width, request.Height)
+
+        var ratio = (float)request.Width / request.Height;
+        var sizeRatio = new MagickGeometry(image.Width,  Convert.ToInt32(image.Width * ratio));
+
+        if (sizeRatio.Height > image.Height)
         {
-            IgnoreAspectRatio = true
-        };
+            sizeRatio = new MagickGeometry(Convert.ToInt32(image.Height / ratio), image.Height);
+        }
+        
+        image.Crop(sizeRatio, Gravity.Center);
+        
+        var size = new MagickGeometry(request.Width, request.Height);
         image.Resize(size);
+        image.RePage();
 
         using var outputStream = new MemoryStream();
+        image.Format = MagickFormat.Jpg;
+        image.Quality = 98;
         await image.WriteAsync(outputStream, cancellationToken);
 
         var dataBase64 = Convert.ToBase64String(outputStream.ToArray());
