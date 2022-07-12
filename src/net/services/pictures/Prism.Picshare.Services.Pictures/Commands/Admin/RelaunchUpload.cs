@@ -46,7 +46,7 @@ public class RelaunchUploadHandler : IRequestHandler<RelaunchUpload>
 
             path = path.Replace("\\", "/");
 
-            if (path.EndsWith("/source"))
+            if (path.EndsWith("/source.jpg"))
             {
                 var pathSplitted = path.Split('/');
                 var organisationId = Guid.Parse(pathSplitted[^3]);

@@ -11,6 +11,7 @@ using Polly;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
 
@@ -58,14 +59,13 @@ public class UploadPictureHandler : IRequestHandler<UploadPicture>
 
     private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
     {
-        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
+        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay: {delay}", retryAttempt, delay);
     }
 
     private async Task UploadFile(UploadPicture picture)
     {
         var dataBase64 = Convert.ToBase64String(picture.Data);
-
-        var blobName = $"{picture.OrganisationId}/{picture.Id}/source";
+        var blobName = BlobNamesExtensions.GetSourcePath(picture.OrganisationId, picture.Id);
 
         await _daprClient.InvokeBindingAsync(Stores.Data, "create", dataBase64, new Dictionary<string, string>
         {
