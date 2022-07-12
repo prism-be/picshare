@@ -10,9 +10,9 @@ using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
 
-public record GeneratePictureSummary(Guid OrganisationId, Guid PictureId, List<ExifData> PictureExifs) : IRequest<ResultCodes>;
+public record GeneratePictureSummary(Guid OrganisationId, Guid PictureId, List<ExifData> PictureExifs) : IRequest<Picture>;
 
-public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSummary, ResultCodes>
+public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSummary, Picture>
 {
     private readonly DaprClient _daprClient;
 
@@ -21,7 +21,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
         _daprClient = daprClient;
     }
 
-    public async Task<ResultCodes> Handle(GeneratePictureSummary request, CancellationToken cancellationToken)
+    public async Task<Picture> Handle(GeneratePictureSummary request, CancellationToken cancellationToken)
     {
         var picture = await _daprClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
 
@@ -29,6 +29,6 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
 
         await _daprClient.SaveStateAsync(picture, cancellationToken);
 
-        return ResultCodes.Ok;
+        return picture;
     }
 }

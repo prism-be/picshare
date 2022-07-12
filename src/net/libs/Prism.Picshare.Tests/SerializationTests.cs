@@ -66,7 +66,6 @@ public class SerializationTests
         {
             Tag = Guid.NewGuid().ToString(),
             Type = Guid.NewGuid().ToString(),
-            Value = Guid.NewGuid().ToString()
         };
 
         CheckSerialization(source);
@@ -116,7 +115,15 @@ public class SerializationTests
             CreationDate = DateTime.Today,
             Views = 42,
             Name = Guid.NewGuid().ToString(),
-            Published = true
+            Published = true,
+            Owner = Guid.NewGuid(),
+            Summary = new PictureSummary
+            {
+                Date = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
+                Name = Guid.NewGuid().ToString(),
+                OrganisationId = Guid.NewGuid()
+            }
         };
 
         CheckSerialization(source);
@@ -158,7 +165,8 @@ public class SerializationTests
         {
             Id = Guid.NewGuid(),
             Name = Guid.NewGuid().ToString(),
-            OrganisationId = Guid.NewGuid()
+            OrganisationId = Guid.NewGuid(),
+            Date = DateTime.UtcNow
         };
 
         CheckSerialization(source);

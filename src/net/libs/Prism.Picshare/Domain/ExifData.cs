@@ -23,5 +23,5 @@ public class ExifData
     public string Type { get; set; }
 
     [JsonPropertyName("value")]
-    public object Value { get; set; }
+    public dynamic Value { get; set; }
 }
