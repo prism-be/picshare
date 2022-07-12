@@ -27,9 +27,9 @@ public class ExifReadController : Controller
     [AllowAnonymous]
     [HttpPost(Topics.RoutePrefix + Topics.Pictures.ExifRead)]
     [Topic(Publishers.PubSub, Topics.Pictures.ExifRead)]
-    public async Task<IActionResult> PictureUploaded([FromBody] Picture picture)
+    public async Task<IActionResult> Execute([FromBody] Picture picture)
     {
-        await _mediator.Send(new GeneratePictureSummary(picture.OrganisationId, picture.Id, picture.Exifs));
-        return Ok();
+        picture = await _mediator.Send(new GeneratePictureSummary(picture.OrganisationId, picture.Id, picture.Exifs));
+        return Ok(picture);
     }
 }
