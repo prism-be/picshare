@@ -10,6 +10,7 @@ using ImageMagick;
 using MediatR;
 using Polly;
 using Prism.Picshare.Dapr;
+using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Processor.Commands;
 
@@ -39,7 +40,7 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
 
     public async Task<ResultCodes> Handle(GenerateThumbnail request, CancellationToken cancellationToken)
     {
-        var blobName = $"{request.OrganisationId}/{request.PictureId}/source";
+        var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
 
         var bindingRequest = new BindingRequest(Stores.Data, "get");
         bindingRequest.Metadata.Add("blobName", blobName);
@@ -66,7 +67,7 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         await image.WriteAsync(outputStream, cancellationToken);
 
         var dataBase64 = Convert.ToBase64String(outputStream.ToArray());
-        var blobNameResized = $"{request.OrganisationId}/{request.PictureId}/{request.Width}-{request.Height}";
+        var blobNameResized = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId, request.Width, request.Height);
 
         var uploadPolicy = Policy.Handle<Exception>()
             .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), OnRetry);
