@@ -16,6 +16,7 @@ public class Picture : EntityReference
         Source = PictureSource.Unknown;
         CreationDate = DateTime.UtcNow;
         Name = string.Empty;
+        Exifs = new List<ExifData>();
     }
 
     [JsonPropertyName("published")]
@@ -29,6 +30,9 @@ public class Picture : EntityReference
 
     [JsonPropertyName("views")]
     public int Views { get; set; }
+
+    [JsonPropertyName("exifs")]
+    public List<ExifData> Exifs { get; set; }
 
     [JsonPropertyName("source")]
     public PictureSource Source { get; set; }

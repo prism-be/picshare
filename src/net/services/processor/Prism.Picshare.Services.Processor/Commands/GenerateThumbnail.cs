@@ -42,11 +42,7 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
     {
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
 
-        var bindingRequest = new BindingRequest(Stores.Data, "get");
-        bindingRequest.Metadata.Add("blobName", blobName);
-        bindingRequest.Metadata.Add("fileName", blobName);
-
-        var response = await _daprClient.InvokeBindingAsync(bindingRequest, cancellationToken);
+        var response = await _daprClient.ReadPictureAsync(blobName, cancellationToken);
 
         if (response == null)
         {

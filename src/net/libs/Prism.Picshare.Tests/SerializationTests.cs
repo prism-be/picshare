@@ -59,6 +59,20 @@ public class SerializationTests
     }
 
     [Fact]
+    public void ExifData_Ok()
+    {
+        // Arrange
+        var source = new ExifData
+        {
+            Tag = Guid.NewGuid().ToString(),
+            Type = Guid.NewGuid().ToString(),
+            Value = Guid.NewGuid().ToString()
+        };
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
     public void Organisation_Ok()
     {
         // Arrange
