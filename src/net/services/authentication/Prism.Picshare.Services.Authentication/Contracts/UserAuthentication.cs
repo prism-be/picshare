@@ -13,6 +13,9 @@ public class UserAuthentication
     [JsonPropertyName("authenticated")]
     public bool Authenticated { get; set; }
 
+    [JsonPropertyName("organisation")]
+    public Guid Organisation { get; set; }
+
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 }
