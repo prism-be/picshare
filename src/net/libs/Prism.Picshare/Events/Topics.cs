@@ -36,6 +36,7 @@ public static class Topics
         public const string Created = "picture/created";
         public const string ExifRead = "picture/exif/read";
         public const string SummaryUpdated = "picture/summary/updated";
+        public const string ThumbnailsGenerated = "picture/thumbnails/generated";
         public const string Updated = "picture/updated";
         public const string Uploaded = "picture/uploaded";
         public const string Seen = "picture/seen";

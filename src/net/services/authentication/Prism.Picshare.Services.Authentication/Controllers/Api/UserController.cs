@@ -35,7 +35,8 @@ public class UserController : Controller
         return Ok(new UserAuthentication
         {
             Authenticated = _userContextAccessor.IsAuthenticated,
-            Name = _userContextAccessor.Name
+            Name = _userContextAccessor.Name,
+            Organisation = _userContextAccessor.OrganisationId
         });
     }
 }

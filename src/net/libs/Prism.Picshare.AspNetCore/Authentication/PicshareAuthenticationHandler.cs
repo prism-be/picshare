@@ -34,19 +34,17 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
             return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new GenericIdentity("dapr")), "path")));
         }
 
-        if (!Request.Headers.ContainsKey(HeaderNames.Authorization))
+        var bearer = GetBearerFromHeader();
+
+        if (string.IsNullOrWhiteSpace(bearer))
+        {
+            bearer = GetBearerFromQuery();
+        }
+
+        if (string.IsNullOrWhiteSpace(bearer))
         {
             return Task.FromResult(AuthenticateResult.Fail($"Header Not Found for path {Request.Path}"));
         }
-
-        var header = Request.Headers[HeaderNames.Authorization].ToString();
-
-        if (!header.StartsWith("Bearer ", StringComparison.InvariantCultureIgnoreCase))
-        {
-            return Task.FromResult(AuthenticateResult.Fail("Header Not Bearer"));
-        }
-
-        var bearer = header.Substring(header.IndexOf(' ')).Trim();
 
         var claimsPrincipal = TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, bearer, _logger, false);
 
@@ -60,5 +58,27 @@ public class PicshareAuthenticationHandler : AuthenticationHandler<PicshareAuthe
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
 
-    
+    private string GetBearerFromHeader()
+    {
+        if (!Request.Headers.ContainsKey(HeaderNames.Authorization))
+        {
+            return string.Empty;
+        }
+
+        var header = Request.Headers[HeaderNames.Authorization].ToString();
+
+        return !header.StartsWith("Bearer ", StringComparison.InvariantCultureIgnoreCase)
+            ? string.Empty
+            : header[header.IndexOf(' ')..].Trim();
+    }
+
+    private string GetBearerFromQuery()
+    {
+        if (Request.Query.TryGetValue("accessToken", out var bearer))
+        {
+            return bearer;
+        }
+
+        return string.Empty;
+    }
 }
