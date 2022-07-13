@@ -3,6 +3,7 @@ import {DragEvent, useState} from "react";
 import {postFile} from "../lib/ajaxHelper";
 import {useSWRConfig} from "swr";
 
+
 const DropZone = () => {
 
     let currentFileIndex = -1;
@@ -14,7 +15,7 @@ const DropZone = () => {
     const [files, setFiles] = useState<File[]>([]);
     const [inProgress, setInProgress] = useState(false);
 
-    const {t} = useTranslation('components')
+    const {t} = useTranslation('common')
 
     const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -98,10 +99,10 @@ const DropZone = () => {
                 <div className={"flex grow"}>
                     <div className={"m-auto"}>
                         <h4>
-                            {t("drop-anywhere")}
-                            <br/>{t("or")}
+                            {t("components.dropzone.drop-anywhere")}
+                            <br/>{t("components.dropzone.or")}
                         </h4>
-                        <p className="">{t("select")}</p>
+                        <p className="">{t("components.dropzone.select")}</p>
                     </div>
                 </div>
                 <div className={"flex h-2"}>
