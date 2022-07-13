@@ -27,6 +27,7 @@ public class FlowController : Controller
     public async Task<IActionResult> GetFlow()
     {
         var flow = await _daprClient.GetStateFlowAsync(_userContextAccessor.OrganisationId, new CancellationToken());
+        flow.Pictures = flow.Pictures.Where(x => x.Ready).ToList();
         return Ok(flow);
     }
 }

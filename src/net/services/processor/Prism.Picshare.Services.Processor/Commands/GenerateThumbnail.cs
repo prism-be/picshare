@@ -10,6 +10,8 @@ using ImageMagick;
 using MediatR;
 using Polly;
 using Prism.Picshare.Dapr;
+using Prism.Picshare.Domain;
+using Prism.Picshare.Events;
 using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Processor.Commands;
@@ -43,12 +45,6 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
 
         var response = await _daprClient.ReadPictureAsync(blobName, cancellationToken);
-
-        if (response == null)
-        {
-            _logger.LogInformation("No picture data found for the request : {request}", request);
-            return ResultCodes.PictureNotFound;
-        }
 
         var pictureData = response.Data.ToArray();
 
@@ -93,6 +89,12 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
             _logger.LogInformation("Picture uploaded on storage: {blobName}", blobNameResized);
         });
 
+        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.ThumbnailsGenerated, new EntityReference
+        {
+            Id = request.PictureId,
+            OrganisationId = request.OrganisationId
+        }, cancellationToken);
+        
         return ResultCodes.Ok;
     }
 

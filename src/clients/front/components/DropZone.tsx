@@ -1,10 +1,13 @@
 ﻿import {useTranslation} from "next-i18next";
 import {DragEvent, useState} from "react";
 import {postFile} from "../lib/ajaxHelper";
+import {useSWRConfig} from "swr";
 
 const DropZone = () => {
-    
+
     let currentFileIndex = -1;
+
+    const {mutate} = useSWRConfig();
 
     const [percentageDone, setPercentageDone] = useState(0);
     const [inDropZone, setInDropZone] = useState(false);
@@ -53,33 +56,32 @@ const DropZone = () => {
 
         if (!inProgress) {
             setInProgress(true);
+            
+            // noinspection JSIgnoredPromiseFromCall
             processNextFile();
         }
     };
 
     const processNextFile = async () => {
         currentFileIndex++;
-        
-        if (currentFileIndex < files.length)
-        {
-           const file = files[currentFileIndex];
-           
-           if (file.type.toLowerCase() === "image/jpeg")
-           {
-               await postFile("/api/pictures/upload", file);
-           }
+
+        if (currentFileIndex < files.length) {
+            const file = files[currentFileIndex];
+
+            if (file.type.toLowerCase() === "image/jpeg") {
+                await postFile("/api/pictures/upload", file);
+                await mutate('/api/pictures/flow');
+            }
         }
 
         const percentage = Math.round((currentFileIndex + 1) / files.length * 100);
         setPercentageDone(percentage);
-        
-        if (currentFileIndex == files.length)
-        {
+
+        if (currentFileIndex == files.length) {
             setInProgress(false);
             setFiles([]);
-        }
-        else if (currentFileIndex < files.length)
-        {
+        } else if (currentFileIndex < files.length) {
+            // noinspection ES6MissingAwait
             processNextFile();
         }
     };

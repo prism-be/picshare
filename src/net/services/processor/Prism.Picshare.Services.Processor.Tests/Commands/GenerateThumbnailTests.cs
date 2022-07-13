@@ -15,22 +15,6 @@ namespace Prism.Picshare.Services.Processor.Tests.Commands;
 
 public class GenerateThumbnailTests
 {
-
-    [Fact]
-    public async Task Handle_NotFound()
-    {
-        // Arrange
-        var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var daprClient = new Mock<DaprClient>();
-
-        // Act
-        var handler = new GenerateThumbnailHandler(logger.Object, daprClient.Object);
-        var result = await handler.Handle(new GenerateThumbnail(Guid.NewGuid(), Guid.NewGuid(), 25, 25), CancellationToken.None);
-
-        // Assert
-        result.Should().Be(ResultCodes.PictureNotFound);
-    }
-
     [Fact]
     public async Task Handle_Ok()
     {

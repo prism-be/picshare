@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "SummaryUpdatedController.cs" company = "Prism">
+//  <copyright file = "ThumbnailsGeneratedController.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -16,21 +16,21 @@ using Prism.Picshare.Services.Pictures.Commands.Pictures;
 
 namespace Prism.Picshare.Services.Pictures.Controllers.Events;
 
-public class SummaryUpdatedController : Controller, IEventExecutor<PictureSummary>
+public class ThumbnailsGeneratedController : Controller, IEventExecutor<EntityReference>
 {
     private readonly IMediator _mediator;
 
-    public SummaryUpdatedController(IMediator mediator)
+    public ThumbnailsGeneratedController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
     [AllowAnonymous]
-    [HttpPost(Topics.RoutePrefix + Topics.Pictures.SummaryUpdated)]
-    [Topic(Publishers.PubSub, Topics.Pictures.SummaryUpdated)]
-    public async Task<IActionResult> Execute([FromBody] PictureSummary summary)
+    [HttpPost(Topics.RoutePrefix + Topics.Pictures.ThumbnailsGenerated)]
+    [Topic(Publishers.PubSub, Topics.Pictures.ThumbnailsGenerated)]
+    public async Task<IActionResult> Execute([FromBody] EntityReference picture)
     {
-        var flow = await _mediator.Send(new UpdateFlowSummary(summary));
-        return Ok(flow);
+        var summary = await _mediator.Send(new SetPictureReady(picture.OrganisationId, picture.Id));
+        return Ok(summary);
     }
 }

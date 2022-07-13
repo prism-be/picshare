@@ -15,6 +15,9 @@ public class PictureSummary : EntityReference
         Name = string.Empty;
     }
 
+    [JsonPropertyName("ready")]
+    public bool Ready { get; set; }
+
     [JsonPropertyName("date")]
     public DateTime Date { get; set; }
 
