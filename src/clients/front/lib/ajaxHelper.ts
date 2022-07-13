@@ -38,7 +38,7 @@ export async function getData(route: string): Promise<ObjectResult> {
     }
 }
 
-const performRefreshToken = async (): Promise<boolean> => {
+export const performRefreshToken = async (): Promise<boolean> => {
     const refreshToken = localStorage.getItem('refreshToken');
 
     if (refreshToken)
@@ -61,6 +61,12 @@ const performRefreshToken = async (): Promise<boolean> => {
             const refreshData = await refreshResponse.json();
             localStorage.setItem('accessToken', refreshData.accessToken);
             localStorage.setItem('refreshToken', refreshData.refreshToken);
+
+            if (autoRefreshToken)
+            {
+                clearTimeout(autoRefreshToken);
+            }
+            autoRefreshToken = setTimeout(performRefreshToken, refreshData.expires / 2 * 1000);
             
             return true;
         }
@@ -73,6 +79,8 @@ const performRefreshToken = async (): Promise<boolean> => {
     
     return false;
 }
+
+let autoRefreshToken: NodeJS.Timeout;
 
 export async function postData(route: string, body: any): Promise<any> {
     const response = await fetch(prefix + route, {

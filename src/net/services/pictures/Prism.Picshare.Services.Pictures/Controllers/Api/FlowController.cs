@@ -7,7 +7,6 @@
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
-using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
 
 namespace Prism.Picshare.Services.Pictures.Controllers.Api;
