@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import {useTranslation} from "next-i18next";
 import Header from "../components/design/Header";
 import DropZone from "../components/DropZone";
+import Flow from "../components/flow/Flow";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -27,6 +28,9 @@ const Home: NextPage = () => {
             <Header/>
             <div className={"p-5"}>
                 <DropZone/>
+            </div>
+            <div className={"p-5"}>
+                <Flow />
             </div>
         </div>
     )
