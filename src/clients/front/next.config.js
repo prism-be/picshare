@@ -2,11 +2,10 @@
 
 const {i18n} = require('./next-i18next.config');
 
-const nextConfig = {
+
+module.exports = {
+    output: 'standalone',
     reactStrictMode: true,
-    experimental: {
-        outputStandalone: true
-    },
     images: {
         domains: ['localhost']
     },
@@ -20,5 +19,3 @@ const nextConfig = {
         ]
     }
 }
-
-module.exports = nextConfig
