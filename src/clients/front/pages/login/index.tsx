@@ -13,6 +13,7 @@ import InputText from "../../components/InputText";
 import Alert from "../../components/Alert";
 import {postData} from "../../lib/ajaxHelper";
 import {useRouter} from "next/router";
+import {useSWRConfig} from "swr";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -21,6 +22,8 @@ export const getStaticProps = async ({locale}: any) => ({
 })
 
 const Login: NextPage = () => {
+    
+    const { mutate } = useSWRConfig();
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -42,6 +45,7 @@ const Login: NextPage = () => {
         if (result.status === 200) {
             localStorage.setItem('accessToken', result.data.accessToken);
             localStorage.setItem('refreshToken', result.data.refreshToken);
+            await mutate('/api/authentication/user/check');
             await router.push('/');
             return;
         }
