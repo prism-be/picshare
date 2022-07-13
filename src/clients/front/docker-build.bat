@@ -1,1 +1,1 @@
-docker build . --tag simonbaudart/picshare:client-front-public-latest
+docker build . --tag simonbaudart/picshare:client-front-public-nightly
