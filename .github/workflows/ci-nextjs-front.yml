@@ -24,18 +24,13 @@ jobs:
       - name: Extract Version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 7.3.0
-
       - name: Install Packages
         working-directory: ./src/clients/front
-        run: pnpm install --frozen-lockfile
+        run: yarn install --frozen-lockfile
 
       - name: Build Project
         working-directory: ./src/clients/front
-        run: pnpm run build
+        run: yarn build
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

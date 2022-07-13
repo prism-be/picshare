@@ -11,7 +11,7 @@ const Header = () => {
             <div className="flex">
                 <Link href="/">
                     <a className="m-auto pl-2 pr-2">
-                        <Image src="/images/logo-white.svg" height={42} width={42}></Image>
+                        <Image src="/images/logo-white.svg" height={42} width={42} alt={"Picshare by PRISM"}></Image>
                     </a>
                 </Link>
             </div>

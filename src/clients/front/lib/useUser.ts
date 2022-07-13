@@ -35,7 +35,7 @@ export default function useUser({
         if ((redirectTo && !redirectIfFound && !user.authenticated) || (redirectIfFound && user.authenticated)) {
             router.push(redirectTo);
         }
-    }, [user, redirectIfFound, redirectTo]);
+    }, [user, redirectIfFound, redirectTo, router]);
 
     return {user, mutateUser};
 }
