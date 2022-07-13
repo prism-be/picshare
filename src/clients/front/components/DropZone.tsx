@@ -3,8 +3,11 @@ import {DragEvent, useState} from "react";
 import {postFile} from "../lib/ajaxHelper";
 import {useSWRConfig} from "swr";
 
+interface Props {
+    small?: boolean;
+}
 
-const DropZone = () => {
+const DropZone = ({small}: Props) => {
 
     let currentFileIndex = -1;
 
@@ -57,7 +60,7 @@ const DropZone = () => {
 
         if (!inProgress) {
             setInProgress(true);
-            
+
             // noinspection JSIgnoredPromiseFromCall
             processNextFile();
         }
@@ -88,27 +91,29 @@ const DropZone = () => {
     };
 
     return <>
-        <div className={"flex border border-dashed border-gray-500 relative rounded" + (inDropZone ? " bg-gray-200" : "")}
+        <div className={"flex border border-dashed border-gray-300 relative rounded" + (inDropZone ? " bg-gray-200" : "")}
              onDragEnter={(e) => handleDragEnter(e)}
              onDragLeave={(e) => handleDragLeave(e)}
              onDragOver={(e) => handleDragOver(e)}
              onDrop={(e) => handleDrop(e)}
         >
-            <input type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50"/>
-            <div className="flex flex-col text-center absolute top-0 right-0 left-0 bottom-0 m-auto">
+            <input type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full z-50"/>
+            <div className="flex flex-col text-center text-gray-500 absolute top-0 right-0 left-0 bottom-0 m-auto">
                 <div className={"flex grow"}>
                     <div className={"m-auto"}>
                         <h4>
                             {t("components.dropzone.drop-anywhere")}
+                            { !small && <>
                             <br/>{t("components.dropzone.or")}
+                                <p className="">{t("components.dropzone.select")}</p>
+                            </>}
                         </h4>
-                        <p className="">{t("components.dropzone.select")}</p>
                     </div>
                 </div>
-                <div className={"flex h-2"}>
+                <div className={"flex h-2 absolute right-0 left-0 bottom-0"}>
                     {inProgress && <>
                         <div className={"h-full flex-auto bg-teal-600"} style={{width: percentageDone + "%"}}></div>
-                        <div className={"h-full flex-auto bg-gray-200"} style={{width: (100 - percentageDone) + "%"}}></div>
+                        <div className={"h-full flex-auto bg-gray-300"} style={{width: (100 - percentageDone) + "%"}}></div>
                     </>}
                 </div>
             </div>

@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+a, a:link, a:hover, a:visited, a:active
+{
+    color: #31859c;
+}

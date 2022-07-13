@@ -1,6 +1,8 @@
 ﻿{
   "header": {
-    "title": "Picshare By PRISM"
+    "title": "Picshare By PRISM",
+    "hello": "Hello",
+    "logout": "Logout"
   },
   "subscribe": {
     "title": "Welcome to Picshare By PRISM"
@@ -14,7 +16,7 @@
   },
   "components": {
     "dropzone": {
-      "drop-anywhere": "Drop files anywhere to upload",
+      "drop-anywhere": "Drop files here",
       "or": "or",
       "select": "Select Files"
     }

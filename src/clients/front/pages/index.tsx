@@ -27,9 +27,6 @@ const Home: NextPage = () => {
         <div>
             <Header/>
             <div className={"p-5"}>
-                <DropZone/>
-            </div>
-            <div className={"p-5"}>
                 <Flow />
             </div>
         </div>
