@@ -1,9 +1,12 @@
 ﻿import {useEffect, useState} from "react";
-import {getData, performRefreshToken} from "../../lib/ajaxHelper";
+import {getData, IFlow, IPictureSummary, performRefreshToken} from "../../lib/ajaxHelper";
 import {Thumbnail} from "./Thumbnail";
 import useSWR from "swr";
+import {format, parse, parseISO, parseJSON} from "date-fns";
+import {useRouter} from "next/router";
+import {getCurrentLocale} from "../../lib/locales";
 
-const getFlow = async (route: string) => {
+const getFlow = async (route: string) : Promise<IFlow> => {
 
     await performRefreshToken();
 
@@ -13,25 +16,70 @@ const getFlow = async (route: string) => {
         return response.data;
     }
 
-    return {};
+    return {
+        organisationId: '',
+        pictures: []
+    };
+}
+
+interface IGroupedFlow
+{
+    date: Date;
+    day: string;
+    pictures: IPictureSummary[];
 }
 
 const Flow = () => {
 
-    const {data: flow, mutate: mutateFlow} = useSWR("/api/pictures/flow", getFlow);
+    const router = useRouter();
     
-    const [pictures, setPictures] = useState<any[]>([]);
+    const {data: flow} = useSWR("/api/pictures/flow", getFlow);
+    
+    const [groupedFlows, setGroupedFlows] = useState<IGroupedFlow[]>([]);
 
     useEffect(() => {
         if (flow) {
-            setPictures(flow.pictures);
+
+            let data: IGroupedFlow[] = [];
+
+            flow.pictures.forEach((picture) => {
+                const pictureDate = parseJSON(picture.date);
+                const day: string = format(pictureDate, 'yyyy-MM-dd');
+
+                let existing = data.find(x => x.day === day);
+
+                if (!existing)
+                {
+                    existing = {
+                        date: parseISO(day),
+                        day,
+                        pictures: []
+                    }
+                    data.push(existing);
+                }
+                
+                existing.pictures.push(picture);
+            })
+            
+            console.log(router.locale);
+            
+            setGroupedFlows(data);
         }
     }, [flow])
 
 
     return <>
-        <div className="flex flex-wrap">
-            {pictures && pictures.map(picture => <Thumbnail picture={picture} key={picture.id}/>)}
+        <div className="">
+            {groupedFlows && groupedFlows.map(groupedFlow => <div key={groupedFlow.day} className="pb-5">
+                <h1 className="text-gray-500">
+                    {format(groupedFlow.date, 'EEEE d MMMM yyyy', {
+                        locale: getCurrentLocale(router)
+                    })}
+                </h1>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-1">
+                    { groupedFlow.pictures && groupedFlow.pictures.map(picture => <Thumbnail picture={picture} key={picture.id}/>)}
+                </div>
+            </div>)}
         </div>
     </>
 }

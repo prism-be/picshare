@@ -15,13 +15,6 @@ export const getStaticProps = async ({locale}: any) => ({
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
-    useEffect(() => {
-        // @ts-ignore
-        import("tw-elements");
-        // @ts-ignore
-        import("tw-elements/dist/css/index.min.css");
-    }, []);
-
     const {t} = useTranslation('common')
 
     return <>
