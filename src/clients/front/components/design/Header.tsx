@@ -34,7 +34,7 @@ const Header = () => {
             </div>
             <div className="grow">
             </div>
-            <div className="flex w-[300px]">
+            <div className="flex w-[150px] sm:w-[300px] lg:w-[400px]">
                 <div className="flex p-2">
                 <DropZone small={true} />
                 </div>
