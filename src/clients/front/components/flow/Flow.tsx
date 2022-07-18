@@ -2,7 +2,7 @@
 import {getData, IFlow, IPictureSummary, performRefreshToken} from "../../lib/ajaxHelper";
 import {Thumbnail} from "./Thumbnail";
 import useSWR from "swr";
-import {format, parse, parseISO, parseJSON} from "date-fns";
+import {format, parseISO, parseJSON} from "date-fns";
 import {useRouter} from "next/router";
 import {getCurrentLocale} from "../../lib/locales";
 
@@ -73,7 +73,7 @@ const Flow = () => {
             {groupedFlows && groupedFlows.map(groupedFlow => <div key={groupedFlow.day} className="pb-5">
                 <h1 className="text-gray-500">
                     {format(groupedFlow.date, 'EEEE d MMMM yyyy', {
-                        locale: getCurrentLocale(router)
+                        locale: getCurrentLocale()
                     })}
                 </h1>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-1">

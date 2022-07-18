@@ -4,7 +4,6 @@ import useUser from "../lib/useUser";
 import Loader from "../components/Loader";
 import {useTranslation} from "next-i18next";
 import Header from "../components/design/Header";
-import DropZone from "../components/DropZone";
 import Flow from "../components/flow/Flow";
 
 export const getStaticProps = async ({locale}: any) => ({

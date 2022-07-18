@@ -5,7 +5,6 @@ import Head from "next/head";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {SWRConfig} from "swr";
 import fetchJson from "../lib/fetchJson";
-import {useEffect} from "react";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
