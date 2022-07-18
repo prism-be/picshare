@@ -18,7 +18,7 @@ namespace Prism.Picshare.Services.Processor.Tests.Controllers.Events;
 public class PictureUploadedControllerTests
 {
     [Fact]
-    public async Task PictureUploaded_Ok()
+    public void PictureUploaded_Ok()
     {
         // Arrange
         var organisationId = Guid.NewGuid();
