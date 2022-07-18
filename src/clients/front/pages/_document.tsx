@@ -1,16 +1,6 @@
 ﻿import {Html, Head, Main, NextScript} from 'next/document'
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
-import {useTranslation} from "next-i18next";
-
-export const getStaticProps = async ({locale}: any) => ({
-    props: {
-        ...(await serverSideTranslations(locale, ['common']))
-    }
-})
 
 export default function Document() {
-    const {t} = useTranslation('common')
-
     // noinspection HtmlRequiredTitleElement
     return (
         <Html>
