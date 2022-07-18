@@ -74,7 +74,7 @@ const DropZone = ({small}: Props) => {
 
             if (file.type.toLowerCase() === "image/jpeg") {
                 await postFile("/api/pictures/upload", file);
-                setTimeout(async () => await mutate('/api/pictures/flow'), 2000);
+                setTimeout(() => mutate('/api/pictures/flow'), 2000);
             }
         }
 
