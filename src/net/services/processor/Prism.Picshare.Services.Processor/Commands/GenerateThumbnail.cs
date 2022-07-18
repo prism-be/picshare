@@ -16,7 +16,7 @@ using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Processor.Commands;
 
-public record GenerateThumbnail(Guid OrganisationId, Guid PictureId, int Width, int Height) : IRequest<ResultCodes>;
+public record GenerateThumbnail(Guid OrganisationId, Guid PictureId, int Width, int Height, bool Crop) : IRequest<ResultCodes>;
 
 public class GenerateThumbnailValidator : AbstractValidator<GenerateThumbnail>
 {
@@ -50,23 +50,35 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
 
         using var image = new MagickImage(pictureData);
 
-        var ratio = (float)request.Width / request.Height;
+        var width = request.Width;
+        var height = request.Height;
+
+        if (image.Height > image.Width)
+        {
+            width = request.Height;
+            height = request.Width;
+        }
+
+        var ratio = (float)width / height;
         var sizeRatio = new MagickGeometry(image.Width,  Convert.ToInt32(image.Width * ratio));
 
         if (sizeRatio.Height > image.Height)
         {
             sizeRatio = new MagickGeometry(Convert.ToInt32(image.Height / ratio), image.Height);
         }
-        
-        image.Crop(sizeRatio, Gravity.Center);
-        
-        var size = new MagickGeometry(request.Width, request.Height);
+
+        if (request.Crop)
+        {
+            image.Crop(sizeRatio, Gravity.Center);
+        }
+
+        var size = new MagickGeometry(width, height);
         image.Resize(size);
         image.RePage();
 
         using var outputStream = new MemoryStream();
         image.Format = MagickFormat.Jpg;
-        image.Quality = 98;
+        image.Quality = 95;
         await image.WriteAsync(outputStream, cancellationToken);
 
         var dataBase64 = Convert.ToBase64String(outputStream.ToArray());

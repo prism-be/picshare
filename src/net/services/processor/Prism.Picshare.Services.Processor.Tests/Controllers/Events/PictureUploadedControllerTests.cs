@@ -27,7 +27,7 @@ public class PictureUploadedControllerTests
 
         // Act
         var controller = new PictureUploadedController(mediator.Object);
-        var result = await controller.PictureUploaded(new EntityReference
+        var result = controller.PictureUploaded(new EntityReference
         {
             OrganisationId = organisationId,
             Id = pictureId
@@ -35,6 +35,6 @@ public class PictureUploadedControllerTests
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
-        mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.AtLeast(1));
+        mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Exactly(4));
     }
 }
