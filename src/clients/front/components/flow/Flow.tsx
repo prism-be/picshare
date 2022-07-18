@@ -3,10 +3,10 @@ import {getData, IFlow, IPictureSummary, performRefreshToken} from "../../lib/aj
 import {Thumbnail} from "./Thumbnail";
 import useSWR from "swr";
 import {format, parseISO, parseJSON} from "date-fns";
-import {useRouter} from "next/router";
 import {getCurrentLocale} from "../../lib/locales";
+import {PictureZoom} from "./PictureZoom";
 
-const getFlow = async (route: string) : Promise<IFlow> => {
+const getFlow = async (route: string): Promise<IFlow> => {
 
     await performRefreshToken();
 
@@ -22,8 +22,7 @@ const getFlow = async (route: string) : Promise<IFlow> => {
     };
 }
 
-interface IGroupedFlow
-{
+interface IGroupedFlow {
     date: Date;
     day: string;
     pictures: IPictureSummary[];
@@ -31,16 +30,19 @@ interface IGroupedFlow
 
 const Flow = () => {
 
-    const router = useRouter();
-    
     const {data: flow} = useSWR("/api/pictures/flow", getFlow);
-    
+
     const [groupedFlows, setGroupedFlows] = useState<IGroupedFlow[]>([]);
+    const [selectedPictures, setSelectedPictures] = useState<string[]>([]);
+    const [zoomPicture, setZoomPicture] = useState('');
+    const [organisationId, setOrganisationId] = useState('');
 
     useEffect(() => {
         if (flow) {
 
             let data: IGroupedFlow[] = [];
+
+            setOrganisationId(flow.organisationId);
 
             flow.pictures.forEach((picture) => {
                 const pictureDate = parseJSON(picture.date);
@@ -48,8 +50,7 @@ const Flow = () => {
 
                 let existing = data.find(x => x.day === day);
 
-                if (!existing)
-                {
+                if (!existing) {
                     existing = {
                         date: parseISO(day),
                         day,
@@ -57,16 +58,34 @@ const Flow = () => {
                     }
                     data.push(existing);
                 }
-                
+
                 existing.pictures.push(picture);
             })
-            
-            console.log(router.locale);
-            
+
             setGroupedFlows(data);
         }
     }, [flow])
 
+    const togglePictureSelection = (id: string) => {
+        const index = selectedPictures.indexOf(id);
+
+        if (index === -1) {
+            selectedPictures.push(id);
+        } else {
+            selectedPictures.splice(index, 1);
+        }
+
+        setSelectedPictures(selectedPictures);
+    }
+
+    const togglePictureZoom = (id: string) => {
+
+        if (id === zoomPicture) {
+            setZoomPicture('');
+            return;
+        }
+        setZoomPicture(id);
+    }
 
     return <>
         <div className="">
@@ -77,9 +96,17 @@ const Flow = () => {
                     })}
                 </h1>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-1">
-                    { groupedFlow.pictures && groupedFlow.pictures.map(picture => <Thumbnail picture={picture} key={picture.id}/>)}
+                    {groupedFlow.pictures && groupedFlow.pictures.map(picture =>
+                        <Thumbnail picture={picture} key={picture.id}
+                                   togglePictureSelection={togglePictureSelection}
+                                   togglePictureZoom={togglePictureZoom}
+                        />
+                    )}
                 </div>
             </div>)}
+
+            {zoomPicture && <PictureZoom organisationId={organisationId} pictureId={zoomPicture} togglePictureZoom={togglePictureZoom}/>}
+
         </div>
     </>
 }
