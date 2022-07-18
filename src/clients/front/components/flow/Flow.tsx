@@ -33,6 +33,7 @@ const Flow = () => {
     const {data: flow} = useSWR("/api/pictures/flow", getFlow);
 
     const [groupedFlows, setGroupedFlows] = useState<IGroupedFlow[]>([]);
+    const [pictures, setPictures] = useState<IPictureSummary[]>([]);
     const [selectedPictures, setSelectedPictures] = useState<string[]>([]);
     const [zoomPicture, setZoomPicture] = useState('');
     const [organisationId, setOrganisationId] = useState('');
@@ -43,6 +44,7 @@ const Flow = () => {
             let data: IGroupedFlow[] = [];
 
             setOrganisationId(flow.organisationId);
+            setPictures(flow.pictures);
 
             flow.pictures.forEach((picture) => {
                 const pictureDate = parseJSON(picture.date);
@@ -87,6 +89,50 @@ const Flow = () => {
         setZoomPicture(id);
     }
 
+    const nextPictureZoom = () => {
+        if (zoomPicture === '') {
+            return;
+        }
+
+        const current = pictures.find(x => x.id === zoomPicture);
+
+        if (current == undefined) {
+            return;
+        }
+
+        let position = pictures.indexOf(current);
+        position++;
+        
+        if (position >= pictures.length)
+        {
+            position = 0;
+        }
+        
+        setZoomPicture(pictures[position].id);
+    }
+
+    const previousPictureZoom = () => {
+        if (zoomPicture === '') {
+            return;
+        }
+
+        const current = pictures.find(x => x.id === zoomPicture);
+
+        if (current == undefined) {
+            return;
+        }
+
+        let position = pictures.indexOf(current);
+        position--;
+
+        if (position < 0)
+        {
+            position = pictures.length - 1;
+        }
+
+        setZoomPicture(pictures[position].id);
+    }
+
     return <>
         <div className="">
             {groupedFlows && groupedFlows.map(groupedFlow => <div key={groupedFlow.day} className="pb-5">
@@ -105,7 +151,7 @@ const Flow = () => {
                 </div>
             </div>)}
 
-            {zoomPicture && <PictureZoom organisationId={organisationId} pictureId={zoomPicture} togglePictureZoom={togglePictureZoom}/>}
+            {zoomPicture && <PictureZoom organisationId={organisationId} pictureId={zoomPicture} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
 
         </div>
     </>
