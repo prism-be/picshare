@@ -4,6 +4,21 @@
     data: any | undefined;
 }
 
+export interface IPictureSummary
+{
+    id: string;
+    organisationId: string;
+    ready: boolean;
+    date: Date;
+    name: string;
+}
+
+export interface IFlow
+{
+    organisationId: string;
+    pictures: IPictureSummary[];
+}
+
 const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
 
 export async function getData(route: string): Promise<ObjectResult> {

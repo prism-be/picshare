@@ -4,7 +4,6 @@ import useUser from "../lib/useUser";
 import Loader from "../components/Loader";
 import {useTranslation} from "next-i18next";
 import Header from "../components/design/Header";
-import DropZone from "../components/DropZone";
 import Flow from "../components/flow/Flow";
 
 export const getStaticProps = async ({locale}: any) => ({
@@ -26,9 +25,6 @@ const Home: NextPage = () => {
     return (
         <div>
             <Header/>
-            <div className={"p-5"}>
-                <DropZone/>
-            </div>
             <div className={"p-5"}>
                 <Flow />
             </div>

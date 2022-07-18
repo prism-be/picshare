@@ -1,6 +1,8 @@
 ﻿{
   "header": {
-    "title": "Picshare By PRISM"
+    "title": "Picshare By PRISM",
+    "hello": "Hello",
+    "logout": "Logout"
   },
   "subscribe": {
     "title": "Welcome to Picshare By PRISM"
@@ -10,6 +12,13 @@
       "required": "This field is required",
       "email": "This is not a valid email",
       "passwordMatch": "The specified password does not match"
+    }
+  },
+  "components": {
+    "dropzone": {
+      "drop-anywhere": "Drop files here",
+      "or": "or",
+      "select": "Select Files"
     }
   }
 }

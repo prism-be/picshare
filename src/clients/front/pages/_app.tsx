@@ -5,7 +5,6 @@ import Head from "next/head";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {SWRConfig} from "swr";
 import fetchJson from "../lib/fetchJson";
-import {useEffect} from "react";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -15,13 +14,6 @@ export const getStaticProps = async ({locale}: any) => ({
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
-    useEffect(() => {
-        // @ts-ignore
-        import("tw-elements");
-        // @ts-ignore
-        import("tw-elements/dist/css/index.min.css");
-    }, []);
-
     const {t} = useTranslation('common')
 
     return <>
@@ -29,6 +21,9 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             <title>{t('header.title')}</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <link rel="icon" type="image/png" href="/favicon.png"/>
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com"/>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"/>
         </Head>
         <SWRConfig
             value={{
