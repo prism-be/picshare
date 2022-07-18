@@ -18,7 +18,7 @@ namespace Prism.Picshare.Services.Processor.Tests.Controllers.Events;
 public class PictureUploadedControllerTests
 {
     [Fact]
-    public async Task PictureUploaded_Ok()
+    public void PictureUploaded_Ok()
     {
         // Arrange
         var organisationId = Guid.NewGuid();
@@ -27,7 +27,7 @@ public class PictureUploadedControllerTests
 
         // Act
         var controller = new PictureUploadedController(mediator.Object);
-        var result = await controller.PictureUploaded(new EntityReference
+        var result = controller.PictureUploaded(new EntityReference
         {
             OrganisationId = organisationId,
             Id = pictureId
@@ -35,6 +35,6 @@ public class PictureUploadedControllerTests
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
-        mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.AtLeast(1));
+        mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Exactly(4));
     }
 }
