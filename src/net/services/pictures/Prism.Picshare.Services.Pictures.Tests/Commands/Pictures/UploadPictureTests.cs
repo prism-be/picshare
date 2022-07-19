@@ -7,11 +7,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapr.Client;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
@@ -27,17 +27,18 @@ public class UploadPictureTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var daprClient = new Mock<DaprClient>();
+        var publisherClient = new Mock<IPublisherClient>();
+        var blobClient = new Mock<IBlobClient>();
         var data = new byte[42];
         Random.Shared.NextBytes(data);
 
         // Act
-        var handler = new UploadPictureHandler(Mock.Of<ILogger<UploadPictureHandler>>(), daprClient.Object);
+        var handler = new UploadPictureHandler(blobClient.Object, publisherClient.Object, Mock.Of<ILogger<UploadPictureHandler>>());
         var result = await handler.Handle(new UploadPicture(Guid.NewGuid(), Guid.NewGuid(), data), CancellationToken.None);
 
         // Assert
         result.Should().Be(Unit.Value);
-        daprClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Uploaded);
+        publisherClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Uploaded);
     }
 
     [Fact]

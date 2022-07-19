@@ -7,7 +7,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapr.Client;
 using FluentAssertions;
 using Moq;
 using Prism.Picshare.Dapr;
@@ -29,16 +28,17 @@ public class InitializePictureTests
         var organisationId = Guid.NewGuid();
         var owner = Guid.NewGuid();
         var request = new InitializePicture(organisationId, owner, pictureId, PictureSource.Upload);
-        var daprClient = new Mock<DaprClient>();
+        var publisherClient = new Mock<IPublisherClient>();
+        var storeClient = new Mock<StoreClient>();
 
         // Act
-        var handler = new InitializePictureHandler(daprClient.Object);
+        var handler = new InitializePictureHandler(storeClient.Object, publisherClient.Object);
         var picture = await handler.Handle(request, CancellationToken.None);
 
         // Assert
         picture.OrganisationId.Should().Be(organisationId);
         picture.Id.Should().Be(pictureId);
-        daprClient.VerifySaveState<Picture>(Stores.Pictures);
-        daprClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Created);
+        storeClient.VerifySaveState<Picture>(Stores.Pictures);
+        publisherClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Created);
     }
 }

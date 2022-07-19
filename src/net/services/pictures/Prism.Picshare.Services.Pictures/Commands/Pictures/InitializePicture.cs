@@ -16,9 +16,9 @@ public record InitializePicture(Guid OrganisationId, Guid Owner, Guid PictureId,
 public class InitializePictureHandler : IRequestHandler<InitializePicture, Picture>
 {
     private readonly IPublisherClient _publisherClient;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public InitializePictureHandler(IStoreClient storeClient, IPublisherClient publisherClient)
+    public InitializePictureHandler(StoreClient storeClient, IPublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;
@@ -35,16 +35,16 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
             Owner = request.Owner
         };
 
-        await _storeClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
 
-        var flow = await _storeClient.GetStateFlowAsync(request.OrganisationId, cancellationToken);
+        var flow = await _storeClient.GetStateAsync<Flow>(request.OrganisationId.ToString(), cancellationToken);
 
         flow.Pictures.Insert(0, new PictureSummary
         {
             OrganisationId = request.OrganisationId,
             Id = request.PictureId
         });
-        await _storeClient.SaveStateAsync(flow, cancellationToken);
+        await _storeClient.SaveStateAsync(request.OrganisationId.ToString(), flow, cancellationToken);
 
         await _publisherClient.PublishEventAsync(Topics.Pictures.Created, picture, cancellationToken);
 

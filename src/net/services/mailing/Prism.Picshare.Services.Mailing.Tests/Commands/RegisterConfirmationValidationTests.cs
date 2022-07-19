@@ -33,7 +33,7 @@ public class RegisterConfirmationValidationTests
             Consumed = true
         };
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
 
         // Act
@@ -52,7 +52,7 @@ public class RegisterConfirmationValidationTests
         var user = new User();
         var action = new MailAction<User>(key, MailActionType.ConfirmUserRegistration, user);
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
 
         // Act
         var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
@@ -70,7 +70,7 @@ public class RegisterConfirmationValidationTests
         var user = new User();
         var action = new MailAction<User>(key, MailActionType.ConfirmUserRegistration, user);
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
 
         // Act

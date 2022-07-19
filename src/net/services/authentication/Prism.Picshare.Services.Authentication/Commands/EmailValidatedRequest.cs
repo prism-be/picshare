@@ -25,9 +25,9 @@ public class EmailValidatedRequestValidator : AbstractValidator<EmailValidatedRe
 public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedRequest, ResultCodes>
 {
     private readonly ILogger<EmailValidatedRequestHandler> _logger;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public EmailValidatedRequestHandler(ILogger<EmailValidatedRequestHandler> logger, IStoreClient storeClient)
+    public EmailValidatedRequestHandler(ILogger<EmailValidatedRequestHandler> logger, StoreClient storeClient)
     {
         _logger = logger;
         _storeClient = storeClient;
@@ -36,7 +36,7 @@ public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedReques
     public async Task<ResultCodes> Handle(EmailValidatedRequest request, CancellationToken cancellationToken)
     {
         var key = EntityReference.ComputeKey(request.OrganisationId, request.UserId);
-        var user = await _storeClient.GetStateAsync<User>(key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
 
         if (user == null)
         {

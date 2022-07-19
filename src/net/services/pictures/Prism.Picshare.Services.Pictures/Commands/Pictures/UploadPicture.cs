@@ -67,7 +67,7 @@ public class UploadPictureHandler : IRequestHandler<UploadPicture>
     {
         var blobName = BlobNamesExtensions.GetSourcePath(picture.OrganisationId, picture.Id);
 
-        await _blobClient.Create(blobName, picture.Data);
+        await _blobClient.CreateAsync(blobName, picture.Data);
 
         _logger.LogInformation("Picture uploaded on storage: {blobName}", blobName);
     }

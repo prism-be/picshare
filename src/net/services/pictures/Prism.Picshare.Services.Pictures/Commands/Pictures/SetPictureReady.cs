@@ -16,9 +16,9 @@ public record SetPictureReady(Guid OrganisationId, Guid PictureId) : IRequest<Pi
 public class SetPictureReadyHandler : IRequestHandler<SetPictureReady, PictureSummary>
 {
     private readonly IPublisherClient _publisherClient;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public SetPictureReadyHandler(IStoreClient storeClient, IPublisherClient publisherClient)
+    public SetPictureReadyHandler(StoreClient storeClient, IPublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;
@@ -26,10 +26,10 @@ public class SetPictureReadyHandler : IRequestHandler<SetPictureReady, PictureSu
 
     public async Task<PictureSummary> Handle(SetPictureReady request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStateAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken);
 
         picture.Summary.Ready = true;
-        await _storeClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.Pictures.SummaryUpdated, picture.Summary, cancellationToken);
 
         return picture.Summary;

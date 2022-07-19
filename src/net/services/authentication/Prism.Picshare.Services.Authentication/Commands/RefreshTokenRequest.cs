@@ -21,11 +21,11 @@ public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>
 
 public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, Token?>
 {
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<GenerateTokenRequestHandler> _logger;
 
-    public RefreshTokenRequestHandler(JwtConfiguration jwtConfiguration, ILogger<GenerateTokenRequestHandler> logger, IStoreClient storeClient)
+    public RefreshTokenRequestHandler(JwtConfiguration jwtConfiguration, ILogger<GenerateTokenRequestHandler> logger, StoreClient storeClient)
     {
         _jwtConfiguration = jwtConfiguration;
         _logger = logger;
@@ -42,7 +42,7 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
         }
 
         var key = principal.Claims.SingleOrDefault(x => x.Type == "Key")?.Value ?? Guid.Empty.ToString();
-        var user = await _storeClient.GetStateAsync<User>(key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
 
         if (user == null)
         {

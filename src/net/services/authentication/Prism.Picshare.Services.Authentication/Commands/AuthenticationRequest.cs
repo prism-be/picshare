@@ -32,9 +32,9 @@ public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRe
 public class AuthenticationRequestHandler : IRequestHandler<AuthenticationRequest, ResultCodes>
 {
     private readonly ILogger<AuthenticationRequestHandler> _logger;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, IStoreClient storeClient)
+    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, StoreClient storeClient)
     {
         _logger = logger;
         _storeClient = storeClient;
@@ -42,7 +42,7 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
     public async Task<ResultCodes> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
     {
-        var credentials = await _storeClient.GetStateAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
+        var credentials = await _storeClient.GetStateNullableAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
         
         if (credentials == null)
         {
@@ -52,7 +52,7 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
-            var user = await _storeClient.GetStateAsync<User>(credentials.Key, cancellationToken: cancellationToken);
+            var user = await _storeClient.GetStateNullableAsync<User>(credentials.Key, cancellationToken: cancellationToken);
             
             if (user == null)
             {

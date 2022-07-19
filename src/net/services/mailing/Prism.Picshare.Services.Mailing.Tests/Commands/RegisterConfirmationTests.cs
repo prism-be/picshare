@@ -23,7 +23,7 @@ public class RegisterConfirmationTests
     {
         // Arrange
         var request = new RegisterConfirmation(new User());
-        var client = new Mock<IStoreClient>();
+        var client = new Mock<StoreClient>();
         var emailWorker = new Mock<IEmailWorker>();
 
         // Act

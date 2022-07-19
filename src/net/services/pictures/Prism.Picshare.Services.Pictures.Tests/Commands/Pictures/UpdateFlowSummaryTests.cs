@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -51,18 +50,18 @@ public class UpdateFlowSummaryTests
         };
 
         var logger = new Mock<ILogger<UpdateFlowSummaryHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Flow, flow.OrganisationId.ToString(), flow);
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Flow, flow.OrganisationId.ToString(), flow);
 
         // Act
-        var handler = new UpdateFlowSummaryHandler(logger.Object, daprClient.Object);
+        var handler = new UpdateFlowSummaryHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(new UpdateFlowSummary(summary), CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
         result.Pictures.Count.Should().Be(2);
         result.Pictures.First().Should().Be(summary);
-        daprClient.VerifySaveState<Flow>(Stores.Flow);
+        storeClient.VerifySaveState<Flow>(Stores.Flow);
     }
 
     [Fact]
@@ -78,17 +77,17 @@ public class UpdateFlowSummaryTests
         };
 
         var logger = new Mock<ILogger<UpdateFlowSummaryHandler>>();
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<StoreClient>();
 
         // Act
-        var handler = new UpdateFlowSummaryHandler(logger.Object, daprClient.Object);
+        var handler = new UpdateFlowSummaryHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(new UpdateFlowSummary(summary), CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
         result.Pictures.Count.Should().Be(1);
         result.Pictures.First().Should().Be(summary);
-        daprClient.VerifySaveState<Flow>(Stores.Flow, Times.Exactly(2));
+        storeClient.VerifySaveState<Flow>(Stores.Flow, Times.Once());
     }
 
     [Fact]
@@ -117,17 +116,17 @@ public class UpdateFlowSummaryTests
         };
 
         var logger = new Mock<ILogger<UpdateFlowSummaryHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Flow, flow.OrganisationId.ToString(), flow);
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Flow, flow.OrganisationId.ToString(), flow);
 
         // Act
-        var handler = new UpdateFlowSummaryHandler(logger.Object, daprClient.Object);
+        var handler = new UpdateFlowSummaryHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(new UpdateFlowSummary(summary), CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
         result.Pictures.Count.Should().Be(2);
         result.Pictures.First().Should().Be(summary);
-        daprClient.VerifySaveState<Flow>(Stores.Flow);
+        storeClient.VerifySaveState<Flow>(Stores.Flow);
     }
 }

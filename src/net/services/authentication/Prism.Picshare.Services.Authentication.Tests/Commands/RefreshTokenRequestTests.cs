@@ -39,7 +39,7 @@ public class RefreshTokenRequestTests
         };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
 
         var refreshToken = TokenGenerator.GenerateAccessToken(_jwtConfiguration.PrivateKey, user);
@@ -65,7 +65,7 @@ public class RefreshTokenRequestTests
         };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
 
         var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
@@ -100,7 +100,7 @@ public class RefreshTokenRequestTests
         };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
 
         var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
 

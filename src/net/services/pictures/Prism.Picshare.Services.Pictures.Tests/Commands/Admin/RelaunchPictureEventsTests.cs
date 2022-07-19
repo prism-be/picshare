@@ -29,7 +29,8 @@ public class RelaunchPictureEventsTests
         // Arrange
         var organisationId = Guid.NewGuid();
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Flow, organisationId.ToString(), new Flow());
 
         // Act
         var handler = new RelaunchPictureEventsHandler(storeClient.Object, publisherClient.Object);
@@ -46,7 +47,7 @@ public class RelaunchPictureEventsTests
         // Arrange
         var organisationId = Guid.NewGuid();
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Flow, organisationId.ToString(), new Flow
         {
             OrganisationId = organisationId,

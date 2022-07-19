@@ -16,9 +16,9 @@ public record SetPictureName(Guid OrganisationId, Guid PictureId, string Name) :
 public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
 {
     private readonly IPublisherClient _publisherClient;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public SetPictureNameHandler(IStoreClient storeClient, IPublisherClient publisherClient)
+    public SetPictureNameHandler(StoreClient storeClient, IPublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;
@@ -26,10 +26,15 @@ public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
 
     public async Task<Picture> Handle(SetPictureName request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStateNullableAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken)
+                      ?? new Picture
+                      {
+                          OrganisationId = request.OrganisationId,
+                          Id = request.PictureId
+                      };
 
         picture.Name = request.Name;
-        await _storeClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
 
         await _publisherClient.PublishEventAsync(Topics.Pictures.Updated, picture, cancellationToken);
 

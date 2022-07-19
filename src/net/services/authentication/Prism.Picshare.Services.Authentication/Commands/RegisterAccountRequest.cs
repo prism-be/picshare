@@ -37,10 +37,10 @@ public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccount
 
 public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest, ResultCodes>
 {
-    private readonly IStoreClient _storeClient;
     private readonly IPublisherClient _publisherClient;
+    private readonly StoreClient _storeClient;
 
-    public RegisterAccountRequestHandler(IStoreClient storeClient, IPublisherClient publisherClient)
+    public RegisterAccountRequestHandler(StoreClient storeClient, IPublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;
@@ -48,21 +48,21 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
 
     public async Task<ResultCodes> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
-        var organisationId = await _storeClient.GetStateAsync<Guid>(Stores.OrganisationsName, request.Organisation, cancellationToken: cancellationToken);
+        var organisation = await _storeClient.GetStateNullableAsync<Organisation>(Stores.OrganisationsName, request.Organisation, cancellationToken);
 
-        if (organisationId != Guid.Empty)
+        if (organisation != null)
         {
             return ResultCodes.ExistingOrganisation;
         }
 
-        var credentials = await _storeClient.GetStateAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
+        var credentials = await _storeClient.GetStateNullableAsync<Credentials>(request.Login, cancellationToken);
 
         if (credentials != default)
         {
             return ResultCodes.ExistingUsername;
         }
 
-        var organisation = new Organisation
+        organisation = new Organisation
         {
             Id = Guid.NewGuid(),
             Name = request.Organisation
@@ -85,10 +85,10 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
             Name = request.Name
         };
 
-        await _storeClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisation.Id, cancellationToken: cancellationToken);
-        await _storeClient.SaveStateAsync(organisation, cancellationToken: cancellationToken);
-        await _storeClient.SaveStateAsync(credentials, cancellationToken: cancellationToken);
-        await _storeClient.SaveStateAsync(user, cancellationToken: cancellationToken);
+        await _storeClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisation, cancellationToken);
+        await _storeClient.SaveStateAsync(organisation.Id.ToString(), organisation, cancellationToken);
+        await _storeClient.SaveStateAsync(credentials.Login, credentials, cancellationToken);
+        await _storeClient.SaveStateAsync(user.Key, user, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.User.Register, user, cancellationToken);
 
         return ResultCodes.Ok;

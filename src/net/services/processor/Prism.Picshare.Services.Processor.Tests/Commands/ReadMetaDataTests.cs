@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentAssertions;
 using Moq;
 using Prism.Picshare.Dapr;
@@ -22,17 +21,18 @@ public class ReadMetaDataTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "get"), Samples.SmallImage, new Dictionary<string, string>()));
+        var publisherClient = new Mock<IPublisherClient>();
+        var blobClient = new Mock<IBlobClient>();
+        blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Samples.SmallImage);
 
         // Act
-        var handler = new ReadMetaDataHandler(daprClient.Object);
+        var handler = new ReadMetaDataHandler(blobClient.Object, publisherClient.Object);
         var result = await handler.Handle(new ReadMetaData(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
-        daprClient.VerifyPublishEvent<Picture>(Topics.Pictures.ExifRead);
+        publisherClient.VerifyPublishEvent<Picture>(Topics.Pictures.ExifRead);
     }
 
     [Fact]

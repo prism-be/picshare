@@ -26,9 +26,9 @@ public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterCon
 {
     private readonly ILogger<RegisterConfirmationValidationHandler> _logger;
     private readonly IPublisherClient _publisherClient;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public RegisterConfirmationValidationHandler(ILogger<RegisterConfirmationValidationHandler> logger, IStoreClient storeClient, IPublisherClient publisherClient)
+    public RegisterConfirmationValidationHandler(ILogger<RegisterConfirmationValidationHandler> logger, StoreClient storeClient, IPublisherClient publisherClient)
     {
         _logger = logger;
         _storeClient = storeClient;
@@ -37,7 +37,7 @@ public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterCon
 
     public async Task<ResultCodes> Handle(RegisterConfirmationValidation request, CancellationToken cancellationToken)
     {
-        var state = await _storeClient.GetStateAsync<MailAction<User>>(Stores.MailActions, request.Key, cancellationToken);
+        var state = await _storeClient.GetStateNullableAsync<MailAction<User>>(Stores.MailActions, request.Key, cancellationToken);
 
         if (state == null)
         {

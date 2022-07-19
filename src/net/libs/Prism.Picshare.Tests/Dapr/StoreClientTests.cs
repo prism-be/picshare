@@ -36,7 +36,7 @@ public class StoreClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
         var result = await storeClient.GetStateAsync<User>(data.Key);
 
         // Assert
@@ -58,7 +58,7 @@ public class StoreClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
         var result = await storeClient.GetStateAsync<EntityReference>(Stores.Albums, data.Key);
 
         // Assert
@@ -78,7 +78,7 @@ public class StoreClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
         await storeClient.SaveStateAsync(data.Key, data);
 
         // Assert
@@ -98,7 +98,7 @@ public class StoreClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
         await storeClient.SaveStateAsync(Stores.Albums, data.Key, data);
 
         // Assert

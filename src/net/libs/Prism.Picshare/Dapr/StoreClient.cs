@@ -11,27 +11,7 @@ using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Dapr;
 
-public interface IStoreClient
-{
-    Task<T> GetStateAsync<T>(string key, CancellationToken cancellationToken = default) where T : new();
-    Task<T> GetStateAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : new();
-
-    Task<Flow> GetStateFlowAsync(Guid organisationId, CancellationToken cancellationToken = default);
-    Task<Picture> GetStatePictureAsync(Guid organisationId, Guid pictureId, CancellationToken cancellationToken = default);
-
-    Task SaveStateAsync<T>(string key, T data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync<T>(string store, string key, T data, CancellationToken cancellationToken = default);
-
-    Task SaveStateAsync(Album data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync(Credentials data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync(Flow data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync<T>(MailAction<T> data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync(Organisation data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync(Picture data, CancellationToken cancellationToken = default);
-    Task SaveStateAsync(User data, CancellationToken cancellationToken = default);
-}
-
-public class StoreClient : IStoreClient
+public abstract class StoreClient
 {
     private static readonly Dictionary<Type, string> StoresMatching = new()
     {
@@ -58,55 +38,31 @@ public class StoreClient : IStoreClient
         }
     };
 
-    private readonly DaprClient _daprClient;
-    private readonly TelemetryClient _telemetryClient;
-
-    public StoreClient(DaprClient daprClient, TelemetryClient telemetryClient)
+    public async Task<T> GetStateAsync<T>(string key, CancellationToken cancellationToken = default) where T : class, new()
     {
-        _daprClient = daprClient;
-        _telemetryClient = telemetryClient;
+        var result = await GetStateNullableAsync<T>(key, cancellationToken);
+        return result ?? new T();
     }
 
-    public async Task<T> GetStateAsync<T>(string key, CancellationToken cancellationToken = default) where T : new()
+    public async Task<T> GetStateAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : class, new()
+    {
+        var result = await GetStateNullableAsync<T>(store, key, cancellationToken);
+        return result ?? new T();
+    }
+
+    public abstract Task<T?> GetStateNullableAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : class;
+
+    public async Task<T?> GetStateNullableAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
     {
         if (StoresMatching.TryGetValue(typeof(T), out var store))
         {
-            return await GetStateAsync<T>(store, key, cancellationToken);
+            return await GetStateNullableAsync<T>(store, key, cancellationToken);
         }
 
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
 
-    public async Task<T> GetStateAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : new()
-    {
-        var startTime = DateTime.UtcNow;
-        var watch = Stopwatch.StartNew();
-        var success = false;
-
-        try
-        {
-            success = true;
-            var result = await _daprClient.GetStateAsync<T>(store, key, cancellationToken: cancellationToken);
-
-            return result ?? new T();
-        }
-        finally
-        {
-            watch.Stop();
-
-            _telemetryClient.TrackDependency("STORE-GET", store, key, startTime, watch.Elapsed, success);
-        }
-    }
-
-    public async Task<Flow> GetStateFlowAsync(Guid organisationId, CancellationToken cancellationToken = default)
-    {
-        return await GetStateAsync<Flow>(organisationId.ToString(), cancellationToken);
-    }
-
-    public async Task<Picture> GetStatePictureAsync(Guid organisationId, Guid pictureId, CancellationToken cancellationToken = default)
-    {
-        return await GetStateAsync<Picture>(EntityReference.ComputeKey(organisationId, pictureId), cancellationToken);
-    }
+    public abstract Task SaveStateAsync<T>(string store, string key, T data, CancellationToken cancellationToken = default);
 
     public async Task SaveStateAsync<T>(string key, T data, CancellationToken cancellationToken = default)
     {
@@ -118,8 +74,42 @@ public class StoreClient : IStoreClient
 
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
+}
 
-    public async Task SaveStateAsync<T>(string store, string key, T data, CancellationToken cancellationToken = default)
+public sealed class DaprStoreClient : StoreClient
+{
+    private readonly DaprClient _daprClient;
+    private readonly TelemetryClient _telemetryClient;
+
+    public DaprStoreClient(DaprClient daprClient, TelemetryClient telemetryClient)
+    {
+        _daprClient = daprClient;
+        _telemetryClient = telemetryClient;
+    }
+
+    public override async Task<T?> GetStateNullableAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : class
+    {
+        var startTime = DateTime.UtcNow;
+        var watch = Stopwatch.StartNew();
+        var success = false;
+
+        try
+        {
+            success = true;
+
+            var result = await _daprClient.GetStateAsync<T>(store, key, cancellationToken: cancellationToken);
+
+            return (T?)result;
+        }
+        finally
+        {
+            watch.Stop();
+
+            _telemetryClient.TrackDependency("STORE-GET", store, key, startTime, watch.Elapsed, success);
+        }
+    }
+
+    public override async Task SaveStateAsync<T>(string store, string key, T data, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
         var watch = Stopwatch.StartNew();
@@ -136,40 +126,5 @@ public class StoreClient : IStoreClient
 
             _telemetryClient.TrackDependency("STORE-SET", store, key, startTime, watch.Elapsed, success);
         }
-    }
-
-    public async Task SaveStateAsync(Album data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.Key, data, cancellationToken);
-    }
-
-    public async Task SaveStateAsync(Credentials data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.Login, data, cancellationToken);
-    }
-
-    public async Task SaveStateAsync(Flow data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.OrganisationId.ToString(), data, cancellationToken);
-    }
-
-    public async Task SaveStateAsync<T>(MailAction<T> data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.Key, data, cancellationToken);
-    }
-
-    public async Task SaveStateAsync(Organisation data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.Id.ToString(), data, cancellationToken);
-    }
-
-    public async Task SaveStateAsync(Picture data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.Key, data, cancellationToken);
-    }
-
-    public async Task SaveStateAsync(User data, CancellationToken cancellationToken = default)
-    {
-        await SaveStateAsync(data.Key, data, cancellationToken);
     }
 }

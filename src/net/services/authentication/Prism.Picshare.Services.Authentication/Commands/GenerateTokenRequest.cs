@@ -26,9 +26,9 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
 {
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<GenerateTokenRequestHandler> _logger;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public GenerateTokenRequestHandler(ILogger<GenerateTokenRequestHandler> logger, JwtConfiguration jwtConfiguration, IStoreClient storeClient)
+    public GenerateTokenRequestHandler(ILogger<GenerateTokenRequestHandler> logger, JwtConfiguration jwtConfiguration, StoreClient storeClient)
     {
         _logger = logger;
         _jwtConfiguration = jwtConfiguration;
@@ -37,7 +37,7 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
 
     public async Task<Token?> Handle(GenerateTokenRequest request, CancellationToken cancellationToken)
     {
-        var credentials = await _storeClient.GetStateAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
+        var credentials = await _storeClient.GetStateNullableAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
 
         if (credentials == null)
         {
@@ -45,7 +45,7 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
             return null;
         }
 
-        var user = await _storeClient.GetStateAsync<User>(credentials.Key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateNullableAsync<User>(credentials.Key, cancellationToken: cancellationToken);
 
         if (user == null)
         {

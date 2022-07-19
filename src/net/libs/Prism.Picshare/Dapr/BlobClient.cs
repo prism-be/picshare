@@ -14,8 +14,9 @@ namespace Prism.Picshare.Dapr;
 
 public interface IBlobClient
 {
-    Task Create(string blobName, byte[] data);
+    Task CreateAsync(string blobName, byte[] data, CancellationToken cancellationToken = default);
     Task<List<string>> ListAsync(Guid organisationId, CancellationToken cancellationToken = default);
+    Task<byte[]> ReadAsync(string blobName, CancellationToken cancellationToken = default);
 }
 
 public class BlobClient : IBlobClient
@@ -74,7 +75,32 @@ public class BlobClient : IBlobClient
         return items;
     }
 
-    public async Task Create(string blobName, byte[] data)
+    public async Task<byte[]> ReadAsync(string blobName, CancellationToken cancellationToken = default)
+    {
+        var bindingRequest = new BindingRequest(Stores.Data, "get");
+        bindingRequest.Metadata.Add("blobName", blobName);
+        bindingRequest.Metadata.Add("fileName", blobName);
+
+        var startTime = DateTime.UtcNow;
+        var watch = Stopwatch.StartNew();
+        var success = false;
+
+        try
+        {
+            success = true;
+            var response = await _daprClient.InvokeBindingAsync(bindingRequest, cancellationToken);
+
+            return response.Data.ToArray();
+        }
+        finally
+        {
+            watch.Stop();
+
+            _telemetryClient.TrackDependency("BINDING", "GET", blobName, startTime, watch.Elapsed, success);
+        }
+    }
+
+    public async Task CreateAsync(string blobName, byte[] data, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
         var watch = Stopwatch.StartNew();
@@ -91,7 +117,7 @@ public class BlobClient : IBlobClient
                 {
                     "fileName", blobName
                 }
-            });
+            }, cancellationToken);
         }
         finally
         {

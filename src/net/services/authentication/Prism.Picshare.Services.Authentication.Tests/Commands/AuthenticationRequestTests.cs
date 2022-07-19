@@ -31,7 +31,7 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(login, password);
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,
@@ -66,7 +66,7 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = Guid.NewGuid(),
@@ -93,7 +93,7 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(login, Guid.NewGuid().ToString());
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = Guid.NewGuid(),
@@ -122,7 +122,7 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(login, password);
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,

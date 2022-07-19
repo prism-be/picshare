@@ -21,7 +21,7 @@ public class EmailValidationRequestTests
     {
         // Arrange
         var logger = new Mock<ILogger<EmailValidatedRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
 
         var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
 
@@ -38,7 +38,7 @@ public class EmailValidationRequestTests
     {
         // Arrange
         var logger = new Mock<ILogger<EmailValidatedRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
 
         var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
         storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(request.OrganisationId, request.UserId), new User

@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentAssertions;
 using Moq;
 using Prism.Picshare.Dapr;
@@ -23,7 +22,7 @@ public class RegisterAccountRequestTests
     {
         // Arrange
         var login = Guid.NewGuid().ToString();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         var publisherClient = new Mock<IPublisherClient>();
 
         // Act
@@ -43,9 +42,9 @@ public class RegisterAccountRequestTests
     {
         // Arrange
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         var organisationName = Guid.NewGuid().ToString();
-        storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, Guid.NewGuid());
+        storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, new Organisation());
 
         // Act
         var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
@@ -63,7 +62,7 @@ public class RegisterAccountRequestTests
         // Arrange
         var login = Guid.NewGuid().ToString();
         var publisherClient = new Mock<IPublisherClient>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials());
 
         // Act

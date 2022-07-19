@@ -17,9 +17,9 @@ public class RegisterConfirmationHandler : IRequestHandler<RegisterConfirmation>
 {
     private readonly IEmailWorker _emailWorker;
     private readonly MailingConfiguration _mailingConfiguration;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public RegisterConfirmationHandler(IStoreClient storeClient, IEmailWorker emailWorker, MailingConfiguration mailingConfiguration)
+    public RegisterConfirmationHandler(StoreClient storeClient, IEmailWorker emailWorker, MailingConfiguration mailingConfiguration)
     {
         _storeClient = storeClient;
         _emailWorker = emailWorker;
@@ -29,7 +29,7 @@ public class RegisterConfirmationHandler : IRequestHandler<RegisterConfirmation>
     public async Task<Unit> Handle(RegisterConfirmation request, CancellationToken cancellationToken)
     {
         var action = new MailAction<User>(Security.GenerateIdentifier(), MailActionType.ConfirmUserRegistration, request.RegisteringUser);
-        await _storeClient.SaveStateAsync(action, cancellationToken);
+        await _storeClient.SaveStateAsync(Stores.MailActions, action.Key, action, cancellationToken);
 
         var data = new
         {

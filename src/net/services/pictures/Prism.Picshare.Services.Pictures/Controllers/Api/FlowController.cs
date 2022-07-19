@@ -7,15 +7,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Dapr;
+using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Pictures.Controllers.Api;
 
 public class FlowController : Controller
 {
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public FlowController(IUserContextAccessor userContextAccessor, IStoreClient storeClient)
+    public FlowController(IUserContextAccessor userContextAccessor, StoreClient storeClient)
     {
         _userContextAccessor = userContextAccessor;
         _storeClient = storeClient;
@@ -25,12 +26,9 @@ public class FlowController : Controller
     [Route("api/pictures/flow")]
     public async Task<IActionResult> GetFlow()
     {
-        var flow = await _storeClient.GetStateFlowAsync(_userContextAccessor.OrganisationId);
+        var flow = await _storeClient.GetStateAsync<Flow>(_userContextAccessor.OrganisationId.ToString());
 
-        if (flow != null)
-        {
-            flow.Pictures = flow.Pictures.Where(x => x.Ready).ToList();
-        }
+        flow.Pictures = flow.Pictures.Where(x => x.Ready).ToList();
 
         return Ok(flow);
     }

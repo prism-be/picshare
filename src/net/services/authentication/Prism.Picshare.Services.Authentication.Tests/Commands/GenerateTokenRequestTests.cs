@@ -33,7 +33,7 @@ public class GenerateTokenRequestTests
         var login = Guid.NewGuid().ToString();
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
 
         // Act
         var handler = new GenerateTokenRequestHandler(logger.Object, _jwtConfiguration, storeClient.Object);
@@ -52,7 +52,7 @@ public class GenerateTokenRequestTests
         var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,
@@ -91,7 +91,7 @@ public class GenerateTokenRequestTests
         var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var storeClient = new Mock<IStoreClient>();
+        var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,

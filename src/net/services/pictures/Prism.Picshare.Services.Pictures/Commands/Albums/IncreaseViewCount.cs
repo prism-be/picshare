@@ -14,9 +14,9 @@ public record AddPictureToAlbum(Guid OrganisationId, Guid AlbumId, Guid PictureI
 
 public class AddPictureToAlbumHandler : IRequestHandler<AddPictureToAlbum, Album>
 {
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public AddPictureToAlbumHandler(IStoreClient storeClient)
+    public AddPictureToAlbumHandler(StoreClient storeClient)
     {
         _storeClient = storeClient;
     }
@@ -27,7 +27,7 @@ public class AddPictureToAlbumHandler : IRequestHandler<AddPictureToAlbum, Album
 
         album.Pictures.Add(request.PictureId);
 
-        await _storeClient.SaveStateAsync(album, cancellationToken);
+        await _storeClient.SaveStateAsync(album.Key, album, cancellationToken);
 
         return album;
     }

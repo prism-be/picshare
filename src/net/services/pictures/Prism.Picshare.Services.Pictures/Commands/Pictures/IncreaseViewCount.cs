@@ -14,19 +14,19 @@ public record IncreaseViewCount(Guid OrganisationId, Guid PictureId) : IRequest<
 
 public class IncreaseViewCountHandler : IRequestHandler<IncreaseViewCount, Picture>
 {
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public IncreaseViewCountHandler(IStoreClient storeClient)
+    public IncreaseViewCountHandler(StoreClient storeClient)
     {
         _storeClient = storeClient;
     }
 
     public async Task<Picture> Handle(IncreaseViewCount request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStateAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken);
 
         picture.Views++;
-        await _storeClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
 
         return picture;
     }

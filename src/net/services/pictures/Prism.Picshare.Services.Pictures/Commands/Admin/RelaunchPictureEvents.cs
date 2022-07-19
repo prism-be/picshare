@@ -15,9 +15,9 @@ public record RelaunchPictureEvents(Guid OrganisationId, string Topic) : IReques
 public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvents>
 {
     private readonly IPublisherClient _publisherClient;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public RelaunchPictureEventsHandler(IStoreClient storeClient, IPublisherClient daprClient)
+    public RelaunchPictureEventsHandler(StoreClient storeClient, IPublisherClient daprClient)
     {
         _publisherClient = daprClient;
         _storeClient = storeClient;

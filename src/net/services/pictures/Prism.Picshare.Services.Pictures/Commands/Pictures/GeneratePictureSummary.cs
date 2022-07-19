@@ -17,9 +17,9 @@ public record GeneratePictureSummary(Guid OrganisationId, Guid PictureId, List<E
 public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSummary, Picture>
 {
     private readonly IPublisherClient _publisherClient;
-    private readonly IStoreClient _storeClient;
+    private readonly StoreClient _storeClient;
 
-    public GeneratePictureSummaryHandler(IStoreClient storeClient, IPublisherClient publisherClient)
+    public GeneratePictureSummaryHandler(StoreClient storeClient, IPublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;
@@ -27,7 +27,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
 
     public async Task<Picture> Handle(GeneratePictureSummary request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStateAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken);
 
         picture.Exifs = request.PictureExifs;
         picture.Summary.Id = picture.Id;
@@ -35,7 +35,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
         picture.Summary.Name = picture.Name;
         picture.Summary.Date = RetrieveDate(picture.Exifs);
 
-        await _storeClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.Pictures.SummaryUpdated, picture.Summary, cancellationToken);
 
         return picture;
