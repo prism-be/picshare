@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
@@ -16,21 +15,23 @@ public record SetPictureName(Guid OrganisationId, Guid PictureId, string Name) :
 
 public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
 {
-    private readonly DaprClient _daprClient;
+    private readonly IPublisherClient _publisherClient;
+    private readonly IStoreClient _storeClient;
 
-    public SetPictureNameHandler(DaprClient daprClient)
+    public SetPictureNameHandler(IStoreClient storeClient, IPublisherClient publisherClient)
     {
-        _daprClient = daprClient;
+        _storeClient = storeClient;
+        _publisherClient = publisherClient;
     }
 
     public async Task<Picture> Handle(SetPictureName request, CancellationToken cancellationToken)
     {
-        var picture = await _daprClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
 
         picture.Name = request.Name;
-        await _daprClient.SaveStateAsync(picture, cancellationToken);
-        
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.Updated, picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture, cancellationToken);
+
+        await _publisherClient.PublishEventAsync(Topics.Pictures.Updated, picture, cancellationToken);
 
         return picture;
     }

@@ -13,7 +13,7 @@ namespace Prism.Picshare.Dapr;
 
 public interface IPublisherClient
 {
-    Task Publish<T>(string topic, T data, CancellationToken cancellationToken = default);
+    Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default);
 }
 
 public class PublisherClient : IPublisherClient
@@ -27,7 +27,7 @@ public class PublisherClient : IPublisherClient
         _telemetryClient = telemetryClient;
     }
 
-    public async Task Publish<T>(string topic, T data, CancellationToken cancellationToken = default)
+    public async Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
         var watch = Stopwatch.StartNew();

@@ -1,14 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "RelaunchCreated.cs" company = "Prism">
+//  <copyright file = "RelaunchPictureEvents.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
 using Prism.Picshare.Dapr;
-using Prism.Picshare.Events;
-using Prism.Picshare.Services.Pictures.Commands.Pictures;
+using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Admin;
 
@@ -16,21 +14,23 @@ public record RelaunchPictureEvents(Guid OrganisationId, string Topic) : IReques
 
 public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvents>
 {
-    private readonly DaprClient _daprClient;
+    private readonly IPublisherClient _publisherClient;
+    private readonly IStoreClient _storeClient;
 
-    public RelaunchPictureEventsHandler(DaprClient daprClient)
+    public RelaunchPictureEventsHandler(IStoreClient storeClient, IPublisherClient daprClient)
     {
-        _daprClient = daprClient;
+        _publisherClient = daprClient;
+        _storeClient = storeClient;
     }
 
     public async Task<Unit> Handle(RelaunchPictureEvents request, CancellationToken cancellationToken)
     {
-        var flow = await _daprClient.GetStateFlowAsync(request.OrganisationId, cancellationToken);
+        var flow = await _storeClient.GetStateAsync<Flow>(request.OrganisationId.ToString(), cancellationToken);
 
         foreach (var pictureSummary in flow.Pictures)
         {
-            var picture = await _daprClient.GetStatePictureAsync(pictureSummary.OrganisationId, pictureSummary.Id, cancellationToken);
-            await _daprClient.PublishEventAsync(Publishers.PubSub, request.Topic, picture, cancellationToken);
+            var picture = await _storeClient.GetStateAsync<Picture>(pictureSummary.Key, cancellationToken);
+            await _publisherClient.PublishEventAsync(request.Topic, picture, cancellationToken);
         }
 
         return Unit.Value;

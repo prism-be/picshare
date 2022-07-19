@@ -12,7 +12,6 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
@@ -38,7 +37,7 @@ public class UploadPictureTests
 
         // Assert
         result.Should().Be(Unit.Value);
-        daprClient.VerifyPublishEvent<EntityReference>(Publishers.PubSub, Topics.Pictures.Uploaded);
+        daprClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Uploaded);
     }
 
     [Fact]

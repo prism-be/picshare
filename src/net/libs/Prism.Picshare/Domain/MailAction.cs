@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Prism.Picshare.Services.Mailing.Model;
+namespace Prism.Picshare.Domain;
 
 public class MailAction<T>
 {

@@ -32,7 +32,7 @@ public class ReadMetaDataTests
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
-        daprClient.VerifyPublishEvent<Picture>(Publishers.PubSub, Topics.Pictures.ExifRead);
+        daprClient.VerifyPublishEvent<Picture>(Topics.Pictures.ExifRead);
     }
 
     [Fact]

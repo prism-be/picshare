@@ -39,6 +39,6 @@ public class InitializePictureTests
         picture.OrganisationId.Should().Be(organisationId);
         picture.Id.Should().Be(pictureId);
         daprClient.VerifySaveState<Picture>(Stores.Pictures);
-        daprClient.VerifyPublishEvent<EntityReference>(Publishers.PubSub, Topics.Pictures.Created);
+        daprClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Created);
     }
 }

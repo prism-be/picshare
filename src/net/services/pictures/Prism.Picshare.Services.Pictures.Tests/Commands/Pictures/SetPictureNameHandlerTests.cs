@@ -36,6 +36,6 @@ public class SetPictureNameHandlerTests
         picture.Id.Should().Be(request.PictureId);
         picture.Name.Should().Be("Hellow World.png");
         daprClient.VerifySaveState<Picture>(Stores.Pictures);
-        daprClient.VerifyPublishEvent<EntityReference>(Publishers.PubSub, Topics.Pictures.Updated);
+        daprClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.Updated);
     }
 }

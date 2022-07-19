@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using MediatR;
 using Prism.Picshare.Dapr;
@@ -25,19 +24,19 @@ public class EmailValidatedRequestValidator : AbstractValidator<EmailValidatedRe
 
 public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedRequest, ResultCodes>
 {
-    private readonly DaprClient _daprClient;
     private readonly ILogger<EmailValidatedRequestHandler> _logger;
+    private readonly IStoreClient _storeClient;
 
-    public EmailValidatedRequestHandler(ILogger<EmailValidatedRequestHandler> logger, DaprClient daprClient)
+    public EmailValidatedRequestHandler(ILogger<EmailValidatedRequestHandler> logger, IStoreClient storeClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
+        _storeClient = storeClient;
     }
 
     public async Task<ResultCodes> Handle(EmailValidatedRequest request, CancellationToken cancellationToken)
     {
         var key = EntityReference.ComputeKey(request.OrganisationId, request.UserId);
-        var user = await _daprClient.GetStateAsync<User>(Stores.Users, key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateAsync<User>(key, cancellationToken: cancellationToken);
 
         if (user == null)
         {
@@ -47,7 +46,7 @@ public class EmailValidatedRequestHandler : IRequestHandler<EmailValidatedReques
         }
 
         user.EmailValidated = true;
-        await _daprClient.SaveStateAsync(Stores.Users, key, user, cancellationToken: cancellationToken);
+        await _storeClient.SaveStateAsync(key, user, cancellationToken: cancellationToken);
 
         return ResultCodes.Ok;
     }

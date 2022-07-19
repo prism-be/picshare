@@ -26,10 +26,10 @@ public class AddPictureToAlbumHandlerTests
         // Arrange
         var pictureId = Guid.NewGuid();
         var request = new AddPictureToAlbum(Guid.NewGuid(), Guid.NewGuid(), pictureId);
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<IStoreClient>();
 
         // Act
-        var handler = new AddPictureToAlbumHandler(daprClient.Object);
+        var handler = new AddPictureToAlbumHandler(storeClient.Object);
         var album = await handler.Handle(request, CancellationToken.None);
 
         // Assert

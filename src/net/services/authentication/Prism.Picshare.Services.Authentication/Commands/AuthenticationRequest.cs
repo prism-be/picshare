@@ -4,12 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Diagnostics;
-using Dapr.Client;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
-using Microsoft.ApplicationInsights;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
@@ -35,19 +32,17 @@ public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRe
 public class AuthenticationRequestHandler : IRequestHandler<AuthenticationRequest, ResultCodes>
 {
     private readonly ILogger<AuthenticationRequestHandler> _logger;
-    private readonly DaprClient _daprClient;
-    private readonly TelemetryClient _telemetryClient;
+    private readonly IStoreClient _storeClient;
 
-    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, DaprClient daprClient, TelemetryClient telemetryClient)
+    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, IStoreClient storeClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
-        _telemetryClient = telemetryClient;
+        _storeClient = storeClient;
     }
 
     public async Task<ResultCodes> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
     {
-        var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
+        var credentials = await _storeClient.GetStateAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
         
         if (credentials == null)
         {
@@ -57,7 +52,13 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
-            var user = await _daprClient.GetStateAsync<User>(Stores.Users, credentials.Key, cancellationToken: cancellationToken);
+            var user = await _storeClient.GetStateAsync<User>(credentials.Key, cancellationToken: cancellationToken);
+            
+            if (user == null)
+            {
+                _logger.LogInformation("Credentials not found for login : {login}", request.Login);
+                return ResultCodes.UserNotFound;
+            }
 
             if (user.EmailValidated)
             {

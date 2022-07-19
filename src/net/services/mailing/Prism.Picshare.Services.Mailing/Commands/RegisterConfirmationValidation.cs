@@ -4,14 +4,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using MediatR;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
-using Prism.Picshare.Services.Mailing.Model;
-using Stores = Prism.Picshare.Services.Mailing.Model.Stores;
 
 namespace Prism.Picshare.Services.Mailing.Commands;
 
@@ -27,18 +24,20 @@ public class RegisterConfirmationValidationValidation : AbstractValidator<Regist
 
 public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterConfirmationValidation, ResultCodes>
 {
-    private readonly DaprClient _daprClient;
     private readonly ILogger<RegisterConfirmationValidationHandler> _logger;
+    private readonly IPublisherClient _publisherClient;
+    private readonly IStoreClient _storeClient;
 
-    public RegisterConfirmationValidationHandler(ILogger<RegisterConfirmationValidationHandler> logger, DaprClient daprClient)
+    public RegisterConfirmationValidationHandler(ILogger<RegisterConfirmationValidationHandler> logger, IStoreClient storeClient, IPublisherClient publisherClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
+        _storeClient = storeClient;
+        _publisherClient = publisherClient;
     }
 
     public async Task<ResultCodes> Handle(RegisterConfirmationValidation request, CancellationToken cancellationToken)
     {
-        var state = await _daprClient.GetStateAsync<MailAction<User>>(Stores.MailActions, request.Key, cancellationToken: cancellationToken);
+        var state = await _storeClient.GetStateAsync<MailAction<User>>(Stores.MailActions, request.Key, cancellationToken);
 
         if (state == null)
         {
@@ -55,8 +54,8 @@ public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterCon
         state.Consumed = true;
         state.ConfirmationDate = DateTime.UtcNow;
 
-        var taskPublish = _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Email.Validated, state.Data, cancellationToken);
-        var taskSave = _daprClient.SaveStateAsync(Stores.MailActions, state.Key, state, cancellationToken: cancellationToken);
+        var taskPublish = _publisherClient.PublishEventAsync(Topics.Email.Validated, state.Data, cancellationToken);
+        var taskSave = _storeClient.SaveStateAsync(Stores.MailActions, state.Key, state, cancellationToken);
 
         Task.WaitAll(new[]
         {

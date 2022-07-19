@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Text.Json.Serialization;
-using Dapr.Client;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
@@ -38,23 +37,25 @@ public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccount
 
 public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest, ResultCodes>
 {
-    private readonly DaprClient _daprClient;
+    private readonly IStoreClient _storeClient;
+    private readonly IPublisherClient _publisherClient;
 
-    public RegisterAccountRequestHandler(DaprClient daprClient)
+    public RegisterAccountRequestHandler(IStoreClient storeClient, IPublisherClient publisherClient)
     {
-        _daprClient = daprClient;
+        _storeClient = storeClient;
+        _publisherClient = publisherClient;
     }
 
     public async Task<ResultCodes> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
-        var organisationId = await _daprClient.GetStateAsync<Guid>(Stores.OrganisationsName, request.Organisation, cancellationToken: cancellationToken);
+        var organisationId = await _storeClient.GetStateAsync<Guid>(Stores.OrganisationsName, request.Organisation, cancellationToken: cancellationToken);
 
         if (organisationId != Guid.Empty)
         {
             return ResultCodes.ExistingOrganisation;
         }
 
-        var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
+        var credentials = await _storeClient.GetStateAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
 
         if (credentials != default)
         {
@@ -84,11 +85,11 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
             Name = request.Name
         };
 
-        await _daprClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisation.Id, cancellationToken: cancellationToken);
-        await _daprClient.SaveStateAsync(Stores.Organisations, organisation.Id.ToString(), organisation, cancellationToken: cancellationToken);
-        await _daprClient.SaveStateAsync(Stores.Credentials, credentials.Login, credentials, cancellationToken: cancellationToken);
-        await _daprClient.SaveStateAsync(Stores.Users, user.Key, user, cancellationToken: cancellationToken);
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.User.Register, user, cancellationToken);
+        await _storeClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisation.Id, cancellationToken: cancellationToken);
+        await _storeClient.SaveStateAsync(organisation, cancellationToken: cancellationToken);
+        await _storeClient.SaveStateAsync(credentials, cancellationToken: cancellationToken);
+        await _storeClient.SaveStateAsync(user, cancellationToken: cancellationToken);
+        await _publisherClient.PublishEventAsync(Topics.User.Register, user, cancellationToken);
 
         return ResultCodes.Ok;
     }

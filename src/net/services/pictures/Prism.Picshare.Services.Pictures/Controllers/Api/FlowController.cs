@@ -4,30 +4,34 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
-using Prism.Picshare.Services.Pictures.Commands.Pictures;
+using Prism.Picshare.Dapr;
 
 namespace Prism.Picshare.Services.Pictures.Controllers.Api;
 
 public class FlowController : Controller
 {
-    private readonly DaprClient _daprClient;
+    private readonly IStoreClient _storeClient;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public FlowController(IUserContextAccessor userContextAccessor, DaprClient daprClient)
+    public FlowController(IUserContextAccessor userContextAccessor, IStoreClient storeClient)
     {
         _userContextAccessor = userContextAccessor;
-        _daprClient = daprClient;
+        _storeClient = storeClient;
     }
 
     [HttpGet]
     [Route("api/pictures/flow")]
     public async Task<IActionResult> GetFlow()
     {
-        var flow = await _daprClient.GetStateFlowAsync(_userContextAccessor.OrganisationId, new CancellationToken());
-        flow.Pictures = flow.Pictures.Where(x => x.Ready).ToList();
+        var flow = await _storeClient.GetStateFlowAsync(_userContextAccessor.OrganisationId);
+
+        if (flow != null)
+        {
+            flow.Pictures = flow.Pictures.Where(x => x.Ready).ToList();
+        }
+
         return Ok(flow);
     }
 }

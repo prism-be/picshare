@@ -36,8 +36,8 @@ public class StoreClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var publisherClient = new StoreClient(daprClient.Object, telemetryClient);
-        var result = await publisherClient.Get<User>(data.Key);
+        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        var result = await storeClient.GetStateAsync<User>(data.Key);
 
         // Assert
         result.Should().BeEquivalentTo(data);
@@ -58,10 +58,50 @@ public class StoreClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var publisherClient = new StoreClient(daprClient.Object, telemetryClient);
-        var result = await publisherClient.Get<EntityReference>(Stores.Albums, data.Key);
+        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        var result = await storeClient.GetStateAsync<EntityReference>(Stores.Albums, data.Key);
 
         // Assert
         result.Should().BeEquivalentTo(data);
+    }
+
+    [Fact]
+    public async Task Save_Ok()
+    {
+        // Arrange
+        var data = new User
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = Guid.NewGuid()
+        };
+        var daprClient = new Mock<DaprClient>();
+        var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
+
+        // Act
+        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        await storeClient.SaveStateAsync(data.Key, data);
+
+        // Assert
+        daprClient.Verify(x => x.SaveStateAsync(Stores.Users, data.Key, data, null, null, It.IsAny<CancellationToken>()));
+    }
+
+    [Fact]
+    public async Task Save_WithStore_Ok()
+    {
+        // Arrange
+        var data = new User
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = Guid.NewGuid()
+        };
+        var daprClient = new Mock<DaprClient>();
+        var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
+
+        // Act
+        var storeClient = new StoreClient(daprClient.Object, telemetryClient);
+        await storeClient.SaveStateAsync(Stores.Albums, data.Key, data);
+
+        // Assert
+        daprClient.Verify(x => x.SaveStateAsync(Stores.Albums, data.Key, data, null, null, It.IsAny<CancellationToken>()));
     }
 }

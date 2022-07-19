@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using MediatR;
 using Polly;
@@ -29,13 +28,15 @@ public class UploadPictureValidator : AbstractValidator<UploadPicture>
 
 public class UploadPictureHandler : IRequestHandler<UploadPicture>
 {
-    private readonly DaprClient _daprClient;
+    private readonly IBlobClient _blobClient;
     private readonly ILogger<UploadPictureHandler> _logger;
+    private readonly IPublisherClient _publisherClient;
 
-    public UploadPictureHandler(ILogger<UploadPictureHandler> logger, DaprClient daprClient)
+    public UploadPictureHandler(IBlobClient blobClient, IPublisherClient publisherClient, ILogger<UploadPictureHandler> logger)
     {
+        _blobClient = blobClient;
+        _publisherClient = publisherClient;
         _logger = logger;
-        _daprClient = daprClient;
     }
 
     public async Task<Unit> Handle(UploadPicture request, CancellationToken cancellationToken)
@@ -48,7 +49,7 @@ public class UploadPictureHandler : IRequestHandler<UploadPicture>
             await UploadFile(request);
         });
 
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.Uploaded, new EntityReference
+        await _publisherClient.PublishEventAsync(Topics.Pictures.Uploaded, new EntityReference
         {
             OrganisationId = request.OrganisationId,
             Id = request.Id
@@ -64,18 +65,10 @@ public class UploadPictureHandler : IRequestHandler<UploadPicture>
 
     private async Task UploadFile(UploadPicture picture)
     {
-        var dataBase64 = Convert.ToBase64String(picture.Data);
         var blobName = BlobNamesExtensions.GetSourcePath(picture.OrganisationId, picture.Id);
 
-        await _daprClient.InvokeBindingAsync(Stores.Data, "create", dataBase64, new Dictionary<string, string>
-        {
-            {
-                "blobName", blobName
-            },
-            {
-                "fileName", blobName
-            }
-        });
+        await _blobClient.Create(blobName, picture.Data);
+
         _logger.LogInformation("Picture uploaded on storage: {blobName}", blobName);
     }
 }

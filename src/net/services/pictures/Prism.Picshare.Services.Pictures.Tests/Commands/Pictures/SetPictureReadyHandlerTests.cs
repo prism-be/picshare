@@ -39,6 +39,6 @@ public class SetPictureReadyHandlerTests
         result.Should().NotBeNull();
         result.Ready.Should().BeTrue();
         daprClient.VerifySaveState<Picture>(Stores.Pictures);
-        daprClient.VerifyPublishEvent<PictureSummary>(Publishers.PubSub, Topics.Pictures.SummaryUpdated);
+        daprClient.VerifyPublishEvent<PictureSummary>(Topics.Pictures.SummaryUpdated);
     }
 }

@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Acme.Dapr.Extensions.UnitTesting;
 using Dapr.Client;
 using FluentAssertions;
 using Moq;
@@ -12,6 +11,7 @@ using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.UnitTests;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -23,30 +23,32 @@ public class RegisterAccountRequestTests
     {
         // Arrange
         var login = Guid.NewGuid().ToString();
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<IStoreClient>();
+        var publisherClient = new Mock<IPublisherClient>();
 
         // Act
-        var handler = new RegisterAccountRequestHandler(daprClient.Object);
+        var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(new RegisterAccountRequest(login, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString()),
             CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
-        daprClient.VerifySaveState<Organisation>(Stores.Organisations);
-        daprClient.VerifySaveState<User>(Stores.Users);
-        daprClient.VerifyPublishEvent<User>(Publishers.PubSub, Topics.User.Register);
+        storeClient.VerifySaveState<Organisation>(Stores.Organisations);
+        storeClient.VerifySaveState<User>(Stores.Users);
+        publisherClient.VerifyPublishEvent<User>(Topics.User.Register);
     }
 
     [Fact]
     public async Task Handle_Organisation_Exist()
     {
         // Arrange
-        var daprClient = new Mock<DaprClient>();
+        var publisherClient = new Mock<IPublisherClient>();
+        var storeClient = new Mock<IStoreClient>();
         var organisationName = Guid.NewGuid().ToString();
-        daprClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, Guid.NewGuid());
+        storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, Guid.NewGuid());
 
         // Act
-        var handler = new RegisterAccountRequestHandler(daprClient.Object);
+        var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(
             new RegisterAccountRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), organisationName),
             CancellationToken.None);
@@ -60,11 +62,12 @@ public class RegisterAccountRequestTests
     {
         // Arrange
         var login = Guid.NewGuid().ToString();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials());
+        var publisherClient = new Mock<IPublisherClient>();
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials());
 
         // Act
-        var handler = new RegisterAccountRequestHandler(daprClient.Object);
+        var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(new RegisterAccountRequest(login, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString()),
             CancellationToken.None);
 

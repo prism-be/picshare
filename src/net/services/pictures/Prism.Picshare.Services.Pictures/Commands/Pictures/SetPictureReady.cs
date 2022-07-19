@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
@@ -16,19 +15,23 @@ public record SetPictureReady(Guid OrganisationId, Guid PictureId) : IRequest<Pi
 
 public class SetPictureReadyHandler : IRequestHandler<SetPictureReady, PictureSummary>
 {
-    private readonly DaprClient _daprClient;
+    private readonly IPublisherClient _publisherClient;
+    private readonly IStoreClient _storeClient;
 
-    public SetPictureReadyHandler(DaprClient daprClient)
+    public SetPictureReadyHandler(IStoreClient storeClient, IPublisherClient publisherClient)
     {
-        _daprClient = daprClient;
+        _storeClient = storeClient;
+        _publisherClient = publisherClient;
     }
 
     public async Task<PictureSummary> Handle(SetPictureReady request, CancellationToken cancellationToken)
     {
-        var picture = await _daprClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+
         picture.Summary.Ready = true;
-        await _daprClient.SaveStateAsync(picture, cancellationToken);
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.SummaryUpdated, picture.Summary, cancellationToken);
+        await _storeClient.SaveStateAsync(picture, cancellationToken);
+        await _publisherClient.PublishEventAsync(Topics.Pictures.SummaryUpdated, picture.Summary, cancellationToken);
+
         return picture.Summary;
     }
 }

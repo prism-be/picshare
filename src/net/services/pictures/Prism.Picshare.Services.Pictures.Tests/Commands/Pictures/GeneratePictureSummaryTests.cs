@@ -85,7 +85,7 @@ public class GeneratePictureSummaryTests
 
         // Assert
         picture.Summary.Date.Should().Be(new DateTime(2019, 2, 10, 14, 37, 10, DateTimeKind.Utc));
-        daprClient.VerifyPublishEvent<PictureSummary>(Publishers.PubSub, Topics.Pictures.SummaryUpdated);
+        daprClient.VerifyPublishEvent<PictureSummary>(Topics.Pictures.SummaryUpdated);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class GeneratePictureSummaryTests
 
         // Assert
         picture.Summary.Date.Should().Be(new DateTime(2019, 2, 2, 8, 53, 7, DateTimeKind.Utc));
-        daprClient.VerifyPublishEvent<PictureSummary>(Publishers.PubSub, Topics.Pictures.SummaryUpdated);
+        daprClient.VerifyPublishEvent<PictureSummary>(Topics.Pictures.SummaryUpdated);
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class GeneratePictureSummaryTests
 
         // Assert
         picture.CreationDate.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
-        daprClient.VerifyPublishEvent<PictureSummary>(Publishers.PubSub, Topics.Pictures.SummaryUpdated);
+        daprClient.VerifyPublishEvent<PictureSummary>(Topics.Pictures.SummaryUpdated);
     }
 
     [Fact]
@@ -152,6 +152,6 @@ public class GeneratePictureSummaryTests
 
         // Assert
         picture.Summary.Date.Should().Be(new DateTime(2019, 2, 10, 14, 37, 10, DateTimeKind.Utc));
-        daprClient.VerifyPublishEvent<PictureSummary>(Publishers.PubSub, Topics.Pictures.SummaryUpdated);
+        daprClient.VerifyPublishEvent<PictureSummary>(Topics.Pictures.SummaryUpdated);
     }
 }

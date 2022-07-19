@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.Services.Mailing.Commands;
 using Prism.Picshare.Services.Mailing.Controllers.Api;
-using Prism.Picshare.Services.Mailing.Model;
 using Xunit;
 
 namespace Prism.Picshare.Services.Mailing.Tests.Controllers;

@@ -9,7 +9,6 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Processor.Commands;
@@ -40,6 +39,6 @@ public class PictureUploadedControllerTests
         // Assert
         result.Should().BeAssignableTo<OkResult>();
         mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Exactly(4));
-        daprClient.VerifyPublishEvent<EntityReference>(Publishers.PubSub, Topics.Pictures.ThumbnailsGenerated);
+        daprClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.ThumbnailsGenerated);
     }
 }

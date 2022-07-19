@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using MediatR;
 using Prism.Picshare.AspNetCore.Authentication;
@@ -25,20 +24,20 @@ public class GenerateTokenRequestValidator : AbstractValidator<GenerateTokenRequ
 
 public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest, Token?>
 {
-    private readonly DaprClient _daprClient;
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<GenerateTokenRequestHandler> _logger;
+    private readonly IStoreClient _storeClient;
 
-    public GenerateTokenRequestHandler(ILogger<GenerateTokenRequestHandler> logger, DaprClient daprClient, JwtConfiguration jwtConfiguration)
+    public GenerateTokenRequestHandler(ILogger<GenerateTokenRequestHandler> logger, JwtConfiguration jwtConfiguration, IStoreClient storeClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
         _jwtConfiguration = jwtConfiguration;
+        _storeClient = storeClient;
     }
 
     public async Task<Token?> Handle(GenerateTokenRequest request, CancellationToken cancellationToken)
     {
-        var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
+        var credentials = await _storeClient.GetStateAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
 
         if (credentials == null)
         {
@@ -46,7 +45,7 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
             return null;
         }
 
-        var user = await _daprClient.GetStateAsync<User>(Stores.Users, credentials.Key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateAsync<User>(credentials.Key, cancellationToken: cancellationToken);
 
         if (user == null)
         {

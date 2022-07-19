@@ -5,8 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics;
-using Acme.Dapr.Extensions.UnitTesting;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -14,6 +12,7 @@ using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.UnitTests;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -40,13 +39,13 @@ public class RefreshTokenRequestTests
         };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
 
         var refreshToken = TokenGenerator.GenerateAccessToken(_jwtConfiguration.PrivateKey, user);
 
         // Act
-        var handler = new RefreshTokenRequestHandler(daprClient.Object, _jwtConfiguration, logger.Object);
+        var handler = new RefreshTokenRequestHandler(_jwtConfiguration, logger.Object, storeClient.Object);
         var result = await handler.Handle(new RefreshTokenRequest(refreshToken), CancellationToken.None);
 
         // Assert
@@ -66,13 +65,13 @@ public class RefreshTokenRequestTests
         };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
 
         var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
 
         // Act
-        var handler = new RefreshTokenRequestHandler(daprClient.Object, _jwtConfiguration, logger.Object);
+        var handler = new RefreshTokenRequestHandler(_jwtConfiguration, logger.Object, storeClient.Object);
         var result = await handler.Handle(new RefreshTokenRequest(refreshToken), CancellationToken.None);
 
         // Assert
@@ -101,12 +100,12 @@ public class RefreshTokenRequestTests
         };
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<IStoreClient>();
 
         var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
 
         // Act
-        var handler = new RefreshTokenRequestHandler(daprClient.Object, _jwtConfiguration, logger.Object);
+        var handler = new RefreshTokenRequestHandler(_jwtConfiguration, logger.Object, storeClient.Object);
         var result = await handler.Handle(new RefreshTokenRequest(refreshToken), CancellationToken.None);
 
         // Assert

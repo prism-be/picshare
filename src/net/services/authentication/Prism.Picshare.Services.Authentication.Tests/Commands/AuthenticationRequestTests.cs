@@ -4,8 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Acme.Dapr.Extensions.UnitTesting;
-using Dapr.Client;
 using FluentAssertions;
 using Isopoh.Cryptography.Argon2;
 using Microsoft.Extensions.Logging;
@@ -13,6 +11,7 @@ using Moq;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.UnitTests;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -32,8 +31,8 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(login, password);
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,
             OrganisationId = organisationId,
@@ -41,7 +40,7 @@ public class AuthenticationRequestTests
             PasswordHash = passwordHash
         });
 
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
         {
             Id = userId,
             OrganisationId = organisationId,
@@ -49,7 +48,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
+        var handler = new AuthenticationRequestHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -67,8 +66,8 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = Guid.NewGuid(),
             Login = login,
@@ -76,7 +75,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
+        var handler = new AuthenticationRequestHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -94,8 +93,8 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(login, Guid.NewGuid().ToString());
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = Guid.NewGuid(),
             Login = login,
@@ -103,7 +102,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
+        var handler = new AuthenticationRequestHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -123,8 +122,8 @@ public class AuthenticationRequestTests
         var request = new AuthenticationRequest(login, password);
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        var storeClient = new Mock<IStoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,
             OrganisationId = organisationId,
@@ -132,7 +131,7 @@ public class AuthenticationRequestTests
             PasswordHash = passwordHash
         });
 
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
         {
             Id = userId,
             OrganisationId = organisationId,
@@ -140,7 +139,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
+        var handler = new AuthenticationRequestHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert

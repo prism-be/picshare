@@ -34,7 +34,7 @@ public class PublisherClientTests
 
         // Act
         var publisherClient = new PublisherClient(daprClient.Object, telemetryClient);
-        await publisherClient.Publish(topic, data);
+        await publisherClient.PublishEventAsync(topic, data);
 
         // Assert
         daprClient.Verify(x => x.PublishEventAsync(Publishers.PubSub, topic, data, It.IsAny<CancellationToken>()));
