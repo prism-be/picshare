@@ -5,6 +5,7 @@ import useSWR from "swr";
 import {format, parseISO, parseJSON} from "date-fns";
 import {getCurrentLocale} from "../../lib/locales";
 import {PictureZoom} from "./PictureZoom";
+import {appInsights} from "../../lib/AppInsights";
 
 const getFlow = async (route: string): Promise<IFlow> => {
 
@@ -83,10 +84,19 @@ const Flow = () => {
     const togglePictureZoom = (id: string) => {
 
         if (id === zoomPicture) {
-            setZoomPicture('');
+            displayAndTrackPicture('');
             return;
         }
+
+        displayAndTrackPicture(id);
+    }
+    
+    const displayAndTrackPicture = (id: string) => {
         setZoomPicture(id);
+        
+        appInsights.trackPageView({
+            uri: 'flow/' + id
+        });
     }
 
     const nextPictureZoom = () => {
@@ -102,13 +112,12 @@ const Flow = () => {
 
         let position = pictures.indexOf(current);
         position++;
-        
-        if (position >= pictures.length)
-        {
+
+        if (position >= pictures.length) {
             position = 0;
         }
-        
-        setZoomPicture(pictures[position].id);
+
+        displayAndTrackPicture(pictures[position].id);
     }
 
     const previousPictureZoom = () => {
@@ -125,12 +134,11 @@ const Flow = () => {
         let position = pictures.indexOf(current);
         position--;
 
-        if (position < 0)
-        {
+        if (position < 0) {
             position = pictures.length - 1;
         }
 
-        setZoomPicture(pictures[position].id);
+        displayAndTrackPicture(pictures[position].id);
     }
 
     return <>
