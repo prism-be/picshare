@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using FluentValidation;
-using Grpc.Net.Client;
 using MediatR;
+using Prism.Picshare.AspNetCore;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;
@@ -21,14 +21,7 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(applicationAssembly);
 
-builder.Services.AddDaprClient(config =>
-{
-    config.UseGrpcChannelOptions(new GrpcChannelOptions
-    {
-        MaxReceiveMessageSize = 30 * 1024 * 1024,
-        MaxSendMessageSize = 30 * 1024 * 1024
-    });
-});
+builder.Services.AddPicshareDependencies();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();

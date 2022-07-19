@@ -4,10 +4,12 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics;
 using Dapr.Client;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
+using Microsoft.ApplicationInsights;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
@@ -34,17 +36,19 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 {
     private readonly ILogger<AuthenticationRequestHandler> _logger;
     private readonly DaprClient _daprClient;
+    private readonly TelemetryClient _telemetryClient;
 
-    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, DaprClient daprClient)
+    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, DaprClient daprClient, TelemetryClient telemetryClient)
     {
         _logger = logger;
         _daprClient = daprClient;
+        _telemetryClient = telemetryClient;
     }
 
     public async Task<ResultCodes> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
     {
         var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
-
+        
         if (credentials == null)
         {
             _logger.LogInformation("Credentials not found for login : {login}", request.Login);

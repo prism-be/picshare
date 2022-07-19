@@ -49,7 +49,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object);
+        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -76,7 +76,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object);
+        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -103,7 +103,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object);
+        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -140,7 +140,7 @@ public class AuthenticationRequestTests
         });
 
         // Act
-        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object);
+        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object, null);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
