@@ -99,7 +99,7 @@ public sealed class DaprStoreClient : StoreClient
 
             var result = await _daprClient.GetStateAsync<T>(store, key, cancellationToken: cancellationToken);
 
-            return (T?)result;
+            return result;
         }
         finally
         {
