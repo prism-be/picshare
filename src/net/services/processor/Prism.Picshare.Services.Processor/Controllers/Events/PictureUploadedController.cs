@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Dapr;
+using Dapr.Client;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,17 +18,19 @@ namespace Prism.Picshare.Services.Processor.Controllers.Events;
 
 public class PictureUploadedController : Controller
 {
+    private readonly DaprClient _daprClient;
     private readonly IMediator _mediator;
 
-    public PictureUploadedController(IMediator mediator)
+    public PictureUploadedController(IMediator mediator, DaprClient daprClient)
     {
         _mediator = mediator;
+        _daprClient = daprClient;
     }
 
     [AllowAnonymous]
     [HttpPost(Topics.RoutePrefix + Topics.Pictures.Uploaded)]
     [Topic(Publishers.PubSub, Topics.Pictures.Uploaded)]
-    public IActionResult PictureUploaded([FromBody] EntityReference entityReference)
+    public async Task<IActionResult> PictureUploaded([FromBody] EntityReference entityReference)
     {
         var resizeTasks = new List<Task>
         {
@@ -38,7 +41,13 @@ public class PictureUploadedController : Controller
         };
 
         Task.WaitAll(resizeTasks.ToArray());
-        
+
+        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.ThumbnailsGenerated, new EntityReference
+        {
+            Id = entityReference.Id,
+            OrganisationId = entityReference.OrganisationId
+        }, CancellationToken.None);
+
         return Ok();
     }
 }
