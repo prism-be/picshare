@@ -20,6 +20,43 @@ public class AuthenticationRequestTests
 {
 
     [Fact]
+    public async Task Handle_Email_Not_Validated()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var organisationId = Guid.NewGuid();
+        var login = Guid.NewGuid().ToString();
+        var password = Guid.NewGuid().ToString();
+        var passwordHash = Argon2.Hash(password, 1, 10);
+
+        var request = new AuthenticationRequest(login, password);
+
+        var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
+        var daprClient = new Mock<DaprClient>();
+        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        {
+            Id = userId,
+            OrganisationId = organisationId,
+            Login = login,
+            PasswordHash = passwordHash
+        });
+
+        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        {
+            Id = userId,
+            OrganisationId = organisationId,
+            EmailValidated = false
+        });
+
+        // Act
+        var handler = new AuthenticationRequestHandler(logger.Object, daprClient.Object);
+        var result = await handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().Be(ResultCodes.EmailNotValidated);
+    }
+
+    [Fact]
     public async Task Handle_Invalid_Login()
     {
         // Arrange
@@ -77,6 +114,8 @@ public class AuthenticationRequestTests
     public async Task Handle_Ok()
     {
         // Arrange
+        var userId = Guid.NewGuid();
+        var organisationId = Guid.NewGuid();
         var login = Guid.NewGuid().ToString();
         var password = Guid.NewGuid().ToString();
         var passwordHash = Argon2.Hash(password, 1, 10);
@@ -87,9 +126,17 @@ public class AuthenticationRequestTests
         var daprClient = new Mock<DaprClient>();
         daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
-            Id = Guid.NewGuid(),
+            Id = userId,
+            OrganisationId = organisationId,
             Login = login,
             PasswordHash = passwordHash
+        });
+
+        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        {
+            Id = userId,
+            OrganisationId = organisationId,
+            EmailValidated = true
         });
 
         // Act

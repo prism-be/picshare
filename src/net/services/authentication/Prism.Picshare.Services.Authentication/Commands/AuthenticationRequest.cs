@@ -53,8 +53,16 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
-            _logger.LogInformation("Authentication success for credentials : {id}", credentials.Id);
-            return ResultCodes.Ok;
+            var user = await _daprClient.GetStateAsync<User>(Stores.Users, credentials.Key, cancellationToken: cancellationToken);
+
+            if (user.EmailValidated)
+            {
+                _logger.LogInformation("Authentication success for credentials : {id}", credentials.Id);
+                return ResultCodes.Ok;
+            }
+            
+            _logger.LogInformation("Authentication failed for credentials, email not validated : {id}", credentials.Id);
+            return ResultCodes.EmailNotValidated;
         }
         
         _logger.LogInformation("Authentication failed for credentials : {id}", credentials.Id);

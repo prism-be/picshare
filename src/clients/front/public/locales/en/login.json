@@ -10,7 +10,8 @@
       "go": "Sign In"
     },
     "error" : {
-      "invalidCredentials": "The provided credentials are incorrect, please try again."
+      "invalidCredentials": "The provided credentials are incorrect, please try again.",
+      "emailNotValidated": "Your email has not been validated, please check your emails."
     }
   },
   "register": {
