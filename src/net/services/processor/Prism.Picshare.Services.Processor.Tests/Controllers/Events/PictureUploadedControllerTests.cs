@@ -26,7 +26,7 @@ public class PictureUploadedControllerTests
         var organisationId = Guid.NewGuid();
         var pictureId = Guid.NewGuid();
         var mediator = new Mock<IMediator>();
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
 
         // Act
         var controller = new PictureUploadedController(mediator.Object, publisherClient.Object);

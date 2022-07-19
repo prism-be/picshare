@@ -37,10 +37,10 @@ public class RegisterAccountRequestValidator : AbstractValidator<RegisterAccount
 
 public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequest, ResultCodes>
 {
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public RegisterAccountRequestHandler(StoreClient storeClient, IPublisherClient publisherClient)
+    public RegisterAccountRequestHandler(StoreClient storeClient, PublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;

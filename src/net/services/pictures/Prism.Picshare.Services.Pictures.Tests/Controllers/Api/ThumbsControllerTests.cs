@@ -32,7 +32,7 @@ public class ThumbsControllerTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.OrganisationId).Returns(organisationId);
 
-        var blobClient = new Mock<IBlobClient>();
+        var blobClient = new Mock<BlobClient>();
 
         // Act
         var controller = new ThumbsController(logger.Object, userContextAccessor.Object, blobClient.Object);
@@ -53,7 +53,7 @@ public class ThumbsControllerTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.OrganisationId).Returns(organisationId);
 
-        var blobClient = new Mock<IBlobClient>();
+        var blobClient = new Mock<BlobClient>();
         blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Samples.SmallImage);
 
@@ -76,7 +76,7 @@ public class ThumbsControllerTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.OrganisationId).Returns(organisationId);
 
-        var blobClient = new Mock<IBlobClient>();
+        var blobClient = new Mock<BlobClient>();
 
         // Act
         var controller = new ThumbsController(logger.Object, userContextAccessor.Object, blobClient.Object);

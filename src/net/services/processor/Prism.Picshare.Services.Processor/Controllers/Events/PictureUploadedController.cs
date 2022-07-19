@@ -18,9 +18,9 @@ namespace Prism.Picshare.Services.Processor.Controllers.Events;
 public class PictureUploadedController : Controller
 {
     private readonly IMediator _mediator;
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
 
-    public PictureUploadedController(IMediator mediator, IPublisherClient publisherClient)
+    public PictureUploadedController(IMediator mediator, PublisherClient publisherClient)
     {
         _mediator = mediator;
         _publisherClient = publisherClient;

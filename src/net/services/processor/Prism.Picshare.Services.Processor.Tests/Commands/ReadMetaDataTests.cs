@@ -21,8 +21,8 @@ public class ReadMetaDataTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
-        var blobClient = new Mock<IBlobClient>();
+        var publisherClient = new Mock<PublisherClient>();
+        var blobClient = new Mock<BlobClient>();
         blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Samples.SmallImage);
 

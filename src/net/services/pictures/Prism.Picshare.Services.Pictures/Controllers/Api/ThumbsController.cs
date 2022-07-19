@@ -13,11 +13,11 @@ namespace Prism.Picshare.Services.Pictures.Controllers.Api;
 
 public class ThumbsController : Controller
 {
-    private readonly IBlobClient _blobClient;
+    private readonly BlobClient _blobClient;
     private readonly ILogger<ThumbsController> _logger;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public ThumbsController(ILogger<ThumbsController> logger, IUserContextAccessor userContextAccessor, IBlobClient blobClient)
+    public ThumbsController(ILogger<ThumbsController> logger, IUserContextAccessor userContextAccessor, BlobClient blobClient)
     {
         _blobClient = blobClient;
         _logger = logger;

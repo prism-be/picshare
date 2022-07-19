@@ -23,8 +23,8 @@ public static class ServiceCollectionExtensions
             });
         });
 
-        services.AddTransient<IBlobClient, BlobClient>();
+        services.AddTransient<BlobClient, DaprBlobClient>();
         services.AddTransient<StoreClient, DaprStoreClient>();
-        services.AddTransient<IPublisherClient, PublisherClient>();
+        services.AddTransient<PublisherClient, DaprPublisherClient>();
     }
 }

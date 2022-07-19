@@ -15,10 +15,10 @@ public record SetPictureReady(Guid OrganisationId, Guid PictureId) : IRequest<Pi
 
 public class SetPictureReadyHandler : IRequestHandler<SetPictureReady, PictureSummary>
 {
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public SetPictureReadyHandler(StoreClient storeClient, IPublisherClient publisherClient)
+    public SetPictureReadyHandler(StoreClient storeClient, PublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;

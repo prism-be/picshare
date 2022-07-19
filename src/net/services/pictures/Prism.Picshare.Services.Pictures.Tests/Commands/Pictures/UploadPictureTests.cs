@@ -27,8 +27,8 @@ public class UploadPictureTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
-        var blobClient = new Mock<IBlobClient>();
+        var publisherClient = new Mock<PublisherClient>();
+        var blobClient = new Mock<BlobClient>();
         var data = new byte[42];
         Random.Shared.NextBytes(data);
 

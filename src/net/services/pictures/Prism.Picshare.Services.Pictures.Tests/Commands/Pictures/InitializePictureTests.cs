@@ -28,7 +28,7 @@ public class InitializePictureTests
         var organisationId = Guid.NewGuid();
         var owner = Guid.NewGuid();
         var request = new InitializePicture(organisationId, owner, pictureId, PictureSource.Upload);
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
 
         // Act

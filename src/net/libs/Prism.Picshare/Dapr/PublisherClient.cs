@@ -11,23 +11,23 @@ using Microsoft.ApplicationInsights;
 
 namespace Prism.Picshare.Dapr;
 
-public interface IPublisherClient
+public abstract class PublisherClient
 {
-    Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default);
+    public abstract Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default);
 }
 
-public class PublisherClient : IPublisherClient
+public class DaprPublisherClient : PublisherClient
 {
     private readonly DaprClient _daprClient;
     private readonly TelemetryClient _telemetryClient;
 
-    public PublisherClient(DaprClient daprClient, TelemetryClient telemetryClient)
+    public DaprPublisherClient(DaprClient daprClient, TelemetryClient telemetryClient)
     {
         _daprClient = daprClient;
         _telemetryClient = telemetryClient;
     }
 
-    public async Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default)
+    public override async Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
         var watch = Stopwatch.StartNew();

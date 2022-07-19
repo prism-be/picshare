@@ -25,10 +25,10 @@ public class RegisterConfirmationValidationValidation : AbstractValidator<Regist
 public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterConfirmationValidation, ResultCodes>
 {
     private readonly ILogger<RegisterConfirmationValidationHandler> _logger;
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public RegisterConfirmationValidationHandler(ILogger<RegisterConfirmationValidationHandler> logger, StoreClient storeClient, IPublisherClient publisherClient)
+    public RegisterConfirmationValidationHandler(ILogger<RegisterConfirmationValidationHandler> logger, StoreClient storeClient, PublisherClient publisherClient)
     {
         _logger = logger;
         _storeClient = storeClient;

@@ -15,10 +15,10 @@ public record SetPictureName(Guid OrganisationId, Guid PictureId, string Name) :
 
 public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
 {
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public SetPictureNameHandler(StoreClient storeClient, IPublisherClient publisherClient)
+    public SetPictureNameHandler(StoreClient storeClient, PublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;

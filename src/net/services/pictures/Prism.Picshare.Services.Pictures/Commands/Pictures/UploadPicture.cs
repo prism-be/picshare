@@ -28,11 +28,11 @@ public class UploadPictureValidator : AbstractValidator<UploadPicture>
 
 public class UploadPictureHandler : IRequestHandler<UploadPicture>
 {
-    private readonly IBlobClient _blobClient;
+    private readonly BlobClient _blobClient;
     private readonly ILogger<UploadPictureHandler> _logger;
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
 
-    public UploadPictureHandler(IBlobClient blobClient, IPublisherClient publisherClient, ILogger<UploadPictureHandler> logger)
+    public UploadPictureHandler(BlobClient blobClient, PublisherClient publisherClient, ILogger<UploadPictureHandler> logger)
     {
         _blobClient = blobClient;
         _publisherClient = publisherClient;

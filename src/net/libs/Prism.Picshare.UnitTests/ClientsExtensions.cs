@@ -17,12 +17,12 @@ public static class TestsExtensions
             .ReturnsAsync(data);
     }
 
-    public static void VerifyPublishEvent<TExpected>(this Mock<IPublisherClient> mock, string expectedTopic)
+    public static void VerifyPublishEvent<TExpected>(this Mock<PublisherClient> mock, string expectedTopic)
     {
         mock.Verify(x => x.PublishEventAsync(expectedTopic, It.IsAny<TExpected>(), default), Times.Once);
     }
 
-    public static void VerifyPublishEvent<TExpected>(this Mock<IPublisherClient> mock, string expectedTopic, Times times)
+    public static void VerifyPublishEvent<TExpected>(this Mock<PublisherClient> mock, string expectedTopic, Times times)
     {
         mock.Verify(x => x.PublishEventAsync(expectedTopic, It.IsAny<TExpected>(), default), times);
     }

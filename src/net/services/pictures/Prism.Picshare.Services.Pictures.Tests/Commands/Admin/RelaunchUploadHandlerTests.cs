@@ -24,8 +24,8 @@ public class RelaunchUploadHandlerTests
     {
         // Arrange
         var organisationId = Guid.NewGuid();
-        var publisherClient = new Mock<IPublisherClient>();
-        var blobClient = new Mock<IBlobClient>();
+        var publisherClient = new Mock<PublisherClient>();
+        var blobClient = new Mock<BlobClient>();
         blobClient.Setup(x => x.ListAsync(organisationId, default))
             .ReturnsAsync(new List<string>());
 

@@ -15,10 +15,10 @@ public record RelaunchUpload(Guid OrganisationId) : IRequest;
 
 public class RelaunchUploadHandler : IRequestHandler<RelaunchUpload>
 {
-    private readonly IBlobClient _blobClient;
-    private readonly IPublisherClient _publisherClient;
+    private readonly BlobClient _blobClient;
+    private readonly PublisherClient _publisherClient;
 
-    public RelaunchUploadHandler(IBlobClient blobClient, IPublisherClient publisherClient)
+    public RelaunchUploadHandler(BlobClient blobClient, PublisherClient publisherClient)
     {
         _blobClient = blobClient;
         _publisherClient = publisherClient;

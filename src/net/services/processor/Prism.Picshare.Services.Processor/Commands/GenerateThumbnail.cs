@@ -28,10 +28,10 @@ public class GenerateThumbnailValidator : AbstractValidator<GenerateThumbnail>
 
 public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, ResultCodes>
 {
-    private readonly IBlobClient _blobClient;
+    private readonly BlobClient _blobClient;
     private readonly ILogger<GenerateThumbnailHandler> _logger;
 
-    public GenerateThumbnailHandler(ILogger<GenerateThumbnailHandler> logger, IBlobClient blobClient)
+    public GenerateThumbnailHandler(ILogger<GenerateThumbnailHandler> logger, BlobClient blobClient)
     {
         _logger = logger;
         _blobClient = blobClient;

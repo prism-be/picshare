@@ -14,10 +14,10 @@ public record RelaunchPictureEvents(Guid OrganisationId, string Topic) : IReques
 
 public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvents>
 {
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public RelaunchPictureEventsHandler(StoreClient storeClient, IPublisherClient daprClient)
+    public RelaunchPictureEventsHandler(StoreClient storeClient, PublisherClient daprClient)
     {
         _publisherClient = daprClient;
         _storeClient = storeClient;

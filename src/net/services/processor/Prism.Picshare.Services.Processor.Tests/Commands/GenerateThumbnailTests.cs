@@ -20,7 +20,7 @@ public class GenerateThumbnailTests
     {
         // Arrange
         var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var blobClient = new Mock<IBlobClient>();
+        var blobClient = new Mock<BlobClient>();
         blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Samples.SmallImage);
 
@@ -37,7 +37,7 @@ public class GenerateThumbnailTests
     {
         // Arrange
         var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var daprClient = new Mock<IBlobClient>();
+        var daprClient = new Mock<BlobClient>();
         daprClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Samples.SmallImage);
 
@@ -54,7 +54,7 @@ public class GenerateThumbnailTests
     {
         // Arrange
         var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var daprClient = new Mock<IBlobClient>();
+        var daprClient = new Mock<BlobClient>();
         daprClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Samples.SmallImageVertical);
 

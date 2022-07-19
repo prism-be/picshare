@@ -27,10 +27,10 @@ public class ReadMetaDataValidator : AbstractValidator<ReadMetaData>
 
 public class ReadMetaDataHandler : IRequestHandler<ReadMetaData, ResultCodes>
 {
-    private readonly IBlobClient _blobClient;
-    private readonly IPublisherClient _publisherClient;
+    private readonly BlobClient _blobClient;
+    private readonly PublisherClient _publisherClient;
 
-    public ReadMetaDataHandler(IBlobClient blobClient, IPublisherClient publisherClient)
+    public ReadMetaDataHandler(BlobClient blobClient, PublisherClient publisherClient)
     {
         _blobClient = blobClient;
         _publisherClient = publisherClient;

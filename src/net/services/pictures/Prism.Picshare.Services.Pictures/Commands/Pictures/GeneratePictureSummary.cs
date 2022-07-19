@@ -16,10 +16,10 @@ public record GeneratePictureSummary(Guid OrganisationId, Guid PictureId, List<E
 
 public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSummary, Picture>
 {
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public GeneratePictureSummaryHandler(StoreClient storeClient, IPublisherClient publisherClient)
+    public GeneratePictureSummaryHandler(StoreClient storeClient, PublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;

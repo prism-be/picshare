@@ -26,7 +26,7 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_All()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture());
 
@@ -59,7 +59,7 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_All_But_Invalid()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture());
 
@@ -93,7 +93,7 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_Digitized()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture());
 
@@ -122,7 +122,7 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_None()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture());
 
@@ -139,7 +139,7 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_OnlyDate()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture());
 

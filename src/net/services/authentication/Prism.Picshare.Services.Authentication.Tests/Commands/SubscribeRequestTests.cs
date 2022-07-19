@@ -23,7 +23,7 @@ public class RegisterAccountRequestTests
         // Arrange
         var login = Guid.NewGuid().ToString();
         var storeClient = new Mock<StoreClient>();
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
 
         // Act
         var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
@@ -41,7 +41,7 @@ public class RegisterAccountRequestTests
     public async Task Handle_Organisation_Exist()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         var organisationName = Guid.NewGuid().ToString();
         storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, new Organisation());
@@ -61,7 +61,7 @@ public class RegisterAccountRequestTests
     {
         // Arrange
         var login = Guid.NewGuid().ToString();
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials());
 

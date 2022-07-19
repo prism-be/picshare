@@ -33,7 +33,7 @@ public class PublisherClientTests
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
-        var publisherClient = new PublisherClient(daprClient.Object, telemetryClient);
+        var publisherClient = new DaprPublisherClient(daprClient.Object, telemetryClient);
         await publisherClient.PublishEventAsync(topic, data);
 
         // Assert

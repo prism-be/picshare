@@ -25,7 +25,7 @@ public class SetPictureNameHandlerTests
     {
         // Arrange
         var request = new SetPictureName(Guid.NewGuid(), Guid.NewGuid(), "Hellow World.png");
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
 
         // Act

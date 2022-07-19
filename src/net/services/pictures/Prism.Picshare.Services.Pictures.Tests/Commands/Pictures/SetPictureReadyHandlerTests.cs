@@ -24,7 +24,7 @@ public class SetPictureReadyHandlerTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var publisherClient = new Mock<IPublisherClient>();
+        var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture
         {

@@ -15,10 +15,10 @@ public record InitializePicture(Guid OrganisationId, Guid Owner, Guid PictureId,
 
 public class InitializePictureHandler : IRequestHandler<InitializePicture, Picture>
 {
-    private readonly IPublisherClient _publisherClient;
+    private readonly PublisherClient _publisherClient;
     private readonly StoreClient _storeClient;
 
-    public InitializePictureHandler(StoreClient storeClient, IPublisherClient publisherClient)
+    public InitializePictureHandler(StoreClient storeClient, PublisherClient publisherClient)
     {
         _storeClient = storeClient;
         _publisherClient = publisherClient;
