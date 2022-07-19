@@ -101,12 +101,6 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
             _logger.LogInformation("Picture uploaded on storage: {blobName}", blobNameResized);
         });
 
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.ThumbnailsGenerated, new EntityReference
-        {
-            Id = request.PictureId,
-            OrganisationId = request.OrganisationId
-        }, cancellationToken);
-        
         return ResultCodes.Ok;
     }
 
