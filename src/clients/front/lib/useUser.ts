@@ -4,10 +4,13 @@ import useSWR from 'swr'
 import {getData, performRefreshToken} from "./ajaxHelper";
 
 const getUser = async (route: string) => {
-
-    await performRefreshToken();
+    let response = await getData(route);
     
-    const response = await getData(route);
+    if (response.status === 401)
+    {
+        await performRefreshToken();
+        response = await getData(route);
+    }
     
     if (response.status === 200) {
         return response.data;
