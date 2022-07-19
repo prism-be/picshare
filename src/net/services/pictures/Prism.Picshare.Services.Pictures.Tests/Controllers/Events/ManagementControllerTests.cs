@@ -10,7 +10,9 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Services.Pictures.Commands.Admin;
+using Prism.Picshare.Services.Pictures.Controllers.Api;
 using Prism.Picshare.Services.Pictures.Controllers.Events;
 using Prism.Picshare.UnitTests;
 using Xunit;
@@ -25,9 +27,11 @@ public class ManagementControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
+        var contextAccessor = new Mock<IUserContextAccessor>();
+        contextAccessor.Setup(x => x.OrganisationId).Returns(Guid.NewGuid);
 
         // Act
-        var result = await new ManagementController(mediator.Object).RelaunchCreated(Guid.NewGuid());
+        var result = await new ManagementController(mediator.Object, contextAccessor.Object).RelaunchCreated();
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
@@ -39,9 +43,11 @@ public class ManagementControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
+        var contextAccessor = new Mock<IUserContextAccessor>();
+        contextAccessor.Setup(x => x.OrganisationId).Returns(Guid.NewGuid);
 
         // Act
-        var result = await new ManagementController(mediator.Object).RelaunchUpdated(Guid.NewGuid());
+        var result = await new ManagementController(mediator.Object, contextAccessor.Object).RelaunchUpdated();
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();
@@ -53,9 +59,11 @@ public class ManagementControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
+        var contextAccessor = new Mock<IUserContextAccessor>();
+        contextAccessor.Setup(x => x.OrganisationId).Returns(Guid.NewGuid);
 
         // Act
-        var result = await new ManagementController(mediator.Object).RelaunchUpload(Guid.NewGuid());
+        var result = await new ManagementController(mediator.Object, contextAccessor.Object).RelaunchUpload();
 
         // Assert
         result.Should().BeAssignableTo<OkResult>();

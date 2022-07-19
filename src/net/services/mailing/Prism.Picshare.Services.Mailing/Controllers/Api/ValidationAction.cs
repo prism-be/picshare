@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
+using Google.Rpc;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Services.Mailing.Commands;
@@ -49,7 +50,10 @@ public class ValidationAction : Controller
         switch (result)
         {
             case ResultCodes.Ok:
-                return Ok();
+                return Ok(new
+                {
+                    code = ResultCodes.Ok
+                });
             case ResultCodes.MailActionAlreadyConsumed:
             case ResultCodes.MailActionNotFound:
                 return NotFound();

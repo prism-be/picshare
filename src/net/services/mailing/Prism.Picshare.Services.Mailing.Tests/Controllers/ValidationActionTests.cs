@@ -101,7 +101,7 @@ public class ValidationActionTests
         var result = await controller.Validate(key);
 
         // Assert
-        result.Should().BeAssignableTo<OkResult>();
+        result.Should().BeAssignableTo<OkObjectResult>();
         mediator.Verify(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Key == key), It.IsAny<CancellationToken>()), Times.Once);
     }
 
