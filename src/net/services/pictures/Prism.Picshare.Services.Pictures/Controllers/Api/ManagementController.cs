@@ -23,21 +23,21 @@ public class ManagementController : Controller
         _userContextAccessor = userContextAccessor;
     }
 
-    [HttpPost("pictures/admin/events/created")]
+    [HttpPost("api/pictures/admin/events/created")]
     public async Task<IActionResult> RelaunchCreated()
     {
         await _mediator.Send(new RelaunchPictureEvents(_userContextAccessor.OrganisationId, Topics.Pictures.Created));
         return Ok();
     }
 
-    [HttpPost("pictures/admin/events/updated")]
+    [HttpPost("api/pictures/admin/events/updated")]
     public async Task<IActionResult> RelaunchUpdated()
     {
         await _mediator.Send(new RelaunchPictureEvents(_userContextAccessor.OrganisationId, Topics.Pictures.Updated));
         return Ok();
     }
 
-    [HttpPost("pictures/admin/upload")]
+    [HttpPost("api/pictures/admin/upload")]
     public async Task<IActionResult> RelaunchUpload()
     {
         await _mediator.Send(new RelaunchUpload(_userContextAccessor.OrganisationId));
