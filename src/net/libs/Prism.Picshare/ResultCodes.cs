@@ -11,6 +11,7 @@ public enum ResultCodes
     Unknown = 0,
     Ok = 200,
     InvalidCredentials = 40101,
+    EmailNotValidated = 40102,
     MailActionNotFound = 40401,
     UserNotFound = 40402,
     PictureNotFound = 40403,
