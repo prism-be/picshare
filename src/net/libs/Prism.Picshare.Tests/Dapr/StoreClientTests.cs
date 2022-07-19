@@ -22,6 +22,26 @@ public class StoreClientTests
 {
 
     [Fact]
+    public async Task Get_NoStore()
+    {
+        // Arrange
+        var data = new User
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = Guid.NewGuid()
+        };
+        var daprClient = new Mock<DaprClient>();
+        var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
+
+        // Act
+        var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
+        var act = async () => await storeClient.GetStateAsync<dynamic>(data.Key);
+
+        // Assert
+        await act.Should().ThrowAsync<NotImplementedException>();
+    }
+
+    [Fact]
     public async Task Get_Ok()
     {
         // Arrange
@@ -63,6 +83,26 @@ public class StoreClientTests
 
         // Assert
         result.Should().BeEquivalentTo(data);
+    }
+
+    [Fact]
+    public async Task Save_NoStore()
+    {
+        // Arrange
+        var data = new User
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = Guid.NewGuid()
+        };
+        var daprClient = new Mock<DaprClient>();
+        var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
+
+        // Act
+        var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
+        var act = async () => await storeClient.SaveStateAsync(data.Key, new DummyRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
+
+        // Assert
+        await act.Should().ThrowAsync<NotImplementedException>();
     }
 
     [Fact]
