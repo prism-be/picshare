@@ -104,7 +104,7 @@ public sealed class DaprStoreClient : StoreClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("STORE-GET", store, key, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("STORE", store, "GET" + key, startTime, watch.Elapsed, success);
         }
     }
 
@@ -123,7 +123,7 @@ public sealed class DaprStoreClient : StoreClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("STORE-SET", store, key, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("STORE", store, "SET" + key, startTime, watch.Elapsed, success);
         }
     }
 }

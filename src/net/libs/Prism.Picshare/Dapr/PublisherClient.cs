@@ -42,7 +42,7 @@ public class DaprPublisherClient : PublisherClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("PUBSUB", topic, JsonSerializer.Serialize(data), startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("PUBSUB", Publishers.PubSub, topic , startTime, watch.Elapsed, success);
         }
     }
 }

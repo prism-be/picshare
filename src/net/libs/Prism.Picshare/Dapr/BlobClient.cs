@@ -54,7 +54,7 @@ public class DaprBlobClient : BlobClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("BINDING", "CREATE", blobName, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("BINDING", Stores.Data, "CREATE " + blobName, startTime, watch.Elapsed, success);
         }
     }
 
@@ -81,7 +81,7 @@ public class DaprBlobClient : BlobClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("BINDING", "LIST", organisationId.ToString(), startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("BINDING", Stores.Data, "LIST " + organisationId, startTime, watch.Elapsed, success);
         }
 
         var data = JsonDocument.Parse(Encoding.Default.GetString(response.Data.ToArray()));
@@ -123,7 +123,7 @@ public class DaprBlobClient : BlobClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("BINDING", "GET", blobName, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("BINDING", Stores.Data, "GET " + blobName, startTime, watch.Elapsed, success);
         }
     }
 }
