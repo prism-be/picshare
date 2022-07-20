@@ -31,15 +31,10 @@ public class PictureUploadedController : Controller
     [Topic(Publishers.PubSub, Topics.Pictures.Uploaded)]
     public async Task<IActionResult> PictureUploaded([FromBody] EntityReference entityReference)
     {
-        var resizeTasks = new List<Task>
-        {
-            _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 150, 150, true)),
-            _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 960, 540, false)),
-            _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 1920, 1080, false)),
-            _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 3840, 2160, false))
-        };
-
-        Task.WaitAll(resizeTasks.ToArray());
+        await _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 150, 150, true));
+        await _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 960, 540, false));
+        await _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 1920, 1080, false));
+        await _mediator.Send(new GenerateThumbnail(entityReference.OrganisationId, entityReference.Id, 3840, 2160, false));
 
         await _publisherClient.PublishEventAsync(Topics.Pictures.ThumbnailsGenerated, new EntityReference
         {
