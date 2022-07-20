@@ -26,9 +26,6 @@ const MyApp = ({Component, pageProps}: AppProps) => {
     return <>
         <Head>
             <title>{t('header.title')}</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <link rel="icon" type="image/png" href="/favicon.png"/>
-
         </Head>
         <SWRConfig value={{fetcher: getData}}>
             <Component {...pageProps} />
