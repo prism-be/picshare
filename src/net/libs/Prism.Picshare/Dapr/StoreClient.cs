@@ -95,10 +95,9 @@ public sealed class DaprStoreClient : StoreClient
 
         try
         {
-            success = true;
 
             var result = await _daprClient.GetStateAsync<T>(store, key, cancellationToken: cancellationToken);
-
+            success = true;
             return result;
         }
         finally
@@ -117,8 +116,8 @@ public sealed class DaprStoreClient : StoreClient
 
         try
         {
-            success = true;
             await _daprClient.SaveStateAsync(store, key, data, cancellationToken: cancellationToken);
+            success = true;
         }
         finally
         {

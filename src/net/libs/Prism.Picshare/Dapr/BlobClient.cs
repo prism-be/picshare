@@ -48,6 +48,7 @@ public class DaprBlobClient : BlobClient
                     "fileName", blobName
                 }
             }, cancellationToken);
+            success = true;
         }
         finally
         {
@@ -114,9 +115,8 @@ public class DaprBlobClient : BlobClient
 
         try
         {
-            success = true;
             var response = await _daprClient.InvokeBindingAsync(bindingRequest, cancellationToken);
-
+            success = true;
             return response.Data.ToArray();
         }
         finally
