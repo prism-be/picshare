@@ -44,7 +44,10 @@ public class RegisterAccountRequestTests
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
         var organisationName = Guid.NewGuid().ToString();
-        storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, new Organisation());
+        storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, new SingleId
+        {
+            Id = Guid.NewGuid()
+        });
 
         // Act
         var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
