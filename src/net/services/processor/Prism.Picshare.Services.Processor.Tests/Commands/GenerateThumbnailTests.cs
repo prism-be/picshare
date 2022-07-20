@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -21,12 +20,12 @@ public class GenerateThumbnailTests
     {
         // Arrange
         var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "get"), Samples.SmallImage, new Dictionary<string, string>()));
+        var blobClient = new Mock<BlobClient>();
+        blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Samples.SmallImage);
 
         // Act
-        var handler = new GenerateThumbnailHandler(logger.Object, daprClient.Object);
+        var handler = new GenerateThumbnailHandler(logger.Object, blobClient.Object);
         var result = await handler.Handle(new GenerateThumbnail(Guid.NewGuid(), Guid.NewGuid(), 25, 25, false), CancellationToken.None);
 
         // Assert
@@ -38,9 +37,9 @@ public class GenerateThumbnailTests
     {
         // Arrange
         var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "get"), Samples.SmallImage, new Dictionary<string, string>()));
+        var daprClient = new Mock<BlobClient>();
+        daprClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Samples.SmallImage);
 
         // Act
         var handler = new GenerateThumbnailHandler(logger.Object, daprClient.Object);
@@ -55,9 +54,9 @@ public class GenerateThumbnailTests
     {
         // Arrange
         var logger = new Mock<ILogger<GenerateThumbnailHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "get"), Samples.SmallImageVertical, new Dictionary<string, string>()));
+        var daprClient = new Mock<BlobClient>();
+        daprClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Samples.SmallImageVertical);
 
         // Act
         var handler = new GenerateThumbnailHandler(logger.Object, daprClient.Object);

@@ -5,8 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Diagnostics;
-using Acme.Dapr.Extensions.UnitTesting;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -14,6 +12,7 @@ using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.UnitTests;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -34,10 +33,10 @@ public class GenerateTokenRequestTests
         var login = Guid.NewGuid().ToString();
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<StoreClient>();
 
         // Act
-        var handler = new GenerateTokenRequestHandler(logger.Object, daprClient.Object, _jwtConfiguration);
+        var handler = new GenerateTokenRequestHandler(logger.Object, _jwtConfiguration, storeClient.Object);
         var result = await handler.Handle(new GenerateTokenRequest(login), CancellationToken.None);
 
         // Assert
@@ -53,21 +52,21 @@ public class GenerateTokenRequestTests
         var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,
             OrganisationId = organisationId,
             Login = login
         });
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
         {
             Id = userId,
             OrganisationId = organisationId
         });
 
         // Act
-        var handler = new GenerateTokenRequestHandler(logger.Object, daprClient.Object, _jwtConfiguration);
+        var handler = new GenerateTokenRequestHandler(logger.Object, _jwtConfiguration, storeClient.Object);
         var result = await handler.Handle(new GenerateTokenRequest(login), CancellationToken.None);
 
         // Assert
@@ -92,8 +91,8 @@ public class GenerateTokenRequestTests
         var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
             Id = userId,
             OrganisationId = organisationId,
@@ -101,7 +100,7 @@ public class GenerateTokenRequestTests
         });
 
         // Act
-        var handler = new GenerateTokenRequestHandler(logger.Object, daprClient.Object, _jwtConfiguration);
+        var handler = new GenerateTokenRequestHandler(logger.Object, _jwtConfiguration, storeClient.Object);
         var result = await handler.Handle(new GenerateTokenRequest(login), CancellationToken.None);
 
         // Assert

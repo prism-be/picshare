@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
@@ -33,18 +32,18 @@ public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRe
 public class AuthenticationRequestHandler : IRequestHandler<AuthenticationRequest, ResultCodes>
 {
     private readonly ILogger<AuthenticationRequestHandler> _logger;
-    private readonly DaprClient _daprClient;
+    private readonly StoreClient _storeClient;
 
-    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, DaprClient daprClient)
+    public AuthenticationRequestHandler(ILogger<AuthenticationRequestHandler> logger, StoreClient storeClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
+        _storeClient = storeClient;
     }
 
     public async Task<ResultCodes> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
     {
-        var credentials = await _daprClient.GetStateAsync<Credentials>(Stores.Credentials, request.Login, cancellationToken: cancellationToken);
-
+        var credentials = await _storeClient.GetStateNullableAsync<Credentials>(request.Login, cancellationToken: cancellationToken);
+        
         if (credentials == null)
         {
             _logger.LogInformation("Credentials not found for login : {login}", request.Login);
@@ -53,7 +52,13 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
-            var user = await _daprClient.GetStateAsync<User>(Stores.Users, credentials.Key, cancellationToken: cancellationToken);
+            var user = await _storeClient.GetStateNullableAsync<User>(credentials.Key, cancellationToken: cancellationToken);
+            
+            if (user == null)
+            {
+                _logger.LogInformation("Credentials not found for login : {login}", request.Login);
+                return ResultCodes.UserNotFound;
+            }
 
             if (user.EmailValidated)
             {

@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +26,10 @@ public class PictureUploadedControllerTests
         var organisationId = Guid.NewGuid();
         var pictureId = Guid.NewGuid();
         var mediator = new Mock<IMediator>();
-        var daprClient = new Mock<DaprClient>();
+        var publisherClient = new Mock<PublisherClient>();
 
         // Act
-        var controller = new PictureUploadedController(mediator.Object, daprClient.Object);
+        var controller = new PictureUploadedController(mediator.Object, publisherClient.Object);
         var result = await controller.PictureUploaded(new EntityReference
         {
             OrganisationId = organisationId,
@@ -40,6 +39,6 @@ public class PictureUploadedControllerTests
         // Assert
         result.Should().BeAssignableTo<OkResult>();
         mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Exactly(4));
-        daprClient.VerifyPublishEvent<EntityReference>(Publishers.PubSub, Topics.Pictures.ThumbnailsGenerated);
+        publisherClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.ThumbnailsGenerated);
     }
 }

@@ -4,8 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
@@ -14,19 +14,19 @@ public record IncreaseViewCount(Guid OrganisationId, Guid PictureId) : IRequest<
 
 public class IncreaseViewCountHandler : IRequestHandler<IncreaseViewCount, Picture>
 {
-    private readonly DaprClient _daprClient;
+    private readonly StoreClient _storeClient;
 
-    public IncreaseViewCountHandler(DaprClient daprClient)
+    public IncreaseViewCountHandler(StoreClient storeClient)
     {
-        _daprClient = daprClient;
+        _storeClient = storeClient;
     }
 
     public async Task<Picture> Handle(IncreaseViewCount request, CancellationToken cancellationToken)
     {
-        var picture = await _daprClient.GetStatePictureAsync(request.OrganisationId, request.PictureId, cancellationToken);
+        var picture = await _storeClient.GetStateAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken);
 
         picture.Views++;
-        await _daprClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
 
         return picture;
     }

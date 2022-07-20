@@ -8,8 +8,8 @@ using System.Globalization;
 using Google.Rpc;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Mailing.Commands;
-using Prism.Picshare.Services.Mailing.Model;
 
 namespace Prism.Picshare.Services.Mailing.Controllers.Api;
 

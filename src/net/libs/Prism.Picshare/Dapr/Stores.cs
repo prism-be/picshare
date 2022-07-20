@@ -12,6 +12,7 @@ public static class Stores
     public const string Credentials = "statecredentials";
     public const string Data = "datastore";
     public const string Flow = "stateflows";
+    public const string MailActions = "statemailactions";
     public const string Organisations = "stateorganisations";
     public const string OrganisationsName = "stateorganisationsnames";
     public const string Pictures = "statepictures";

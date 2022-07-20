@@ -4,14 +4,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using FluentValidation;
 using ImageMagick;
 using MediatR;
 using Polly;
 using Prism.Picshare.Dapr;
-using Prism.Picshare.Domain;
-using Prism.Picshare.Events;
 using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Processor.Commands;
@@ -31,22 +28,20 @@ public class GenerateThumbnailValidator : AbstractValidator<GenerateThumbnail>
 
 public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, ResultCodes>
 {
-    private readonly DaprClient _daprClient;
+    private readonly BlobClient _blobClient;
     private readonly ILogger<GenerateThumbnailHandler> _logger;
 
-    public GenerateThumbnailHandler(ILogger<GenerateThumbnailHandler> logger, DaprClient daprClient)
+    public GenerateThumbnailHandler(ILogger<GenerateThumbnailHandler> logger, BlobClient blobClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
+        _blobClient = blobClient;
     }
 
     public async Task<ResultCodes> Handle(GenerateThumbnail request, CancellationToken cancellationToken)
     {
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
 
-        var response = await _daprClient.ReadPictureAsync(blobName, cancellationToken);
-
-        var pictureData = response.Data.ToArray();
+        var pictureData = await _blobClient.ReadAsync(blobName, cancellationToken);
 
         using var image = new MagickImage(pictureData);
 
@@ -60,7 +55,7 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         }
 
         var ratio = (float)width / height;
-        var sizeRatio = new MagickGeometry(image.Width,  Convert.ToInt32(image.Width * ratio));
+        var sizeRatio = new MagickGeometry(image.Width, Convert.ToInt32(image.Width * ratio));
 
         if (sizeRatio.Height > image.Height)
         {
@@ -81,7 +76,6 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         image.Quality = 95;
         await image.WriteAsync(outputStream, cancellationToken);
 
-        var dataBase64 = Convert.ToBase64String(outputStream.ToArray());
         var blobNameResized = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId, request.Width, request.Height);
 
         var uploadPolicy = Policy.Handle<Exception>()
@@ -89,15 +83,7 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
 
         await uploadPolicy.ExecuteAsync(async () =>
         {
-            await _daprClient.InvokeBindingAsync(Stores.Data, "create", dataBase64, new Dictionary<string, string>
-            {
-                {
-                    "blobName", blobNameResized
-                },
-                {
-                    "fileName", blobNameResized
-                }
-            }, cancellationToken);
+            await _blobClient.CreateAsync(blobNameResized, outputStream.ToArray(), cancellationToken);
             _logger.LogInformation("Picture uploaded on storage: {blobName}", blobNameResized);
         });
 

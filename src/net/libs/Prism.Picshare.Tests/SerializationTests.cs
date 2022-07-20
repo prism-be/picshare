@@ -48,11 +48,11 @@ public class SerializationTests
     public void EmailAction_Ok()
     {
         // Arrange
-        var source = new EmailAction
+        var source = new MailAction<User>(Guid.NewGuid(), MailActionType.ConfirmUserRegistration, new User())
         {
-            Action = Guid.NewGuid().ToString(),
-            Key = Guid.NewGuid().ToString(),
-            UserId = Guid.NewGuid()
+            Consumed = false,
+            CreationDate = default,
+            ConfirmationDate = null
         };
 
         CheckSerialization(source);

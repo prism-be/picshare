@@ -1,10 +1,12 @@
-import {appWithTranslation, useTranslation} from 'next-i18next'
 import '../styles/globals.css'
+import {appWithTranslation, useTranslation} from 'next-i18next'
 import type {AppProps} from 'next/app'
 import Head from "next/head";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {SWRConfig} from "swr";
-import fetchJson from "../lib/fetchJson";
+import {withAITracking} from "@microsoft/applicationinsights-react-js";
+import {loadAppInsights, reactPlugin} from "../lib/AppInsights";
+import {useEffect} from "react";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -15,25 +17,21 @@ export const getStaticProps = async ({locale}: any) => ({
 const MyApp = ({Component, pageProps}: AppProps) => {
 
     const {t} = useTranslation('common')
+    
+    useEffect(() => {
+        loadAppInsights();
+    }, []);
 
     return <>
         <Head>
             <title>{t('header.title')}</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <link rel="icon" type="image/png" href="/favicon.png"/>
-           
+
         </Head>
-        <SWRConfig
-            value={{
-                fetcher: fetchJson,
-                onError: (err) => {
-                    console.error(err);
-                },
-            }}
-        >
+        <SWRConfig>
             <Component {...pageProps} />
         </SWRConfig>
     </>
 }
-
-export default appWithTranslation(MyApp)
+export default withAITracking(reactPlugin, appWithTranslation(MyApp));

@@ -7,7 +7,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapr.Client;
 using FluentAssertions;
 using Moq;
 using Prism.Picshare.Dapr;
@@ -25,20 +24,21 @@ public class SetPictureReadyHandlerTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture
+        var publisherClient = new Mock<PublisherClient>();
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), new Picture
         {
             Summary = new PictureSummary()
         });
 
         // Act
-        var handler = new SetPictureReadyHandler(daprClient.Object);
+        var handler = new SetPictureReadyHandler(storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(new SetPictureReady(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
         result.Ready.Should().BeTrue();
-        daprClient.VerifySaveState<Picture>(Stores.Pictures);
-        daprClient.VerifyPublishEvent<PictureSummary>(Publishers.PubSub, Topics.Pictures.SummaryUpdated);
+        storeClient.VerifySaveState<Picture>(Stores.Pictures);
+        publisherClient.VerifyPublishEvent<PictureSummary>(Topics.Pictures.SummaryUpdated);
     }
 }

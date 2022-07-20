@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -26,11 +25,11 @@ public class FlowControllerTests
         // Arrange
         var userContextAccessor = new Mock<IUserContextAccessor>();
 
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.Flow, It.IsAny<string>(), new Flow());
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Flow, It.IsAny<string>(), new Flow());
 
         // Act
-        var controller = new FlowController(userContextAccessor.Object, daprClient.Object);
+        var controller = new FlowController(userContextAccessor.Object, storeClient.Object);
         var flow = await controller.GetFlow();
 
         // Assert

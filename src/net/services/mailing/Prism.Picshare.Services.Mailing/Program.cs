@@ -7,6 +7,7 @@
 using FluentValidation;
 using MediatR;
 using Prism.Picshare;
+using Prism.Picshare.AspNetCore;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Insights;
 using Prism.Picshare.Services.Mailing;
@@ -28,13 +29,13 @@ var configuration = new MailingConfiguration
     SmtpPort = Convert.ToInt32(EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_PORT")),
     SmtpServer = EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_SERVER"),
     SmtpUser = EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_USER"),
-    SmtpPassword = EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_PASSWORD"),
+    SmtpPassword = EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_PASSWORD")
 };
 builder.Services.AddSingleton(configuration);
 builder.Services.AddScoped<ISmtpClientWrapper, SmtpClientWrapper>();
 builder.Services.AddScoped<IEmailWorker, EmailWorker>();
 
-builder.Services.AddDaprClient();
+builder.Services.AddPicshareDependencies();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();

@@ -4,22 +4,22 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.AspNetCore.Authentication;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Pictures.Controllers.Api;
 
 public class ThumbsController : Controller
 {
-    private readonly DaprClient _daprClient;
+    private readonly BlobClient _blobClient;
     private readonly ILogger<ThumbsController> _logger;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public ThumbsController(ILogger<ThumbsController> logger, IUserContextAccessor userContextAccessor, DaprClient daprClient)
+    public ThumbsController(ILogger<ThumbsController> logger, IUserContextAccessor userContextAccessor, BlobClient blobClient)
     {
-        _daprClient = daprClient;
+        _blobClient = blobClient;
         _logger = logger;
         _userContextAccessor = userContextAccessor;
     }
@@ -38,8 +38,8 @@ public class ThumbsController : Controller
         try
         {
             var blobName = BlobNamesExtensions.GetSourcePath(organisationId, pictureId, width, height);
-            var data = await _daprClient.ReadPictureAsync(blobName, new CancellationToken());
-            return File(data.Data.ToArray(), "image/jpeg");
+            var data = await _blobClient.ReadAsync(blobName);
+            return File(data, "image/jpeg");
         }
         catch (Exception ex)
         {

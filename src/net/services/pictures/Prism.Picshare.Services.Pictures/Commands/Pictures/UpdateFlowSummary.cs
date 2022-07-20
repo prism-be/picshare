@@ -4,8 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
@@ -14,18 +14,18 @@ public record UpdateFlowSummary(PictureSummary Summary) : IRequest<Flow>;
 
 public class UpdateFlowSummaryHandler : IRequestHandler<UpdateFlowSummary, Flow>
 {
-    private readonly DaprClient _daprClient;
     private readonly ILogger<UpdateFlowSummaryHandler> _logger;
+    private readonly StoreClient _storeClient;
 
-    public UpdateFlowSummaryHandler(ILogger<UpdateFlowSummaryHandler> logger, DaprClient daprClient)
+    public UpdateFlowSummaryHandler(ILogger<UpdateFlowSummaryHandler> logger, StoreClient storeClient)
     {
         _logger = logger;
-        _daprClient = daprClient;
+        _storeClient = storeClient;
     }
 
     public async Task<Flow> Handle(UpdateFlowSummary request, CancellationToken cancellationToken)
     {
-        var flow = await _daprClient.GetStateFlowAsync(request.Summary.OrganisationId, cancellationToken);
+        var flow = await _storeClient.GetStateAsync<Flow>(request.Summary.OrganisationId.ToString(), cancellationToken);
 
         var existingSummary = flow.Pictures.SingleOrDefault(x => x.Id == request.Summary.Id);
 
@@ -42,7 +42,7 @@ public class UpdateFlowSummaryHandler : IRequestHandler<UpdateFlowSummary, Flow>
         }
 
         flow.Pictures = flow.Pictures.OrderByDescending(x => x.Date).ToList();
-        await _daprClient.SaveStateAsync(flow, cancellationToken);
+        await _storeClient.SaveStateAsync(request.Summary.OrganisationId.ToString(), flow, cancellationToken);
 
         return flow;
     }

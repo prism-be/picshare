@@ -1,12 +1,15 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "Stores.cs" company = "Prism">
+//  <copyright file = "SingleId.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Services.Mailing.Model;
+using System.Text.Json.Serialization;
 
-public static class Stores
+namespace Prism.Picshare.Domain;
+
+public class SingleId
 {
-    public const string MailActions = "statemailactions";
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
 }

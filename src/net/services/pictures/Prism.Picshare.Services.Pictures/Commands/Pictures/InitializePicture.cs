@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
@@ -16,11 +15,13 @@ public record InitializePicture(Guid OrganisationId, Guid Owner, Guid PictureId,
 
 public class InitializePictureHandler : IRequestHandler<InitializePicture, Picture>
 {
-    private readonly DaprClient _daprClient;
+    private readonly PublisherClient _publisherClient;
+    private readonly StoreClient _storeClient;
 
-    public InitializePictureHandler(DaprClient daprClient)
+    public InitializePictureHandler(StoreClient storeClient, PublisherClient publisherClient)
     {
-        _daprClient = daprClient;
+        _storeClient = storeClient;
+        _publisherClient = publisherClient;
     }
 
     public async Task<Picture> Handle(InitializePicture request, CancellationToken cancellationToken)
@@ -34,17 +35,18 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
             Owner = request.Owner
         };
 
-        await _daprClient.SaveStateAsync(picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
 
-        var flow = await _daprClient.GetStateFlowAsync(request.OrganisationId, cancellationToken);
+        var flow = await _storeClient.GetStateAsync<Flow>(request.OrganisationId.ToString(), cancellationToken);
+
         flow.Pictures.Insert(0, new PictureSummary
         {
             OrganisationId = request.OrganisationId,
             Id = request.PictureId
         });
-        await _daprClient.SaveStateAsync(flow, cancellationToken);
+        await _storeClient.SaveStateAsync(request.OrganisationId.ToString(), flow, cancellationToken);
 
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.Created, picture, cancellationToken);
+        await _publisherClient.PublishEventAsync(Topics.Pictures.Created, picture, cancellationToken);
 
         return picture;
     }

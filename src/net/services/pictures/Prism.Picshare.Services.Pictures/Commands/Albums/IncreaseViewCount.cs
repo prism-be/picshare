@@ -4,8 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
+using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Pictures.Commands.Albums;
@@ -14,20 +14,20 @@ public record AddPictureToAlbum(Guid OrganisationId, Guid AlbumId, Guid PictureI
 
 public class AddPictureToAlbumHandler : IRequestHandler<AddPictureToAlbum, Album>
 {
-    private readonly DaprClient _daprClient;
+    private readonly StoreClient _storeClient;
 
-    public AddPictureToAlbumHandler(DaprClient daprClient)
+    public AddPictureToAlbumHandler(StoreClient storeClient)
     {
-        _daprClient = daprClient;
+        _storeClient = storeClient;
     }
 
     public async Task<Album> Handle(AddPictureToAlbum request, CancellationToken cancellationToken)
     {
-        var album = await _daprClient.GetStateAlbumAsync(request.OrganisationId, request.AlbumId, cancellationToken);
+        var album = await _storeClient.GetStateAsync<Album>(EntityReference.ComputeKey(request.OrganisationId, request.AlbumId), cancellationToken);
 
         album.Pictures.Add(request.PictureId);
 
-        await _daprClient.SaveStateAsync(album, cancellationToken);
+        await _storeClient.SaveStateAsync(album.Key, album, cancellationToken);
 
         return album;
     }

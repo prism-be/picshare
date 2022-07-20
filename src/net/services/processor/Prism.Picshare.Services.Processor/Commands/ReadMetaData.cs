@@ -4,8 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Text.Json;
-using Dapr.Client;
 using FluentValidation;
 using ImageMagick;
 using MediatR;
@@ -29,18 +27,19 @@ public class ReadMetaDataValidator : AbstractValidator<ReadMetaData>
 
 public class ReadMetaDataHandler : IRequestHandler<ReadMetaData, ResultCodes>
 {
-    private readonly DaprClient _daprClient;
+    private readonly BlobClient _blobClient;
+    private readonly PublisherClient _publisherClient;
 
-    public ReadMetaDataHandler(DaprClient daprClient)
+    public ReadMetaDataHandler(BlobClient blobClient, PublisherClient publisherClient)
     {
-        _daprClient = daprClient;
+        _blobClient = blobClient;
+        _publisherClient = publisherClient;
     }
 
     public async Task<ResultCodes> Handle(ReadMetaData request, CancellationToken cancellationToken)
     {
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
-        var response = await _daprClient.ReadPictureAsync(blobName, cancellationToken);
-        var pictureData = response.Data.ToArray();
+        var pictureData = await _blobClient.ReadAsync(blobName, cancellationToken);
 
         using var image = new MagickImage(pictureData);
         var profile = image.GetExifProfile();
@@ -64,7 +63,7 @@ public class ReadMetaDataHandler : IRequestHandler<ReadMetaData, ResultCodes>
             }
         }
 
-        await _daprClient.PublishEventAsync(Publishers.PubSub, Topics.Pictures.ExifRead, picture, cancellationToken);
+        await _publisherClient.PublishEventAsync(Topics.Pictures.ExifRead, picture, cancellationToken);
 
         return ResultCodes.Ok;
     }

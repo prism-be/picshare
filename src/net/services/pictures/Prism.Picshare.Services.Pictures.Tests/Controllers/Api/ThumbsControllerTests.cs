@@ -5,10 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -34,11 +32,11 @@ public class ThumbsControllerTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.OrganisationId).Returns(organisationId);
 
-        var daprClient = new Mock<DaprClient>();
+        var blobClient = new Mock<BlobClient>();
 
         // Act
-        var controller = new ThumbsController(logger.Object, userContextAccessor.Object, daprClient.Object);
-        var thumb = await controller.GetThumbs(organisationId, Guid.NewGuid(), 150, 150);
+        var controller = new ThumbsController(logger.Object, userContextAccessor.Object, blobClient.Object);
+        var thumb = await controller.GetThumbs(Guid.NewGuid(), Guid.NewGuid(), 150, 150);
 
         // Assert
         thumb.Should().BeAssignableTo<NotFoundResult>();
@@ -55,12 +53,12 @@ public class ThumbsControllerTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.OrganisationId).Returns(organisationId);
 
-        var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "get"), Samples.SmallImage, new Dictionary<string, string>()));
+        var blobClient = new Mock<BlobClient>();
+        blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Samples.SmallImage);
 
         // Act
-        var controller = new ThumbsController(logger.Object, userContextAccessor.Object, daprClient.Object);
+        var controller = new ThumbsController(logger.Object, userContextAccessor.Object, blobClient.Object);
         var thumb = await controller.GetThumbs(organisationId, Guid.NewGuid(), 150, 150);
 
         // Assert
@@ -78,10 +76,10 @@ public class ThumbsControllerTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.OrganisationId).Returns(organisationId);
 
-        var daprClient = new Mock<DaprClient>();
+        var blobClient = new Mock<BlobClient>();
 
         // Act
-        var controller = new ThumbsController(logger.Object, userContextAccessor.Object, daprClient.Object);
+        var controller = new ThumbsController(logger.Object, userContextAccessor.Object, blobClient.Object);
         var thumb = await controller.GetThumbs(Guid.NewGuid(), Guid.NewGuid(), 150, 150);
 
         // Assert

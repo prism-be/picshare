@@ -7,8 +7,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Acme.Dapr.Extensions.UnitTesting;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,9 +14,8 @@ using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Mailing.Commands;
-using Prism.Picshare.Services.Mailing.Model;
+using Prism.Picshare.UnitTests;
 using Xunit;
-using Stores = Prism.Picshare.Services.Mailing.Model.Stores;
 
 namespace Prism.Picshare.Services.Mailing.Tests.Commands;
 
@@ -35,11 +32,12 @@ public class RegisterConfirmationValidationTests
         {
             Consumed = true
         };
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
+        var publisherClient = new Mock<PublisherClient>();
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
 
         // Act
-        var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), daprClient.Object);
+        var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(new RegisterConfirmationValidation(action.Key), CancellationToken.None);
 
         // Assert
@@ -53,10 +51,11 @@ public class RegisterConfirmationValidationTests
         var key = Guid.NewGuid();
         var user = new User();
         var action = new MailAction<User>(key, MailActionType.ConfirmUserRegistration, user);
-        var daprClient = new Mock<DaprClient>();
+        var publisherClient = new Mock<PublisherClient>();
+        var storeClient = new Mock<StoreClient>();
 
         // Act
-        var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), daprClient.Object);
+        var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(new RegisterConfirmationValidation(action.Key), CancellationToken.None);
 
         // Assert
@@ -70,17 +69,18 @@ public class RegisterConfirmationValidationTests
         var key = Guid.NewGuid();
         var user = new User();
         var action = new MailAction<User>(key, MailActionType.ConfirmUserRegistration, user);
-        var daprClient = new Mock<DaprClient>();
-        daprClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
+        var publisherClient = new Mock<PublisherClient>();
+        var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
 
         // Act
-        var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), daprClient.Object);
+        var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
         var result = await handler.Handle(new RegisterConfirmationValidation(action.Key), CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
-        daprClient.VerifyPublishEvent<User>(Publishers.PubSub, Topics.Email.Validated);
-        daprClient.VerifySaveState<MailAction<User>>(Stores.MailActions);
+        publisherClient.VerifyPublishEvent<User>(Topics.Email.Validated);
+        storeClient.VerifySaveState<MailAction<User>>(Stores.MailActions);
     }
 
     [Fact]

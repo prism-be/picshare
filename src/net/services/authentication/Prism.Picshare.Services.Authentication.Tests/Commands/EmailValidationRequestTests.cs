@@ -4,14 +4,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Acme.Dapr.Extensions.UnitTesting;
-using Dapr.Client;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.UnitTests;
 
 namespace Prism.Picshare.Services.Authentication.Tests.Commands;
 
@@ -22,12 +21,12 @@ public class EmailValidationRequestTests
     {
         // Arrange
         var logger = new Mock<ILogger<EmailValidatedRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<StoreClient>();
 
         var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
 
         // Act
-        var handler = new EmailValidatedRequestHandler(logger.Object, daprClient.Object);
+        var handler = new EmailValidatedRequestHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -39,22 +38,22 @@ public class EmailValidationRequestTests
     {
         // Arrange
         var logger = new Mock<ILogger<EmailValidatedRequestHandler>>();
-        var daprClient = new Mock<DaprClient>();
+        var storeClient = new Mock<StoreClient>();
 
         var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
-        daprClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(request.OrganisationId, request.UserId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(request.OrganisationId, request.UserId), new User
         {
             OrganisationId = request.OrganisationId,
             Id = request.UserId
         });
 
         // Act
-        var handler = new EmailValidatedRequestHandler(logger.Object, daprClient.Object);
+        var handler = new EmailValidatedRequestHandler(logger.Object, storeClient.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
-        daprClient.VerifySaveState<User>(Stores.Users);
+        storeClient.VerifySaveState<User>(Stores.Users);
     }
 
     [Fact]

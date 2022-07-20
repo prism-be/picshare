@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Dapr.Client;
 using MediatR;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Dapr;
@@ -22,15 +21,15 @@ public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>
 
 public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, Token?>
 {
-    private readonly DaprClient _daprClient;
+    private readonly StoreClient _storeClient;
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<GenerateTokenRequestHandler> _logger;
 
-    public RefreshTokenRequestHandler(DaprClient daprClient, JwtConfiguration jwtConfiguration, ILogger<GenerateTokenRequestHandler> logger)
+    public RefreshTokenRequestHandler(JwtConfiguration jwtConfiguration, ILogger<GenerateTokenRequestHandler> logger, StoreClient storeClient)
     {
-        _daprClient = daprClient;
         _jwtConfiguration = jwtConfiguration;
         _logger = logger;
+        _storeClient = storeClient;
     }
 
     public async Task<Token?> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
@@ -43,7 +42,7 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
         }
 
         var key = principal.Claims.SingleOrDefault(x => x.Type == "Key")?.Value ?? Guid.Empty.ToString();
-        var user = await _daprClient.GetStateAsync<User>(Stores.Users, key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
 
         if (user == null)
         {

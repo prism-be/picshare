@@ -25,11 +25,11 @@ public class UserContextAccessor : IUserContextAccessor
         _contextAccessor = contextAccessor;
     }
 
-    public bool IsAuthenticated => _contextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
+    public bool IsAuthenticated => _contextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true;
 
-    public Guid Id => Guid.Parse(_contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
+    public Guid Id => Guid.Parse(_contextAccessor.HttpContext?.User.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
 
-    public Guid OrganisationId => Guid.Parse(_contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
+    public Guid OrganisationId => Guid.Parse(_contextAccessor.HttpContext?.User.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
 
-    public string Name => _contextAccessor.HttpContext.User?.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
+    public string Name => _contextAccessor.HttpContext?.User.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
 }

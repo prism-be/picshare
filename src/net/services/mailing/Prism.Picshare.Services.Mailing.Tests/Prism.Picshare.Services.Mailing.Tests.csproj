@@ -8,11 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Acme.Dapr.Extensions.UnitTesting" Version="1.0.0.4"/>
-        <PackageReference Include="FluentAssertions" Version="6.7.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0"/>
-        <PackageReference Include="Moq" Version="4.18.1"/>
-        <PackageReference Include="xunit" Version="2.4.1"/>
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+        <PackageReference Include="Moq" Version="4.18.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -24,11 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Prism.Picshare.Services.Mailing\Prism.Picshare.Services.Mailing.csproj"/>
+        <ProjectReference Include="..\..\..\libs\Prism.Picshare.UnitTests\Prism.Picshare.UnitTests.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Services.Mailing\Prism.Picshare.Services.Mailing.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Templates\en-unit-test.txt"/>
+        <None Remove="Templates\en-unit-test.txt" />
         <Content Include="Templates\en-unit-test.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
