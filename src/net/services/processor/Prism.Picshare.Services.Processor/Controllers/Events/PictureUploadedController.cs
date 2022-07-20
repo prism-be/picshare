@@ -25,7 +25,7 @@ public class PictureUploadedController : Controller
         _mediator = mediator;
         _publisherClient = publisherClient;
     }
-    
+
     [AllowAnonymous]
     [HttpPost(Topics.RoutePrefix + Topics.Pictures.Uploaded)]
     [Topic(Publishers.PubSub, Topics.Pictures.Uploaded)]
