@@ -48,9 +48,9 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
 
     public async Task<ResultCodes> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
-        var organisation = await _storeClient.GetStateNullableAsync<Organisation>(Stores.OrganisationsName, request.Organisation, cancellationToken);
+        var organisationId = await _storeClient.GetStateNullableAsync<SingleId>(Stores.OrganisationsName, request.Organisation, cancellationToken);
 
-        if (organisation != null)
+        if (organisationId != null)
         {
             return ResultCodes.ExistingOrganisation;
         }
@@ -62,10 +62,15 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
             return ResultCodes.ExistingUsername;
         }
 
-        organisation = new Organisation
+        var organisation = new Organisation
         {
             Id = Guid.NewGuid(),
             Name = request.Organisation
+        };
+
+        organisationId = new SingleId
+        {
+            Id = organisation.Id
         };
 
         credentials = new Credentials
@@ -85,7 +90,7 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
             Name = request.Name
         };
 
-        await _storeClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisation, cancellationToken);
+        await _storeClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisationId, cancellationToken);
         await _storeClient.SaveStateAsync(organisation.Id.ToString(), organisation, cancellationToken);
         await _storeClient.SaveStateAsync(credentials.Login, credentials, cancellationToken);
         await _storeClient.SaveStateAsync(user.Key, user, cancellationToken);
