@@ -39,7 +39,7 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
 
         var flow = await _storeClient.GetStateAsync<Flow>(request.OrganisationId.ToString(), cancellationToken);
 
-        if (flow.OrganisationId == default)
+        if (flow.OrganisationId == Guid.Empty)
         {
             flow.OrganisationId = request.OrganisationId;
         }
