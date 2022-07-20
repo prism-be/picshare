@@ -16,12 +16,24 @@ export const appInsights = new ApplicationInsights({
     }
 });
 
-fetch('/api/authentication/insights')
-    .then((response) => {
-        response.json().then(data => {
-            appInsights.config.instrumentationKey = data.instrumentationKey;
-            appInsights.config.connectionString = data.connectionString;
-            appInsights.loadAppInsights();
-            appInsights.addTelemetryInitializer(telemetryInitializer);
-        })
-    });
+let appInsightsLoaded = false;
+
+export const loadAppInsights = () => {
+    
+    if (appInsightsLoaded)
+    {
+        return;
+    }
+
+    appInsightsLoaded = true;
+    
+    fetch('/api/authentication/insights')
+        .then((response) => {
+            response.json().then(data => {
+                appInsights.config.instrumentationKey = data.instrumentationKey;
+                appInsights.config.connectionString = data.connectionString;
+                appInsights.loadAppInsights();
+                appInsights.addTelemetryInitializer(telemetryInitializer);
+            })
+        });
+}

@@ -5,8 +5,9 @@ import Head from "next/head";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {SWRConfig} from "swr";
 import {withAITracking} from "@microsoft/applicationinsights-react-js";
-import {reactPlugin} from "../lib/AppInsights";
+import {loadAppInsights, reactPlugin} from "../lib/AppInsights";
 import {getData} from "../lib/ajaxHelper";
+import {useEffect} from "react";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -17,6 +18,10 @@ export const getStaticProps = async ({locale}: any) => ({
 const MyApp = ({Component, pageProps}: AppProps) => {
 
     const {t} = useTranslation('common')
+    
+    useEffect(() => {
+        loadAppInsights();
+    }, []);
 
     return <>
         <Head>
@@ -25,7 +30,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             <link rel="icon" type="image/png" href="/favicon.png"/>
 
         </Head>
-        <SWRConfig value={{fetcher: getData}}>
+        <SWRConfig>
             <Component {...pageProps} />
         </SWRConfig>
     </>
