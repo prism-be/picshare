@@ -25,8 +25,26 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
 
     const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
 
+    let touchStartX = 0;
+    const onTouchStart = (event: React.Touch) => {
+        touchStartX = event.pageX;
+    }
+
+    const onTouchEnd = (event: React.Touch) => {
+        const swipeLength = event.pageX - touchStartX;
+
+        if (swipeLength < 0) {
+            previousPictureZoom();
+        }
+
+        if (swipeLength > 0) {
+            nextPictureZoom();
+        }
+    }
+
     return <>
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-50 overflow-auto bg-gray-600 flex">
+        <div className="fixed top-0 left-0 right-0 bottom-0 z-50 overflow-auto bg-gray-600 flex"
+             onTouchStart={(e) => onTouchStart(e.changedTouches[0])} onTouchEnd={(e) => onTouchEnd(e.changedTouches[0])}>
             <div onClick={() => nextPictureZoom()} className="grow relative opacity-100 m-1 cursor-pointer">
                 <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id}/>
             </div>
