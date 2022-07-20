@@ -57,6 +57,9 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
             <div className={"h-8 absolute right-0 left-0 bottom-0 text-center text-sm text-gray-200 opacity-60"}>
                 {pictureInfo.data.name}
             </div>
+            <div onClick={() => togglePictureZoom(picture)} className={"w-8 h-8 m-1 cursor-pointer flex absolute right-0 top-0"}>
+                <span className="material-icons m-auto text-gray-500">close_fullscreen</span>
+            </div>
         </div>
     </>
 }
