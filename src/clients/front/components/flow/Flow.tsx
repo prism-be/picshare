@@ -1,5 +1,5 @@
 ﻿import {useEffect, useState} from "react";
-import {getData, IFlow, IPictureSummary, performRefreshToken} from "../../lib/ajaxHelper";
+import {getData, IFlow, IPictureSummary} from "../../lib/ajaxHelper";
 import {Thumbnail} from "./Thumbnail";
 import useSWR from "swr";
 import {format, parseISO, parseJSON} from "date-fns";
@@ -8,8 +8,6 @@ import {PictureZoom} from "./PictureZoom";
 import {appInsights} from "../../lib/AppInsights";
 
 const getFlow = async (route: string): Promise<IFlow> => {
-
-    await performRefreshToken();
 
     const response = await getData(route);
 
@@ -36,15 +34,13 @@ const Flow = () => {
     const [groupedFlows, setGroupedFlows] = useState<IGroupedFlow[]>([]);
     const [pictures, setPictures] = useState<IPictureSummary[]>([]);
     const [selectedPictures, setSelectedPictures] = useState<string[]>([]);
-    const [zoomPicture, setZoomPicture] = useState('');
-    const [organisationId, setOrganisationId] = useState('');
+    const [zoomPicture, setZoomPicture] = useState<IPictureSummary | null>(null);
 
     useEffect(() => {
         if (flow) {
 
             let data: IGroupedFlow[] = [];
 
-            setOrganisationId(flow.organisationId);
             setPictures(flow.pictures);
 
             flow.pictures.forEach((picture) => {
@@ -81,64 +77,59 @@ const Flow = () => {
         setSelectedPictures(selectedPictures);
     }
 
-    const togglePictureZoom = (id: string) => {
+    const togglePictureZoom = (picture: IPictureSummary) => {
 
-        if (id === zoomPicture) {
-            displayAndTrackPicture('');
+        if (picture.id === zoomPicture?.id) {
+            displayAndTrackPicture(null);
             return;
         }
 
-        displayAndTrackPicture(id);
+        displayAndTrackPicture(picture);
     }
     
-    const displayAndTrackPicture = (id: string) => {
-        setZoomPicture(id);
+    const displayAndTrackPicture = (picture: IPictureSummary | null) => {
+        
+        if (picture == null)
+        {
+            setZoomPicture(null);
+            return;
+        }
+        
+        setZoomPicture(picture);
         
         appInsights.trackPageView({
-            uri: 'flow/' + id
+            uri: 'flow/' + picture.organisationId + "/" + picture.id
         });
     }
 
     const nextPictureZoom = () => {
-        if (zoomPicture === '') {
+        if (zoomPicture == null) {
             return;
         }
 
-        const current = pictures.find(x => x.id === zoomPicture);
-
-        if (current == undefined) {
-            return;
-        }
-
-        let position = pictures.indexOf(current);
+        let position = pictures.indexOf(zoomPicture);
         position++;
 
         if (position >= pictures.length) {
             position = 0;
         }
 
-        displayAndTrackPicture(pictures[position].id);
+        displayAndTrackPicture(pictures[position]);
     }
 
     const previousPictureZoom = () => {
-        if (zoomPicture === '') {
+        if (zoomPicture === null) {
             return;
         }
 
-        const current = pictures.find(x => x.id === zoomPicture);
-
-        if (current == undefined) {
-            return;
-        }
-
-        let position = pictures.indexOf(current);
+        let position = pictures.indexOf(zoomPicture);
         position--;
 
         if (position < 0) {
             position = pictures.length - 1;
         }
 
-        displayAndTrackPicture(pictures[position].id);
+        displayAndTrackPicture(pictures[position]);
     }
 
     return <>
@@ -159,7 +150,7 @@ const Flow = () => {
                 </div>
             </div>)}
 
-            {zoomPicture && <PictureZoom organisationId={organisationId} pictureId={zoomPicture} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
+            {zoomPicture && <PictureZoom picture={zoomPicture} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
 
         </div>
     </>

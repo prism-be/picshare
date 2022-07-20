@@ -7,6 +7,7 @@ import {SWRConfig} from "swr";
 import {withAITracking} from "@microsoft/applicationinsights-react-js";
 import {loadAppInsights, reactPlugin} from "../lib/AppInsights";
 import {useEffect} from "react";
+import {getData} from "../lib/ajaxHelper";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -17,7 +18,7 @@ export const getStaticProps = async ({locale}: any) => ({
 const MyApp = ({Component, pageProps}: AppProps) => {
 
     const {t} = useTranslation('common')
-    
+
     useEffect(() => {
         loadAppInsights();
     }, []);
@@ -25,11 +26,8 @@ const MyApp = ({Component, pageProps}: AppProps) => {
     return <>
         <Head>
             <title>{t('header.title')}</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <link rel="icon" type="image/png" href="/favicon.png"/>
-
         </Head>
-        <SWRConfig>
+        <SWRConfig value={{fetcher: getData}}>
             <Component {...pageProps} />
         </SWRConfig>
     </>

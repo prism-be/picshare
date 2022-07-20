@@ -14,6 +14,8 @@ public interface IUserContextAccessor
     Guid Id { get; }
     Guid OrganisationId { get; }
     string Name { get; }
+
+    bool HasAccess(Guid organisationId);
 }
 
 public class UserContextAccessor : IUserContextAccessor
@@ -32,4 +34,9 @@ public class UserContextAccessor : IUserContextAccessor
     public Guid OrganisationId => Guid.Parse(_contextAccessor.HttpContext?.User.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
 
     public string Name => _contextAccessor.HttpContext?.User.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
+
+    public bool HasAccess(Guid organisationId)
+    {
+        return OrganisationId == organisationId;
+    }
 }
