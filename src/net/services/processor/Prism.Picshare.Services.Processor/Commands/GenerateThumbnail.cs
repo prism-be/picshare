@@ -28,6 +28,7 @@ public class GenerateThumbnailValidator : AbstractValidator<GenerateThumbnail>
 
 public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, ResultCodes>
 {
+    private static readonly object LockMagick = new();
     private readonly BlobClient _blobClient;
     private readonly ILogger<GenerateThumbnailHandler> _logger;
 
@@ -37,7 +38,22 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         _blobClient = blobClient;
     }
 
-    public async Task<ResultCodes> Handle(GenerateThumbnail request, CancellationToken cancellationToken)
+    public Task<ResultCodes> Handle(GenerateThumbnail request, CancellationToken cancellationToken)
+    {
+        lock (LockMagick)
+        {
+            var task = ProcessRequest(request, cancellationToken);
+            task.Wait(cancellationToken);
+            return Task.FromResult(task.Result);
+        }
+    }
+
+    private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
+    {
+        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
+    }
+
+    private async Task<ResultCodes> ProcessRequest(GenerateThumbnail request, CancellationToken cancellationToken)
     {
         var blobName = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId);
 
@@ -88,10 +104,5 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         });
 
         return ResultCodes.Ok;
-    }
-
-    private void OnRetry(Exception ex, TimeSpan delay, int retryAttempt, Context _)
-    {
-        _logger.LogError(ex, "The policy needs a retry. Attempts: {attemps}, delay;: {delay}", retryAttempt, delay);
     }
 }
