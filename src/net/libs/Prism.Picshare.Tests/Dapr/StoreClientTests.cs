@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapr.Client;
@@ -122,7 +123,7 @@ public class StoreClientTests
         await storeClient.SaveStateAsync(data.Key, data);
 
         // Assert
-        daprClient.Verify(x => x.SaveStateAsync(Stores.Users, data.Key, data, null, null, It.IsAny<CancellationToken>()));
+        daprClient.Verify(x => x.SaveStateAsync(Stores.Users, data.Key, data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
     }
 
     [Fact]
@@ -142,6 +143,6 @@ public class StoreClientTests
         await storeClient.SaveStateAsync(Stores.Albums, data.Key, data);
 
         // Assert
-        daprClient.Verify(x => x.SaveStateAsync(Stores.Albums, data.Key, data, null, null, It.IsAny<CancellationToken>()));
+        daprClient.Verify(x => x.SaveStateAsync(Stores.Albums, data.Key, data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
     }
 }
