@@ -116,7 +116,13 @@ public sealed class DaprStoreClient : StoreClient
 
         try
         {
-            await _daprClient.SaveStateAsync(store, key, data, cancellationToken: cancellationToken);
+            var metaData = new Dictionary<string, string>();
+            if (data is EntityReference entityReference)
+            {
+                metaData.Add("partitionKey", entityReference.OrganisationId.ToString());
+            }
+            
+            await _daprClient.SaveStateAsync(store, key, data, metadata: metaData, cancellationToken: cancellationToken);
             success = true;
         }
         finally
