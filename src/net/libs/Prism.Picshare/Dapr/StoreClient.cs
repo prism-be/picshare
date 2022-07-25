@@ -13,7 +13,7 @@ namespace Prism.Picshare.Dapr;
 
 public abstract class StoreClient
 {
-    private static readonly Dictionary<Type, string> StoresMatching = new()
+    protected static readonly Dictionary<Type, string> StoresMatching = new()
     {
         {
             typeof(Album), Stores.Albums
@@ -36,6 +36,13 @@ public abstract class StoreClient
         {
             typeof(User), Stores.Users
         }
+    };
+
+    protected static readonly HashSet<Type> OrganisationScopedTypes = new()
+    {
+        typeof(Album),
+        typeof(Picture),
+        typeof(User)
     };
 
     public async Task<T> GetStateAsync<T>(string key, CancellationToken cancellationToken = default) where T : class, new()
@@ -95,8 +102,15 @@ public sealed class DaprStoreClient : StoreClient
 
         try
         {
+            var metaData = new Dictionary<string, string>();
 
-            var result = await _daprClient.GetStateAsync<T>(store, key, cancellationToken: cancellationToken);
+            if (OrganisationScopedTypes.Contains(typeof(T)))
+            {
+                var organisationId = key.Split('+')[0];
+                metaData.Add("partitionKey", organisationId);
+            }
+
+            var result = await _daprClient.GetStateAsync<T>(store, key, metadata: metaData, cancellationToken: cancellationToken);
             success = true;
             return result;
         }
@@ -117,11 +131,12 @@ public sealed class DaprStoreClient : StoreClient
         try
         {
             var metaData = new Dictionary<string, string>();
+
             if (data is EntityReference entityReference)
             {
                 metaData.Add("partitionKey", entityReference.OrganisationId.ToString());
             }
-            
+
             await _daprClient.SaveStateAsync(store, key, data, metadata: metaData, cancellationToken: cancellationToken);
             success = true;
         }
