@@ -10,6 +10,7 @@ import InputText from "../../../components/InputText";
 import Alert from "../../../components/Alert";
 import HtmlLink from "../../../components/HtmlLink";
 import Button from "../../../components/Button";
+import {wakeMailing} from "../../../lib/ajaxHelper";
 
 export const getStaticProps = async ({locale}: any) => ({
     props: {
@@ -49,12 +50,12 @@ const Register = () => {
                 'Content-Type': 'application/json'
             },
 
-            //make sure to serialize your JSON body
             body: JSON.stringify(data)
         });
 
         if (response.status === 204) {
             setSuccess(true);
+            wakeMailing();
             return;
         }
 
