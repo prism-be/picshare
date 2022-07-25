@@ -23,7 +23,15 @@ public static class ServiceCollectionExtensions
             });
         });
 
-        services.AddTransient<BlobClient, DaprBlobClient>();
+        if (string.IsNullOrWhiteSpace(EnvironmentConfiguration.GetConfiguration("AZURE_BLOB_CONNECTION_STRING")))
+        {
+            services.AddTransient<BlobClient, DaprBlobClient>();
+        }
+        else
+        {
+            services.AddTransient<BlobClient, AzureBlobClient>();
+        }
+
         services.AddTransient<StoreClient, DaprStoreClient>();
         services.AddTransient<PublisherClient, DaprPublisherClient>();
     }
