@@ -38,7 +38,7 @@ public class DaprStoreClient : StoreClient
                 metaData.Add("partitionKey", organisationId);
             }
 
-            var result = await _daprClient.GetStateAsync<T>(store, key, metadata: metaData, cancellationToken: cancellationToken);
+            var result = await _daprClient.GetStateAsync<T>("state" + store, key, metadata: metaData, cancellationToken: cancellationToken);
             success = true;
             return result;
         }
@@ -65,7 +65,7 @@ public class DaprStoreClient : StoreClient
                 metaData.Add("partitionKey", entityReference.OrganisationId.ToString());
             }
 
-            await _daprClient.SaveStateAsync(store, key, data, metadata: metaData, cancellationToken: cancellationToken);
+            await _daprClient.SaveStateAsync("state" + store, key, data, metadata: metaData, cancellationToken: cancellationToken);
             success = true;
         }
         finally

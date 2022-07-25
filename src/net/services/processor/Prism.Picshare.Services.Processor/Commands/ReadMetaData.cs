@@ -7,7 +7,6 @@
 using FluentValidation;
 using ImageMagick;
 using MediatR;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Extensions;

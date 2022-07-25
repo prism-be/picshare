@@ -9,7 +9,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Pictures.Controllers.Api;
 using Prism.Picshare.UnitTests;

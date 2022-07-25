@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
 using Prism.Picshare.UnitTests;

@@ -7,7 +7,6 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Services.Processor.Commands;
 
 namespace Prism.Picshare.Services.Processor.Tests.Commands;

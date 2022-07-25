@@ -7,7 +7,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Mailing.Commands;
 using Prism.Picshare.Services.Mailing.Workers;

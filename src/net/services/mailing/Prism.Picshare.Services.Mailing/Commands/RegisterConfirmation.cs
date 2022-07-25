@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Mailing.Workers;
 

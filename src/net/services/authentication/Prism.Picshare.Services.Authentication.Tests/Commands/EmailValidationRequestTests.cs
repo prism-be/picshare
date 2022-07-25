@@ -7,7 +7,6 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services.Authentication.Commands;
 using Prism.Picshare.UnitTests;

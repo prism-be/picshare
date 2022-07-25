@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Moq;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Pictures.Commands.Admin;

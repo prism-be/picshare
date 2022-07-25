@@ -7,7 +7,6 @@
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services.Authentication.Commands;

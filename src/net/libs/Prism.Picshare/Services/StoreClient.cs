@@ -7,7 +7,6 @@
 using System.Diagnostics;
 using Dapr.Client;
 using Microsoft.ApplicationInsights;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services;

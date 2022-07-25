@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.Json;
 using Dapr.Client;
 using Microsoft.ApplicationInsights;
-using Prism.Picshare.Dapr;
 
 namespace Prism.Picshare.Services.Dapr;
 
@@ -33,7 +32,7 @@ public class DaprBlobClient : BlobClient
         try
         {
             var dataBase64 = Convert.ToBase64String(data);
-            await _daprClient.InvokeBindingAsync(Stores.Data, "create", dataBase64, new Dictionary<string, string>
+            await _daprClient.InvokeBindingAsync("datastore", "create", dataBase64, new Dictionary<string, string>
             {
                 {
                     "blobName", blobName
@@ -48,7 +47,7 @@ public class DaprBlobClient : BlobClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("BINDING", Stores.Data, "CREATE " + blobName, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("BINDING", "datastore", "CREATE " + blobName, startTime, watch.Elapsed, success);
         }
     }
 
@@ -56,7 +55,7 @@ public class DaprBlobClient : BlobClient
     {
         var items = new List<string>();
 
-        var bindingRequest = new BindingRequest(Stores.Data, "list");
+        var bindingRequest = new BindingRequest("datastore", "list");
         bindingRequest.Metadata.Add("prefix", organisationId + "/");
         bindingRequest.Metadata.Add("fileName", organisationId + "/");
 
@@ -75,7 +74,7 @@ public class DaprBlobClient : BlobClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("BINDING", Stores.Data, "LIST " + organisationId, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("BINDING", "datastore", "LIST " + organisationId, startTime, watch.Elapsed, success);
         }
 
         var data = JsonDocument.Parse(Encoding.Default.GetString(response.Data.ToArray()));
@@ -99,7 +98,7 @@ public class DaprBlobClient : BlobClient
 
     public override async Task<byte[]> ReadAsync(string blobName, CancellationToken cancellationToken = default)
     {
-        var bindingRequest = new BindingRequest(Stores.Data, "get");
+        var bindingRequest = new BindingRequest("datastore", "get");
         bindingRequest.Metadata.Add("blobName", blobName);
         bindingRequest.Metadata.Add("fileName", blobName);
 
@@ -117,7 +116,7 @@ public class DaprBlobClient : BlobClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("BINDING", Stores.Data, "GET " + blobName, startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("BINDING", "datastore", "GET " + blobName, startTime, watch.Elapsed, success);
         }
     }
 }

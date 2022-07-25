@@ -8,7 +8,6 @@ using FluentValidation;
 using ImageMagick;
 using MediatR;
 using Polly;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Extensions;
 
 namespace Prism.Picshare.Services.Processor.Commands;

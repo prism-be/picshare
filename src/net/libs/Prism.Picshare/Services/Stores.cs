@@ -4,17 +4,16 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Dapr;
+namespace Prism.Picshare.Services;
 
 public static class Stores
 {
-    public const string Albums = "statealbums";
-    public const string Credentials = "statecredentials";
-    public const string Data = "datastore";
-    public const string Flow = "stateflows";
-    public const string MailActions = "statemailactions";
-    public const string Organisations = "stateorganisations";
-    public const string OrganisationsName = "stateorganisationsnames";
-    public const string Pictures = "statepictures";
-    public const string Users = "stateusers";
+    public const string Albums = "albums";
+    public const string Credentials = "credentials";
+    public const string Flow = "flows";
+    public const string MailActions = "mailactions";
+    public const string Organisations = "organisations";
+    public const string OrganisationsName = "organisationsnames";
+    public const string Pictures = "pictures";
+    public const string Users = "users";
 }

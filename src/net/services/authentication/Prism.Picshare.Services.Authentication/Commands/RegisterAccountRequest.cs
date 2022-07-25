@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
-using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 
