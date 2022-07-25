@@ -52,7 +52,7 @@ public class StoreClientTests
             OrganisationId = Guid.NewGuid()
         };
         var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.GetStateAsync<User>(Stores.Users, data.Key, null, null, It.IsAny<CancellationToken>()))
+        daprClient.Setup(x => x.GetStateAsync<User>(Stores.Users, data.Key, null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
@@ -74,7 +74,7 @@ public class StoreClientTests
             OrganisationId = Guid.NewGuid()
         };
         var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.GetStateAsync<EntityReference>(Stores.Albums, data.Key, null, null, It.IsAny<CancellationToken>()))
+        daprClient.Setup(x => x.GetStateAsync<EntityReference>(Stores.Albums, data.Key, null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 

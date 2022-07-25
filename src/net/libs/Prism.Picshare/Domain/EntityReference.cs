@@ -21,6 +21,6 @@ public class EntityReference
 
     public static string ComputeKey(Guid organisationId, Guid id)
     {
-        return $"{organisationId}#{id}";
+        return $"{organisationId}+{id}";
     }
 }
