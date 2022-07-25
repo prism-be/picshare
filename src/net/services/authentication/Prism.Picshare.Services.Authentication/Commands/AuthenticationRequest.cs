@@ -52,7 +52,8 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
-            var user = await _storeClient.GetStateNullableAsync<User>(credentials.Key, cancellationToken: cancellationToken);
+            var key = EntityReference.ComputeKey(credentials.OrganisationId, credentials.Id);
+            var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
             
             if (user == null)
             {
