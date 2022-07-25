@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Prism.Picshare.Domain;
 
-public class Credentials : EntityReference
+public class Credentials
 {
     public Credentials()
     {
@@ -16,6 +16,12 @@ public class Credentials : EntityReference
         Login = string.Empty;
         PasswordHash = string.Empty;
     }
+
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
+
+    [JsonPropertyName("organisationId")]
+    public Guid OrganisationId { get; set; }
 
     [JsonPropertyName("login")]
     public string Login { get; set; }
