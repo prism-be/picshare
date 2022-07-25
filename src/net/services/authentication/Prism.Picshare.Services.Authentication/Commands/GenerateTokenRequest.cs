@@ -45,11 +45,12 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
             return null;
         }
 
-        var user = await _storeClient.GetStateNullableAsync<User>(credentials.Key, cancellationToken: cancellationToken);
+        var key = EntityReference.ComputeKey(credentials.OrganisationId, credentials.Id);
+        var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
 
         if (user == null)
         {
-            _logger.LogWarning("No user found for key : {key}", credentials.Key);
+            _logger.LogWarning("No user found for key : {key}", key);
             return null;
         }
 
