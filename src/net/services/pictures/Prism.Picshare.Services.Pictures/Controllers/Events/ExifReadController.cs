@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services.Dapr;
 using Prism.Picshare.Services.Pictures.Commands.Pictures;
 
 namespace Prism.Picshare.Services.Pictures.Controllers.Events;

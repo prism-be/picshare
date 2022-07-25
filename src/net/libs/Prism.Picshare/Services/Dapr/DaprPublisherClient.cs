@@ -1,20 +1,15 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "PublisherClient.cs" company = "Prism">
+//  <copyright file = "DaprPublisherClient.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 using System.Diagnostics;
-using System.Text.Json;
 using Dapr.Client;
 using Microsoft.ApplicationInsights;
+using Prism.Picshare.Dapr;
 
-namespace Prism.Picshare.Dapr;
-
-public abstract class PublisherClient
-{
-    public abstract Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default);
-}
+namespace Prism.Picshare.Services.Dapr;
 
 public class DaprPublisherClient : PublisherClient
 {
@@ -42,7 +37,7 @@ public class DaprPublisherClient : PublisherClient
         {
             watch.Stop();
 
-            _telemetryClient.TrackDependency("PUBSUB", Publishers.PubSub, topic , startTime, watch.Elapsed, success);
+            _telemetryClient.TrackDependency("PUBSUB", Publishers.PubSub, topic, startTime, watch.Elapsed, success);
         }
     }
 }

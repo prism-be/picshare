@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Dapr;
+namespace Prism.Picshare.Services.Dapr;
 
 public static class Publishers
 {

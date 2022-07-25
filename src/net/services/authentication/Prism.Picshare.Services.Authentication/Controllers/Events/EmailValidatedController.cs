@@ -12,6 +12,7 @@ using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.Services.Dapr;
 
 namespace Prism.Picshare.Services.Authentication.Controllers.Events;
 

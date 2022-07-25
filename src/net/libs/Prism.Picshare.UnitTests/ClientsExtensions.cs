@@ -6,6 +6,7 @@
 
 using Moq;
 using Prism.Picshare.Dapr;
+using Prism.Picshare.Services;
 
 namespace Prism.Picshare.UnitTests;
 

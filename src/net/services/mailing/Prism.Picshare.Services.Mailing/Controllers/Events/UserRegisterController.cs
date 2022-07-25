@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Prism.Picshare.Dapr;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services.Dapr;
 using Prism.Picshare.Services.Mailing.Commands;
 
 namespace Prism.Picshare.Services.Mailing.Controllers.Events;

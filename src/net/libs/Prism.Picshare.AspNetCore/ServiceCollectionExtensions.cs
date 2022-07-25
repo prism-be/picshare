@@ -6,7 +6,9 @@
 
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
-using Prism.Picshare.Dapr;
+using Prism.Picshare.Services;
+using Prism.Picshare.Services.Azure;
+using Prism.Picshare.Services.Dapr;
 
 namespace Prism.Picshare.AspNetCore;
 

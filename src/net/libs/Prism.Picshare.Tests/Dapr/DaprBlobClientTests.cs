@@ -16,6 +16,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Moq;
 using Prism.Picshare.Dapr;
+using Prism.Picshare.Services.Dapr;
 using Xunit;
 
 namespace Prism.Picshare.Tests.Dapr;
