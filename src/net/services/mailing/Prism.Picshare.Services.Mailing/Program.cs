@@ -46,7 +46,7 @@ app.UseExceptionLogger();
 
 app.MapSubscribeHandler();
 app.UseCloudEvents();
-app.UseHealthChecks("/health");
+app.UseHealthChecks("/api/mailing/health");
 
 app.MapControllers();
 

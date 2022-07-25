@@ -35,7 +35,7 @@ app.UseAuthentication()
 
 app.MapSubscribeHandler();
 app.UseCloudEvents();
-app.UseHealthChecks("/health");
+app.UseHealthChecks("/api/processor/health");
 
 app.MapControllers()
     .RequireAuthorization();
