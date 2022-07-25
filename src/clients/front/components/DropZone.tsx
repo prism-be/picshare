@@ -1,6 +1,6 @@
 ﻿import {useTranslation} from "next-i18next";
 import {DragEvent, useState} from "react";
-import {postFile} from "../lib/ajaxHelper";
+import {postFile, wakeProcessor} from "../lib/ajaxHelper";
 import {useSWRConfig} from "swr";
 
 interface Props {
@@ -74,6 +74,7 @@ const DropZone = ({small}: Props) => {
 
             if (file.type.toLowerCase() === "image/jpeg") {
                 await postFile("/api/pictures/upload", file);
+                wakeProcessor();
                 setTimeout(() => mutate('/api/pictures/flow'), 30000);
             }
         }

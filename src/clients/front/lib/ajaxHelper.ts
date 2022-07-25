@@ -175,3 +175,13 @@ const getAuthorization = (): string => {
 
     return '';
 }
+
+export const wakeMailing = () => {
+    fetch('/api/mailing/health')
+        .then();
+}
+
+export const wakeProcessor = () => {
+    fetch('/api/processor/health')
+        .then();
+}
