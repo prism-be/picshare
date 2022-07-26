@@ -23,7 +23,7 @@ jobs:
           dotnet-version: 6.x
           
       - name: Build
-        workingDirectory: src/net/
+        working-directory: src/net/
         run: |
           dotnet build services/api/Prism.Picshare.AzureServices.Api/Prism.Picshare.AzureServices.Api.csproj --configuration Release --output ./output
           
