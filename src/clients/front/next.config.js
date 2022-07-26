@@ -1,15 +1,12 @@
 /** @type {import('next').NextConfig} */
 
-const {i18n} = require('./next-i18next.config');
-
-
 module.exports = {
     output: 'standalone',
     reactStrictMode: true,
     images: {
-        domains: ['localhost']
+        domains: ['localhost'],
+        loader: 'custom'
     },
-    i18n,
     async rewrites() {
         return [
             {
