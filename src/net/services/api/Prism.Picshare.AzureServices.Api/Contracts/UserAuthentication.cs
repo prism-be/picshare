@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Prism.Picshare.Services.Authentication.Contracts;
+namespace Prism.Picshare.AzureServices.Api.Contracts;
 
 public class UserAuthentication
 {

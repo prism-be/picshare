@@ -4,9 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Diagnostics;
-using Dapr.Client;
-using Microsoft.ApplicationInsights;
 using Prism.Picshare.Domain;
 
 namespace Prism.Picshare.Services;
@@ -45,9 +42,9 @@ public abstract class StoreClient
         typeof(User)
     };
 
-    public async Task<T> GetStateAsync<T>(string key, CancellationToken cancellationToken = default) where T : class, new()
+    public async Task<T> GetStateAsync<T>(string id, CancellationToken cancellationToken = default) where T : class, new()
     {
-        var result = await GetStateNullableAsync<T>(key, cancellationToken);
+        var result = await GetStateNullableAsync<T>(id, cancellationToken);
         return result ?? new T();
     }
 
@@ -57,29 +54,71 @@ public abstract class StoreClient
         return result ?? new T();
     }
 
-    public abstract Task<T?> GetStateNullableAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : class;
+    public abstract Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class;
 
-    public async Task<T?> GetStateNullableAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
+    public async Task<T?> GetStateNullableAsync<T>(Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class
     {
         if (StoresMatching.TryGetValue(typeof(T), out var store))
         {
-            return await GetStateNullableAsync<T>(store, key, cancellationToken);
+            return await GetStateNullableAsync<T>(store, organisationId.ToString(), id.ToString(), cancellationToken);
         }
 
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
 
-    public abstract Task SaveStateAsync<T>(string store, string key, T data, CancellationToken cancellationToken = default);
+    public async Task<T?> GetStateNullableAsync<T>(string store, Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class
+    {
+        return await GetStateNullableAsync<T>(store, organisationId.ToString(), id.ToString(), cancellationToken);
+    }
 
-    public async Task SaveStateAsync<T>(string key, T data, CancellationToken cancellationToken = default)
+    public async Task<T?> GetStateNullableAsync<T>(string partition, string id, CancellationToken cancellationToken = default) where T : class
     {
         if (StoresMatching.TryGetValue(typeof(T), out var store))
         {
-            await SaveStateAsync(store, key, data, cancellationToken);
+            return await GetStateNullableAsync<T>(store, partition, id, cancellationToken);
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public async Task<T?> GetStateNullableAsync<T>(string id, CancellationToken cancellationToken = default) where T : class
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            return await GetStateNullableAsync<T>(store, string.Empty, id, cancellationToken);
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public abstract Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default);
+
+    public async Task SaveStateAsync<T>(string id, T data, CancellationToken cancellationToken = default)
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            await SaveStateAsync(store, string.Empty, id, data, cancellationToken);
+            return;
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public async Task SaveStateAsync<T>(Guid id, T data, CancellationToken cancellationToken = default)
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            var organisationId = string.Empty;
+
+            if (data is EntityReference entityReference)
+            {
+                organisationId = entityReference.OrganisationId.ToString();
+            }
+
+            await SaveStateAsync(store, organisationId, id.ToString(), data, cancellationToken);
             return;
         }
 
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
 }
-

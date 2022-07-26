@@ -6,10 +6,12 @@
 
 using FluentValidation;
 using MediatR;
-using Prism.Picshare.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Security;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Authentication.Commands;
+namespace Prism.Picshare.Commands.Authentication;
 
 public record GenerateTokenRequest(string Login) : IRequest<Token?>;
 
@@ -44,12 +46,11 @@ public class GenerateTokenRequestHandler : IRequestHandler<GenerateTokenRequest,
             return null;
         }
 
-        var key = EntityReference.ComputeKey(credentials.OrganisationId, credentials.Id);
-        var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
+        var user = await _storeClient.GetStateNullableAsync<User>(credentials.OrganisationId, credentials.UserId, cancellationToken: cancellationToken);
 
         if (user == null)
         {
-            _logger.LogWarning("No user found for key : {key}", key);
+            _logger.LogWarning("No user found for key : {key}", credentials.UserId);
             return null;
         }
 

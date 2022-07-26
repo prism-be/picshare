@@ -12,19 +12,19 @@ public class Credentials
 {
     public Credentials()
     {
-        Id = Security.GenerateIdentifier();
-        Login = string.Empty;
+        UserId = Guid.NewGuid();
+        Id = string.Empty;
         PasswordHash = string.Empty;
     }
-
-    [JsonPropertyName("id")]
-    public Guid Id { get; set; }
 
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
 
-    [JsonPropertyName("login")]
-    public string Login { get; set; }
+    [JsonPropertyName("userId")]
+    public Guid UserId { get; set; }
+
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
 
     [JsonPropertyName("passwordHash")]
     public string PasswordHash { get; set; }

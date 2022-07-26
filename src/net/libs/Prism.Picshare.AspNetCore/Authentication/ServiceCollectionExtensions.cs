@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Picshare.Security;
 
 namespace Prism.Picshare.AspNetCore.Authentication;
 

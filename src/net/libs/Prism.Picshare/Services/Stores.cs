@@ -13,7 +13,6 @@ public static class Stores
     public const string Flow = "flows";
     public const string MailActions = "mailactions";
     public const string Organisations = "organisations";
-    public const string OrganisationsName = "organisationsnames";
     public const string Pictures = "pictures";
     public const string Users = "users";
 }

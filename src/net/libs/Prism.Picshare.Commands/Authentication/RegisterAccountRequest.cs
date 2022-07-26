@@ -10,8 +10,10 @@ using Isopoh.Cryptography.Argon2;
 using MediatR;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Security;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Authentication.Commands;
+namespace Prism.Picshare.Commands.Authentication;
 
 public record RegisterAccountRequest(
     [property: JsonPropertyName("login")] string Login,
@@ -47,13 +49,6 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
 
     public async Task<ResultCodes> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
-        var organisationId = await _storeClient.GetStateNullableAsync<SingleId>(Stores.OrganisationsName, request.Organisation, cancellationToken);
-
-        if (organisationId != null)
-        {
-            return ResultCodes.ExistingOrganisation;
-        }
-
         var credentials = await _storeClient.GetStateNullableAsync<Credentials>(request.Login, cancellationToken);
 
         if (credentials != default)
@@ -63,36 +58,30 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
 
         var organisation = new Organisation
         {
-            Id = Guid.NewGuid(),
+            Id = Identifier.Generate(),
             Name = request.Organisation
-        };
-
-        organisationId = new SingleId
-        {
-            Id = organisation.Id
         };
 
         credentials = new Credentials
         {
-            Id = Security.GenerateIdentifier(),
+            UserId = Identifier.Generate(),
             OrganisationId = organisation.Id,
-            Login = request.Login,
+            Id = request.Login,
             PasswordHash = Argon2.Hash(request.Password)
         };
 
         var user = new User
         {
-            Id = credentials.Id,
+            Id = credentials.UserId,
             OrganisationId = organisation.Id,
             Email = request.Email,
             EmailValidated = false,
             Name = request.Name
         };
 
-        await _storeClient.SaveStateAsync(Stores.OrganisationsName, organisation.Name, organisationId, cancellationToken);
         await _storeClient.SaveStateAsync(organisation.Id.ToString(), organisation, cancellationToken);
-        await _storeClient.SaveStateAsync(credentials.Login, credentials, cancellationToken);
-        await _storeClient.SaveStateAsync(user.Key, user, cancellationToken);
+        await _storeClient.SaveStateAsync(credentials.Id, credentials, cancellationToken);
+        await _storeClient.SaveStateAsync(user.Id, user, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.User.Register, user, cancellationToken);
 
         return ResultCodes.Ok;

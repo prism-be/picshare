@@ -36,7 +36,7 @@ public class UpdateFlowSummaryTests
 
         var flow = new Flow
         {
-            OrganisationId = organisationId,
+            Id = organisationId,
             Pictures = new List<PictureSummary>
             {
                 new()
@@ -50,7 +50,7 @@ public class UpdateFlowSummaryTests
 
         var logger = new Mock<ILogger<UpdateFlowSummaryHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Flow, flow.OrganisationId.ToString(), flow);
+        storeClient.SetupGetStateAsync(Stores.Flow, flow.Id.ToString(), flow);
 
         // Act
         var handler = new UpdateFlowSummaryHandler(logger.Object, storeClient.Object);
@@ -103,7 +103,7 @@ public class UpdateFlowSummaryTests
 
         var flow = new Flow
         {
-            OrganisationId = organisationId,
+            Id = organisationId,
             Pictures = new List<PictureSummary>
             {
                 new()
@@ -116,7 +116,7 @@ public class UpdateFlowSummaryTests
 
         var logger = new Mock<ILogger<UpdateFlowSummaryHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Flow, flow.OrganisationId.ToString(), flow);
+        storeClient.SetupGetStateAsync(Stores.Flow, flow.Id.ToString(), flow);
 
         // Act
         var handler = new UpdateFlowSummaryHandler(logger.Object, storeClient.Object);

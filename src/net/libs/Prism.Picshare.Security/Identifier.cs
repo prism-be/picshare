@@ -6,11 +6,11 @@
 
 using System.Security.Cryptography;
 
-namespace Prism.Picshare;
+namespace Prism.Picshare.Security;
 
-public static class Security
+public static class Identifier
 {
-    public static Guid GenerateIdentifier()
+    public static Guid Generate()
     {
         return new Guid(RandomNumberGenerator.GetBytes(16));
     }

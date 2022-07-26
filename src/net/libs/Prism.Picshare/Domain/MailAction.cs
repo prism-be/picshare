@@ -33,8 +33,6 @@ public class MailAction<T>
     [JsonPropertyName("actionType")]
     public MailActionType ActionType { get; set; }
 
-    public string Key => $"{(int)ActionType}-{Id}";
-
     [JsonPropertyName("data")]
     public T Data { get; set; }
 }

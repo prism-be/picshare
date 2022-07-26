@@ -8,11 +8,13 @@ using System.Data.Common;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Prism.Picshare.AzureServices.Middlewares;
 
 namespace Prism.Picshare.AzureServices.Api.Config;
 
 public class Insights
 {
+    [Authorize(AllowAnonymous = true)]
     [Function(nameof(Config) + "." + nameof(Insights))]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "config/insights")] HttpRequestData req, FunctionContext executionContext)
     {

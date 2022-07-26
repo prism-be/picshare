@@ -9,6 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.1.0" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
       <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.8.0" />
       <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
       <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" />
@@ -17,13 +19,20 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Authentication" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Update="host.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="local.settings.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\libs\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj" />
+      <ProjectReference Include="..\..\..\libs\Prism.Picshare.AzureServices\Prism.Picshare.AzureServices.csproj" />
+      <ProjectReference Include="..\..\..\libs\Prism.Picshare.Commands\Prism.Picshare.Commands.csproj" />
+      <ProjectReference Include="..\..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj" />
+      <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 
 </Project>

@@ -54,21 +54,5 @@ public class LoginController : Controller
 
         return Unauthorized();
     }
-
-    [AllowAnonymous]
-    [HttpPost("/api/authentication/register")]
-    public async Task<IActionResult> Register([FromBody] RegisterAccountRequest request)
-    {
-        var responseCode = await _mediator.Send(request);
-
-        if (responseCode == ResultCodes.Ok)
-        {
-            return NoContent();
-        }
-
-        return Conflict(new
-        {
-            code = responseCode
-        });
-    }
+    
 }

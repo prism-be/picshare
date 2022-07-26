@@ -54,9 +54,9 @@ public class GenerateTokenRequestTests
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
-            Id = userId,
+            UserId = userId,
             OrganisationId = organisationId,
-            Login = login
+            Id = login
         });
         storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
         {
@@ -93,9 +93,9 @@ public class GenerateTokenRequestTests
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
         {
-            Id = userId,
+            UserId = userId,
             OrganisationId = organisationId,
-            Login = login
+            Id = login
         });
 
         // Act

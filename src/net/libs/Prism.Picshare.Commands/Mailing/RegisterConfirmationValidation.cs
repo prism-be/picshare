@@ -6,18 +6,20 @@
 
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Mailing.Commands;
+namespace Prism.Picshare.Commands.Mailing;
 
-public record RegisterConfirmationValidation(string Key) : IRequest<ResultCodes>;
+public record RegisterConfirmationValidation(Guid Id) : IRequest<ResultCodes>;
 
 public class RegisterConfirmationValidationValidation : AbstractValidator<RegisterConfirmationValidation>
 {
     public RegisterConfirmationValidationValidation()
     {
-        RuleFor(x => x.Key).NotEmpty().MaximumLength(Constants.MaxShortStringLength);
+        RuleFor(x => x.Id).NotEmpty();
     }
 }
 
@@ -36,17 +38,17 @@ public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterCon
 
     public async Task<ResultCodes> Handle(RegisterConfirmationValidation request, CancellationToken cancellationToken)
     {
-        var state = await _storeClient.GetStateNullableAsync<MailAction<User>>(Stores.MailActions, request.Key, cancellationToken);
+        var state = await _storeClient.GetStateNullableAsync<MailAction<User>>(Stores.MailActions, Guid.Empty, request.Id, cancellationToken);
 
         if (state == null)
         {
-            _logger.LogInformation("The state for key {key} does not exists", request.Key);
+            _logger.LogInformation("The state for key {Id} does not exists", request.Id);
             return ResultCodes.MailActionNotFound;
         }
 
         if (state.Consumed)
         {
-            _logger.LogInformation("The state for key {key} is already consumed", request.Key);
+            _logger.LogInformation("The state for key {Id} is already consumed", request.Id);
             return ResultCodes.MailActionAlreadyConsumed;
         }
 
@@ -54,7 +56,7 @@ public class RegisterConfirmationValidationHandler : IRequestHandler<RegisterCon
         state.ConfirmationDate = DateTime.UtcNow;
 
         var taskPublish = _publisherClient.PublishEventAsync(Topics.Email.Validated, state.Data, cancellationToken);
-        var taskSave = _storeClient.SaveStateAsync(Stores.MailActions, state.Key, state, cancellationToken);
+        var taskSave = _storeClient.SaveStateAsync(Stores.MailActions, string.Empty, state.Id.ToString(), state, cancellationToken);
 
         Task.WaitAll(new[]
         {

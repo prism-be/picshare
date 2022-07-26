@@ -4,14 +4,19 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Prism.Picshare.Commands.Authentication;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
-using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
+using Xunit;
 
-namespace Prism.Picshare.Services.Authentication.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Authentication;
 
 public class RegisterAccountRequestTests
 {
@@ -37,35 +42,13 @@ public class RegisterAccountRequestTests
     }
 
     [Fact]
-    public async Task Handle_Organisation_Exist()
-    {
-        // Arrange
-        var publisherClient = new Mock<PublisherClient>();
-        var storeClient = new Mock<StoreClient>();
-        var organisationName = Guid.NewGuid().ToString();
-        storeClient.SetupGetStateAsync(Stores.OrganisationsName, organisationName, new SingleId
-        {
-            Id = Guid.NewGuid()
-        });
-
-        // Act
-        var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);
-        var result = await handler.Handle(
-            new RegisterAccountRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), organisationName),
-            CancellationToken.None);
-
-        // Assert
-        result.Should().Be(ResultCodes.ExistingOrganisation);
-    }
-
-    [Fact]
     public async Task Handle_User_Exist()
     {
         // Arrange
         var login = Guid.NewGuid().ToString();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials());
+        storeClient.SetupGetStateAsync(Stores.Credentials, string.Empty, login, new Credentials());
 
         // Act
         var handler = new RegisterAccountRequestHandler(storeClient.Object, publisherClient.Object);

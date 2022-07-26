@@ -22,21 +22,22 @@ public class DaprStoreClient : StoreClient
         _telemetryClient = telemetryClient;
     }
 
-    public override async Task<T?> GetStateNullableAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : class
+    public override async Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class
     {
         var startTime = DateTime.UtcNow;
         var watch = Stopwatch.StartNew();
         var success = false;
 
+        var key = id;
+
+        if (!string.IsNullOrWhiteSpace(organisation))
+        {
+            key = $"{organisation}+{id}";
+        }
+
         try
         {
             var metaData = new Dictionary<string, string>();
-
-            if (OrganisationScopedTypes.Contains(typeof(T)))
-            {
-                var organisationId = key.Split('+')[0];
-                metaData.Add("partitionKey", organisationId);
-            }
 
             var result = await _daprClient.GetStateAsync<T>("state" + store, key, metadata: metaData, cancellationToken: cancellationToken);
             success = true;
@@ -50,11 +51,18 @@ public class DaprStoreClient : StoreClient
         }
     }
 
-    public override async Task SaveStateAsync<T>(string store, string key, T data, CancellationToken cancellationToken = default)
+    public override async Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
         var watch = Stopwatch.StartNew();
         var success = false;
+
+        var key = id;
+
+        if (!string.IsNullOrWhiteSpace(organisation))
+        {
+            key = $"{organisation}+{id}";
+        }
 
         try
         {

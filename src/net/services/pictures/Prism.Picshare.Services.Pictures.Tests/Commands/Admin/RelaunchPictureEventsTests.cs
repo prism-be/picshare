@@ -49,7 +49,7 @@ public class RelaunchPictureEventsTests
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Flow, organisationId.ToString(), new Flow
         {
-            OrganisationId = organisationId,
+            Id = organisationId,
             Pictures = new List<PictureSummary>
             {
                 new()

@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Commands.Mailing;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
-using Prism.Picshare.Services.Mailing.Commands;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
 using Xunit;
 
-namespace Prism.Picshare.Services.Mailing.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Mailing;
 
 public class RegisterConfirmationValidationTests
 {
@@ -33,11 +34,11 @@ public class RegisterConfirmationValidationTests
         };
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
+        storeClient.SetupGetStateAsync(Stores.MailActions, string.Empty, action.Id.ToString(), action);
 
         // Act
         var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
-        var result = await handler.Handle(new RegisterConfirmationValidation(action.Key), CancellationToken.None);
+        var result = await handler.Handle(new RegisterConfirmationValidation(action.Id), CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.MailActionAlreadyConsumed);
@@ -55,7 +56,7 @@ public class RegisterConfirmationValidationTests
 
         // Act
         var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
-        var result = await handler.Handle(new RegisterConfirmationValidation(action.Key), CancellationToken.None);
+        var result = await handler.Handle(new RegisterConfirmationValidation(action.Id), CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.MailActionNotFound);
@@ -70,11 +71,11 @@ public class RegisterConfirmationValidationTests
         var action = new MailAction<User>(key, MailActionType.ConfirmUserRegistration, user);
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.MailActions, action.Key, action);
+        storeClient.SetupGetStateAsync(Stores.MailActions, string.Empty, action.Id.ToString(), action);
 
         // Act
         var handler = new RegisterConfirmationValidationHandler(Mock.Of<ILogger<RegisterConfirmationValidationHandler>>(), storeClient.Object, publisherClient.Object);
-        var result = await handler.Handle(new RegisterConfirmationValidation(action.Key), CancellationToken.None);
+        var result = await handler.Handle(new RegisterConfirmationValidation(action.Id), CancellationToken.None);
 
         // Assert
         result.Should().Be(ResultCodes.Ok);
@@ -86,7 +87,7 @@ public class RegisterConfirmationValidationTests
     public void Validation_Empty_Key()
     {
         // Arrange
-        var request = new RegisterConfirmationValidation(string.Empty);
+        var request = new RegisterConfirmationValidation(Guid.Empty);
 
         // Act
         var result = new RegisterConfirmationValidationValidation().Validate(request);
@@ -99,7 +100,7 @@ public class RegisterConfirmationValidationTests
     public void Validation_Ok()
     {
         // Arrange
-        var request = new RegisterConfirmationValidation(Guid.NewGuid().ToString());
+        var request = new RegisterConfirmationValidation(Guid.NewGuid());
 
         // Act
         var result = new RegisterConfirmationValidationValidation().Validate(request);

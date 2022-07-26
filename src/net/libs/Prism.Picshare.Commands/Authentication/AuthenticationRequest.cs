@@ -7,9 +7,11 @@
 using FluentValidation;
 using Isopoh.Cryptography.Argon2;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Authentication.Commands;
+namespace Prism.Picshare.Commands.Authentication;
 
 public record AuthenticationRequest(string Login, string Password) : IRequest<ResultCodes>
 {
@@ -51,8 +53,7 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
         if (Argon2.Verify(credentials.PasswordHash, request.Password))
         {
-            var key = EntityReference.ComputeKey(credentials.OrganisationId, credentials.Id);
-            var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
+            var user = await _storeClient.GetStateNullableAsync<User>(credentials.OrganisationId, credentials.UserId, cancellationToken: cancellationToken);
             
             if (user == null)
             {
@@ -62,15 +63,15 @@ public class AuthenticationRequestHandler : IRequestHandler<AuthenticationReques
 
             if (user.EmailValidated)
             {
-                _logger.LogInformation("Authentication success for credentials : {id}", credentials.Id);
+                _logger.LogInformation("Authentication success for credentials : {id}", credentials.UserId);
                 return ResultCodes.Ok;
             }
             
-            _logger.LogInformation("Authentication failed for credentials, email not validated : {id}", credentials.Id);
+            _logger.LogInformation("Authentication failed for credentials, email not validated : {id}", credentials.UserId);
             return ResultCodes.EmailNotValidated;
         }
         
-        _logger.LogInformation("Authentication failed for credentials : {id}", credentials.Id);
+        _logger.LogInformation("Authentication failed for credentials : {id}", credentials.UserId);
         return ResultCodes.InvalidCredentials;
     }
 }

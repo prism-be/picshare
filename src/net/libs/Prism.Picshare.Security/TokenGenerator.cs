@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Exceptions;
 
-namespace Prism.Picshare.AspNetCore.Authentication;
+namespace Prism.Picshare.Security;
 
 public static class TokenGenerator
 {
@@ -22,7 +22,7 @@ public static class TokenGenerator
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
-            new(JwtRegisteredClaimNames.Jti, Security.GenerateIdentifier().ToString()),
+            new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
             new(nameof(user.Name), user.Name),
             new(nameof(user.OrganisationId), user.OrganisationId.ToString()),
             new(nameof(user.Id), user.Id.ToString())
@@ -37,8 +37,9 @@ public static class TokenGenerator
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
-            new(JwtRegisteredClaimNames.Jti, Security.GenerateIdentifier().ToString()),
-            new(nameof(user.Key), user.Key)
+            new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
+            new(nameof(user.OrganisationId), user.OrganisationId.ToString()),
+            new(nameof(user.Id), user.Id.ToString())
         };
 
         return GenerateToken(privateKey, claims, DateTime.Now.AddDays(30), true);

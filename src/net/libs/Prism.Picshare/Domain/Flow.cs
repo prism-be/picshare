@@ -15,8 +15,8 @@ public class Flow
         Pictures = new List<PictureSummary>();
     }
 
-    [JsonPropertyName("organisationId")]
-    public Guid OrganisationId { get; set; }
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
 
     [JsonPropertyName("pictures")]
     public List<PictureSummary> Pictures { get; set; }

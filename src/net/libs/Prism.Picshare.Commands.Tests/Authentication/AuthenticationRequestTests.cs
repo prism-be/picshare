@@ -4,15 +4,20 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Isopoh.Cryptography.Argon2;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Commands.Authentication;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
+using Xunit;
 
-namespace Prism.Picshare.Services.Authentication.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Authentication;
 
 public class AuthenticationRequestTests
 {
@@ -31,15 +36,15 @@ public class AuthenticationRequestTests
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        storeClient.SetupGetStateAsync(Stores.Credentials, string.Empty, login, new Credentials
         {
-            Id = userId,
+            UserId = userId,
             OrganisationId = organisationId,
-            Login = login,
+            Id = login,
             PasswordHash = passwordHash
         });
 
-        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, organisationId, userId, new User
         {
             Id = userId,
             OrganisationId = organisationId,
@@ -66,10 +71,10 @@ public class AuthenticationRequestTests
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        storeClient.SetupGetStateAsync(Stores.Credentials, string.Empty, login, new Credentials
         {
-            Id = Guid.NewGuid(),
-            Login = login,
+            UserId = Guid.NewGuid(),
+            Id = login,
             PasswordHash = passwordHash
         });
 
@@ -93,10 +98,10 @@ public class AuthenticationRequestTests
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        storeClient.SetupGetStateAsync(Stores.Credentials, string.Empty, login, new Credentials
         {
-            Id = Guid.NewGuid(),
-            Login = login,
+            UserId = Guid.NewGuid(),
+            Id = login,
             PasswordHash = passwordHash
         });
 
@@ -122,15 +127,15 @@ public class AuthenticationRequestTests
 
         var logger = new Mock<ILogger<AuthenticationRequestHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Credentials, login, new Credentials
+        storeClient.SetupGetStateAsync(Stores.Credentials, string.Empty, login, new Credentials
         {
-            Id = userId,
+            UserId = userId,
             OrganisationId = organisationId,
-            Login = login,
+            Id = login,
             PasswordHash = passwordHash
         });
 
-        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, organisationId, userId, new User
         {
             Id = userId,
             OrganisationId = organisationId,
