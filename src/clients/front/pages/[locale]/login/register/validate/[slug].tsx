@@ -1,13 +1,15 @@
 ﻿import {useRouter} from 'next/router'
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
-import {GetStaticPaths} from "next";
 import {useTranslation} from "next-i18next";
-import Loader from "../../../../components/Loader";
-import {getData} from "../../../../lib/ajaxHelper";
-import Alert from "../../../../components/Alert";
-import Button from "../../../../components/Button";
-import HtmlLink from "../../../../components/HtmlLink";
+import Loader from "../../../../../components/Loader";
+import {getData} from "../../../../../lib/ajaxHelper";
+import Alert from "../../../../../components/Alert";
+import Button from "../../../../../components/Button";
+import HtmlLink from "../../../../../components/HtmlLink";
 import {useState} from "react";
+import { makeStaticProps } from '../../../../../lib/getStatic'
+import {GetStaticPaths} from "next";
+
+const getStaticProps = makeStaticProps(['login', 'common'])
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
@@ -17,11 +19,7 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
     }
 }
 
-export const getStaticProps = async ({locale}: any) => ({
-    props: {
-        ...(await serverSideTranslations(locale, ['common', 'login']))
-    }
-})
+export { getStaticProps }
 
 const Validate = () => {
 
