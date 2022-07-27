@@ -18,7 +18,7 @@ using Prism.Picshare.Services.Azure;
 
 namespace Prism.Picshare.AzureServices.Api;
 
-internal class Program
+internal static class Program
 {
     private static async Task Main()
     {

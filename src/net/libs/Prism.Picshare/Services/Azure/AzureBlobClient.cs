@@ -21,7 +21,7 @@ public class AzureBlobClient : BlobClient
     {
         var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
 
-        return Task.FromResult(container.GetBlobs(prefix: organisationId.ToString())
+        return Task.FromResult(container.GetBlobs(prefix: organisationId.ToString(), cancellationToken: cancellationToken)
             .Select(x => x.Name)
             .ToList());
     }

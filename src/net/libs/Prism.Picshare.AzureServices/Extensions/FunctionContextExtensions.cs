@@ -35,16 +35,13 @@ public static class FunctionContextExtensions
 
     public static UserContext GetUserContext(this FunctionContext context)
     {
-        if (context.Items.TryGetValue("PicshareClaims", out var claimsPrincipalObject))
+        if (context.Items.TryGetValue("PicshareClaims", out var claimsPrincipalObject) && claimsPrincipalObject is ClaimsPrincipal claimsPrincipal)
         {
-            if (claimsPrincipalObject is ClaimsPrincipal claimsPrincipal)
-            {
-                var id = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
-                var organisationId = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
-                var name = claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
+            var id = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
+            var organisationId = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
+            var name = claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
 
-                return new UserContext(organisationId, id, id != Guid.Empty, name);
-            }
+            return new UserContext(organisationId, id, id != Guid.Empty, name);
         }
 
         return new UserContext(Guid.Empty, Guid.Empty, false, string.Empty);

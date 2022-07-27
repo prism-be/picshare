@@ -40,7 +40,7 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
 
         var authorization = attributes.Single();
 
-        if (authorization.AllowAnonymous != true)
+        if (!authorization.AllowAnonymous)
         {
             var claims = TryGetUserFromBearer(context) ?? TryGetUserFromQuery(context);
 

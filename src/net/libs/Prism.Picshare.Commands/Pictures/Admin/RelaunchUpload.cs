@@ -26,20 +26,19 @@ public class RelaunchUploadHandler : IRequestHandler<RelaunchUpload>
 
     public async Task<Unit> Handle(RelaunchUpload request, CancellationToken cancellationToken)
     {
-        foreach (var path in await _blobClient.ListAsync(request.OrganisationId, cancellationToken))
-        {
-            if (path.EndsWith("/source.jpg"))
-            {
-                var pathSplitted = path.Split('/');
-                var organisationId = Guid.Parse(pathSplitted[^3]);
-                var pictureId = Guid.Parse(pathSplitted[^2]);
+        var items = await _blobClient.ListAsync(request.OrganisationId, cancellationToken);
 
-                await _publisherClient.PublishEventAsync(Topics.Pictures.Uploaded, new EntityReference
-                {
-                    OrganisationId = organisationId,
-                    Id = pictureId
-                }, cancellationToken);
-            }
+        foreach (var path in items.Where(x => x.EndsWith("/source.jpg")))
+        {
+            var pathSplitted = path.Split('/');
+            var organisationId = Guid.Parse(pathSplitted[^3]);
+            var pictureId = Guid.Parse(pathSplitted[^2]);
+
+            await _publisherClient.PublishEventAsync(Topics.Pictures.Uploaded, new EntityReference
+            {
+                OrganisationId = organisationId,
+                Id = pictureId
+            }, cancellationToken);
         }
 
         return Unit.Value;
