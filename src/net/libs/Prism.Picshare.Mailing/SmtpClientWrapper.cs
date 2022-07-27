@@ -7,7 +7,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace Prism.Picshare.Services.Mailing.Workers;
+namespace Prism.Picshare.Mailing;
 
 public interface ISmtpClientWrapper
 {

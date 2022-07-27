@@ -37,7 +37,7 @@ public class StoreClientTests
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        var act = async () => await storeClient.GetStateAsync<dynamic>(data.Key);
+        var act = async () => await storeClient.GetStateAsync<dynamic>(data.Id.ToString());
 
         // Assert
         await act.Should().ThrowAsync<NotImplementedException>();
@@ -53,13 +53,13 @@ public class StoreClientTests
             OrganisationId = Guid.NewGuid()
         };
         var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.GetStateAsync<User>(Stores.Users, data.Key, null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
+        daprClient.Setup(x => x.GetStateAsync<User>(Stores.Users, data.Id.ToString(), null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        var result = await storeClient.GetStateAsync<User>(data.Key);
+        var result = await storeClient.GetStateAsync<User>(data.Id.ToString());
 
         // Assert
         result.Should().BeEquivalentTo(data);
@@ -75,13 +75,13 @@ public class StoreClientTests
             OrganisationId = Guid.NewGuid()
         };
         var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.GetStateAsync<EntityReference>(Stores.Albums, data.Key, null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
+        daprClient.Setup(x => x.GetStateAsync<EntityReference>(Stores.Albums, data.Id.ToString(), null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        var result = await storeClient.GetStateAsync<EntityReference>(Stores.Albums, data.Key);
+        var result = await storeClient.GetStateAsync<EntityReference>(Stores.Albums, data.Id.ToString());
 
         // Assert
         result.Should().BeEquivalentTo(data);
@@ -101,7 +101,7 @@ public class StoreClientTests
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        var act = async () => await storeClient.SaveStateAsync(data.Key, new DummyRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
+        var act = async () => await storeClient.SaveStateAsync(data.Id.ToString(), new DummyRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
 
         // Assert
         await act.Should().ThrowAsync<NotImplementedException>();
@@ -121,10 +121,10 @@ public class StoreClientTests
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        await storeClient.SaveStateAsync(data.Key, data);
+        await storeClient.SaveStateAsync(data.Id.ToString(), data);
 
         // Assert
-        daprClient.Verify(x => x.SaveStateAsync(Stores.Users, data.Key, data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
+        daprClient.Verify(x => x.SaveStateAsync(Stores.Users, data.Id.ToString(), data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
     }
 
     [Fact]
@@ -141,9 +141,9 @@ public class StoreClientTests
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        await storeClient.SaveStateAsync(Stores.Albums, data.Key, data);
+        await storeClient.SaveStateAsync(Stores.Albums, data);
 
         // Assert
-        daprClient.Verify(x => x.SaveStateAsync(Stores.Albums, data.Key, data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
+        daprClient.Verify(x => x.SaveStateAsync(Stores.Albums, data.Id.ToString(), data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
     }
 }

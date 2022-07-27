@@ -6,9 +6,11 @@
 
 using MediatR;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Mailing.Workers;
+using Prism.Picshare.Mailing;
+using Prism.Picshare.Security;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Mailing.Commands;
+namespace Prism.Picshare.Commands.Mailing;
 
 public record RegisterConfirmation(User RegisteringUser) : IRequest;
 
@@ -27,13 +29,13 @@ public class RegisterConfirmationHandler : IRequestHandler<RegisterConfirmation>
 
     public async Task<Unit> Handle(RegisterConfirmation request, CancellationToken cancellationToken)
     {
-        var action = new MailAction<User>(Security.GenerateIdentifier(), MailActionType.ConfirmUserRegistration, request.RegisteringUser);
-        await _storeClient.SaveStateAsync(Stores.MailActions, action.Key, action, cancellationToken);
+        var action = new MailAction<User>(Identifier.Generate(), MailActionType.ConfirmUserRegistration, request.RegisteringUser);
+        await _storeClient.SaveStateAsync(Stores.MailActions, string.Empty, action.Id.ToString(), action, cancellationToken);
 
         var data = new
         {
             name = request.RegisteringUser.Name,
-            validationUrl = $"{_mailingConfiguration.RootUri.Trim('/')}/login/register/validate/{action.Key}"
+            validationUrl = $"{_mailingConfiguration.RootUri.Trim('/')}/login/register/validate/{action.Id}"
         };
 
         await _emailWorker.RenderAndSendAsync("register-confirmation", request.RegisteringUser, data, cancellationToken);

@@ -28,4 +28,9 @@
         <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands" />
+      <Folder Include="Workers" />
+    </ItemGroup>
+
 </Project>

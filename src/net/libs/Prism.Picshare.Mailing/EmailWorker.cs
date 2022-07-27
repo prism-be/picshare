@@ -7,9 +7,10 @@
 using System.Diagnostics;
 using System.Net.Mail;
 using DotLiquid;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
 
-namespace Prism.Picshare.Services.Mailing.Workers;
+namespace Prism.Picshare.Mailing;
 
 public interface IEmailWorker
 {

@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Services.Mailing;
+namespace Prism.Picshare.Mailing;
 
 public class MailingConfiguration
 {

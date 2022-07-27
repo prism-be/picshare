@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Prism.Picshare.Security\Prism.Picshare.Security.csproj" />
+      <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotLiquid" Version="2.2.656" />
+    </ItemGroup>
+
+</Project>
