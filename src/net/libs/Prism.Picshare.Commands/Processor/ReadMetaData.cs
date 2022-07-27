@@ -10,8 +10,9 @@ using MediatR;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Extensions;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Processor.Commands;
+namespace Prism.Picshare.Commands.Processor;
 
 public record ReadMetaData(Guid OrganisationId, Guid PictureId) : IRequest<ResultCodes>;
 

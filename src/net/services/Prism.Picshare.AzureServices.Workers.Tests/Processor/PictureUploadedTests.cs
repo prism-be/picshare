@@ -1,22 +1,26 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "PictureUploadedControllerTests.cs" company = "Prism">
+//  <copyright file = "PictureUploadedTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using FluentAssertions;
+using System;
+using System.Text.Json;
+using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
 using Moq;
+using Prism.Picshare.AzureServices.Workers.Processor;
+using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
-using Prism.Picshare.Services.Processor.Commands;
-using Prism.Picshare.Services.Processor.Controllers.Events;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
+using Xunit;
 
-namespace Prism.Picshare.Services.Processor.Tests.Controllers.Events;
+namespace Prism.Picshare.AzureServices.Workers.Tests.Processor;
 
-public class PictureUploadedControllerTests
+public class PictureUploadedTests
 {
     [Fact]
     public async Task PictureUploaded_Ok()
@@ -27,16 +31,18 @@ public class PictureUploadedControllerTests
         var mediator = new Mock<IMediator>();
         var publisherClient = new Mock<PublisherClient>();
 
-        // Act
-        var controller = new PictureUploadedController(mediator.Object, publisherClient.Object);
-        var result = await controller.PictureUploaded(new EntityReference
+        var message = JsonSerializer.Serialize(new EntityReference
         {
             OrganisationId = organisationId,
             Id = pictureId
         });
+        var context = new Mock<FunctionContext>();
+
+        // Act
+        var controller = new PictureUploaded(mediator.Object, publisherClient.Object);
+        await controller.Run(message, context.Object);
 
         // Assert
-        result.Should().BeAssignableTo<OkResult>();
         mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Exactly(4));
         publisherClient.VerifyPublishEvent<EntityReference>(Topics.Pictures.ThumbnailsGenerated);
     }

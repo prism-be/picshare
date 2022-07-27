@@ -4,7 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.Services.Processor.Tests;
+using System;
+
+namespace Prism.Picshare.Commands.Tests;
 
 public static class Samples
 {

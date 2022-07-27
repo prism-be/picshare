@@ -4,16 +4,20 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Picshare.Services.Processor.Commands;
+using Prism.Picshare.Commands.Processor;
+using Prism.Picshare.Services;
+using Xunit;
 
-namespace Prism.Picshare.Services.Processor.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Processor;
 
 public class GenerateThumbnailTests
 {
-
     [Fact]
     public async Task Handle_Ok()
     {

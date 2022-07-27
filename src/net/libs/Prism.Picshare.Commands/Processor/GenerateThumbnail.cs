@@ -7,10 +7,12 @@
 using FluentValidation;
 using ImageMagick;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Prism.Picshare.Extensions;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Processor.Commands;
+namespace Prism.Picshare.Commands.Processor;
 
 public record GenerateThumbnail(Guid OrganisationId, Guid PictureId, int Width, int Height, bool Crop) : IRequest<ResultCodes>;
 

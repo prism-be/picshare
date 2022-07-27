@@ -4,14 +4,19 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
-using Prism.Picshare.Services.Processor.Commands;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
+using Xunit;
 
-namespace Prism.Picshare.Services.Processor.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Processor;
 
 public class ReadMetaDataTests
 {
