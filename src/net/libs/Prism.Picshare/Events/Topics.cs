@@ -9,6 +9,7 @@ namespace Prism.Picshare.Events;
 public static class Topics
 {
     public const string RoutePrefix = "events/";
+    public const string Subscription = "picshare";
 
     public static class User
     {

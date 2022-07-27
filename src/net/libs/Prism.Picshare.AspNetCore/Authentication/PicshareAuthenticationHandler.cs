@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using Prism.Picshare.Security;
 
 namespace Prism.Picshare.AspNetCore.Authentication;
 

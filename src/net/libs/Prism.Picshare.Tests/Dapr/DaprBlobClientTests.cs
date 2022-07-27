@@ -15,7 +15,8 @@ using FluentAssertions;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Moq;
-using Prism.Picshare.Dapr;
+using Prism.Picshare.Services;
+using Prism.Picshare.Services.Dapr;
 using Xunit;
 
 namespace Prism.Picshare.Tests.Dapr;
@@ -31,7 +32,7 @@ public class DaprBlobClientTests
         var jsonBytes = Encoding.Default.GetBytes(json);
         var daprClient = new Mock<DaprClient>();
         daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), CancellationToken.None))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "list"), jsonBytes, new Dictionary<string, string>()));
+            .ReturnsAsync(new BindingResponse(new BindingRequest("datastore", "list"), jsonBytes, new Dictionary<string, string>()));
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
@@ -51,7 +52,7 @@ public class DaprBlobClientTests
         var blobName = Guid.NewGuid().ToString();
         var daprClient = new Mock<DaprClient>();
         daprClient.Setup(x => x.InvokeBindingAsync(It.IsAny<BindingRequest>(), CancellationToken.None))
-            .ReturnsAsync(new BindingResponse(new BindingRequest(Stores.Data, "get"), data, new Dictionary<string, string>()));
+            .ReturnsAsync(new BindingResponse(new BindingRequest("datastore", "get"), data, new Dictionary<string, string>()));
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
@@ -77,6 +78,6 @@ public class DaprBlobClientTests
         await storeClient.CreateAsync(blobName, data, CancellationToken.None);
 
         // Assert
-        daprClient.Verify(x => x.InvokeBindingAsync(Stores.Data, "create", Convert.ToBase64String(data), It.IsAny<Dictionary<string, string>>(), CancellationToken.None));
+        daprClient.Verify(x => x.InvokeBindingAsync("datastore", "create", Convert.ToBase64String(data), It.IsAny<Dictionary<string, string>>(), CancellationToken.None));
     }
 }

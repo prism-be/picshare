@@ -1,6 +1,6 @@
 ﻿import useUser from "../../lib/useUser";
-import Link from "next/link";
-import Image from "next/image";
+import Link from "../Link";
+import Image, {ImageLoaderProps} from "next/image";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 import {useSWRConfig} from "swr";
@@ -23,12 +23,16 @@ const Header = () => {
         await router.push('/login');
     }
 
+    const myLoader = ({src}: ImageLoaderProps) => {
+        return src;
+    }
+
     return <>
         <div className="h-16 flex flex-nowrap border-b border-gray-300">
             <div className="flex">
                 <Link href="/">
                     <a className="m-auto pl-2 pr-2">
-                        <Image src="/images/logo.svg" height={42} width={42} alt={"Picshare by PRISM"}></Image>
+                        <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"Picshare by PRISM"}></Image>
                     </a>
                 </Link>
             </div>

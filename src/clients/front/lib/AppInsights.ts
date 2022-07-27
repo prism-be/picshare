@@ -27,7 +27,7 @@ export const loadAppInsights = () => {
 
     appInsightsLoaded = true;
     
-    fetch('/api/authentication/insights')
+    fetch('/api/config/insights')
         .then((response) => {
             response.json().then(data => {
                 appInsights.config.instrumentationKey = data.instrumentationKey;

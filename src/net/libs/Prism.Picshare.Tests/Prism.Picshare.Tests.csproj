@@ -24,7 +24,14 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.Mailing\Prism.Picshare.Mailing.csproj" />
         <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Templates\en-unit-test.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

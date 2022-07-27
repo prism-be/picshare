@@ -1,1 +1,0 @@
-docker build ../../ --file Prism.Picshare.Services.Processor/Dockerfile --tag simonbaudart/picshare:service-processor-nightly

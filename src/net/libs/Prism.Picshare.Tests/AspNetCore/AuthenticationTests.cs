@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
+using Prism.Picshare.Security;
 using Xunit;
 
 namespace Prism.Picshare.Tests.AspNetCore;
@@ -237,7 +238,7 @@ public class Authentication
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
-            new(JwtRegisteredClaimNames.Jti, Security.GenerateIdentifier().ToString())
+            new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString())
         };
 
         var privateKey = Convert.FromBase64String(_jwtConfiguration.PrivateKey);

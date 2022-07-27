@@ -46,7 +46,7 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 overflow-auto bg-gray-600 flex"
              onTouchStart={(e) => onTouchStart(e.changedTouches[0])} onTouchEnd={(e) => onTouchEnd(e.changedTouches[0])}>
             <div onClick={() => nextPictureZoom()} className="grow relative opacity-100 m-1 cursor-pointer">
-                <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id}/>
+                <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id} alt={picture.name}/>
             </div>
             <div onClick={() => previousPictureZoom()} className={"w-8 cursor-pointer flex absolute left-0 top-0 bottom-0"}>
                 <span className="material-icons m-auto text-gray-500">keyboard_arrow_left</span>

@@ -5,15 +5,21 @@
 // -----------------------------------------------------------------------
 
 using Moq;
-using Prism.Picshare.Dapr;
+using Prism.Picshare.Services;
 
 namespace Prism.Picshare.UnitTests;
 
 public static class TestsExtensions
 {
-    public static void SetupGetStateAsync<T>(this Mock<StoreClient> mock, string store, string key, T data) where T : class
+    public static void SetupGetStateAsync<T>(this Mock<StoreClient> mock, string store, string organisation, string id, T data) where T : class
     {
-        mock.Setup(x => x.GetStateNullableAsync<T>(store, key, It.IsAny<CancellationToken>()))
+        mock.Setup(x => x.GetStateNullableAsync<T>(store, organisation, id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(data);
+    }
+    
+    public static void SetupGetStateAsync<T>(this Mock<StoreClient> mock, string store, Guid organisation, Guid id, T data) where T : class
+    {
+        mock.Setup(x => x.GetStateNullableAsync<T>(store, organisation.ToString(), id.ToString(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
     }
 
@@ -34,7 +40,7 @@ public static class TestsExtensions
 
     public static void VerifySaveState<TExpected>(this Mock<StoreClient> mock, string expectedStore, Times times)
     {
-        mock.Verify(x => x.SaveStateAsync(expectedStore, It.IsAny<string>(), It.IsAny<TExpected>(), default),
+        mock.Verify(x => x.SaveStateAsync(expectedStore, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TExpected>(), default),
             times);
     }
 }

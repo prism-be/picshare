@@ -36,8 +36,8 @@ public class SerializationTests
         // Arrange
         var source = new Credentials
         {
-            Id = Guid.NewGuid(),
-            Login = Guid.NewGuid().ToString(),
+            UserId = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             PasswordHash = Guid.NewGuid().ToString()
         };
 
@@ -135,7 +135,7 @@ public class SerializationTests
         // Arrange
         var source = new Flow
         {
-            OrganisationId = Guid.NewGuid(),
+            Id = Guid.NewGuid(),
             Pictures = new List<PictureSummary>()
         };
 

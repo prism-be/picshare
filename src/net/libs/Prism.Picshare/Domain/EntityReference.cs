@@ -15,12 +15,4 @@ public class EntityReference
 
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
-
-    [JsonPropertyName("key")]
-    public string Key => ComputeKey(OrganisationId, Id);
-
-    public static string ComputeKey(Guid organisationId, Guid id)
-    {
-        return $"{organisationId}+{id}";
-    }
 }
