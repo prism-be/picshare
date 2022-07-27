@@ -4,18 +4,33 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text.Json;
+using MediatR;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
+using Prism.Picshare.Commands.Authentication;
 using Prism.Picshare.Events;
 
 namespace Prism.Picshare.AzureServices.Workers.User;
 
 public class EmailValidated
 {
-    [Function(nameof(User) + "." + nameof(EmailValidated))]
-    public void Run([ServiceBusTrigger(Topics.Email.Validated, Topics.Subscription, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
+    private readonly IMediator _mediator;
+
+    public EmailValidated(IMediator mediator)
     {
-        var logger = context.GetLogger("EmailValidated");
-        logger.LogInformation($"C# ServiceBus topic trigger function processed message: {mySbMsg}");
+        _mediator = mediator;
+    }
+
+    [Function(nameof(User) + "." + nameof(EmailValidated))]
+    public async Task Run([ServiceBusTrigger(Topics.Email.Validated, Topics.Subscription, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
+    {
+        var user = JsonSerializer.Deserialize<Domain.User>(mySbMsg);
+
+        if (user == null)
+        {
+            return;
+        }
+
+        await _mediator.Send(new EmailValidatedRequest(user.OrganisationId, user.Id));
     }
 }

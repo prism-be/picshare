@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Mailing.Workers;
+using Prism.Picshare.Mailing;
 using Xunit;
 
-namespace Prism.Picshare.Services.Mailing.Tests.Workers;
+namespace Prism.Picshare.Tests.Mailing;
 
 public class EmailWorkerTests
 {

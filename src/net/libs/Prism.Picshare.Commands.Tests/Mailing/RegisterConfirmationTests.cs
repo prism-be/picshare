@@ -7,13 +7,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
+using Prism.Picshare.Commands.Mailing;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Mailing.Commands;
-using Prism.Picshare.Services.Mailing.Workers;
+using Prism.Picshare.Mailing;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
 using Xunit;
 
-namespace Prism.Picshare.Services.Mailing.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Mailing;
 
 public class RegisterConfirmationTests
 {

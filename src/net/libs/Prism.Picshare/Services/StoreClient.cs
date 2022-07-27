@@ -68,7 +68,8 @@ public abstract class StoreClient
 
     public async Task<T?> GetStateNullableAsync<T>(string store, Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class
     {
-        return await GetStateNullableAsync<T>(store, organisationId.ToString(), id.ToString(), cancellationToken);
+        var organisation = organisationId == Guid.Empty ? String.Empty : organisationId.ToString();
+        return await GetStateNullableAsync<T>(store, organisation, id.ToString(), cancellationToken);
     }
 
     public async Task<T?> GetStateNullableAsync<T>(string partition, string id, CancellationToken cancellationToken = default) where T : class
@@ -102,6 +103,17 @@ public abstract class StoreClient
         }
 
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public async Task SaveStateAsync<T>(T data, CancellationToken cancellationToken = default)
+    {
+        if (data is EntityReference entityReference)
+        {
+            await SaveStateAsync(entityReference.Id, data, cancellationToken);
+            return;
+        }
+
+        throw new NotImplementedException($"Cannot automagically find the Id int type {typeof(T).FullName}");
     }
 
     public async Task SaveStateAsync<T>(Guid id, T data, CancellationToken cancellationToken = default)
