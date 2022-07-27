@@ -6,8 +6,9 @@
 
 using MediatR;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Albums;
+namespace Prism.Picshare.Commands.Albums;
 
 public record AddPictureToAlbum(Guid OrganisationId, Guid AlbumId, Guid PictureId) : IRequest<Album>;
 
@@ -22,11 +23,11 @@ public class AddPictureToAlbumHandler : IRequestHandler<AddPictureToAlbum, Album
 
     public async Task<Album> Handle(AddPictureToAlbum request, CancellationToken cancellationToken)
     {
-        var album = await _storeClient.GetStateAsync<Album>(EntityReference.ComputeKey(request.OrganisationId, request.AlbumId), cancellationToken);
+        var album = await _storeClient.GetStateAsync<Album>(request.OrganisationId, request.AlbumId, cancellationToken);
 
         album.Pictures.Add(request.PictureId);
 
-        await _storeClient.SaveStateAsync(album.Key, album, cancellationToken);
+        await _storeClient.SaveStateAsync(album, cancellationToken);
 
         return album;
     }

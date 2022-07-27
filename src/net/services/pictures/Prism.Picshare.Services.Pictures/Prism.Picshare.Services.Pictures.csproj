@@ -20,4 +20,9 @@
         <ProjectReference Include="..\..\..\libs\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands\Albums" />
+      <Folder Include="Commands\Pictures" />
+    </ItemGroup>
+
 </Project>

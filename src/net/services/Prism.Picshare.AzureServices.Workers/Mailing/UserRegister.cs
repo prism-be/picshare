@@ -22,7 +22,7 @@ public class UserRegister
     }
 
     [Function(nameof(Mailing) + "." + nameof(UserRegister))]
-    public async Task Run([ServiceBusTrigger(Topics.User.Register, Topics.Subscription, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
+    public async Task Run([ServiceBusTrigger(Topics.User.Register, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
     {
         var user = JsonSerializer.Deserialize<Domain.User>(mySbMsg);
 

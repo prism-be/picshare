@@ -7,8 +7,9 @@
 using MediatR;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
+namespace Prism.Picshare.Commands.Pictures;
 
 public record InitializePicture(Guid OrganisationId, Guid Owner, Guid PictureId, PictureSource Source) : IRequest<Picture>;
 
@@ -34,7 +35,7 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
             Owner = request.Owner
         };
 
-        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture, cancellationToken);
 
         var flow = await _storeClient.GetStateAsync<Flow>(request.OrganisationId.ToString(), cancellationToken);
 

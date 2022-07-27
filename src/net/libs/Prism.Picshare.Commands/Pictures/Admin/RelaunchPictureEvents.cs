@@ -6,8 +6,9 @@
 
 using MediatR;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Admin;
+namespace Prism.Picshare.Commands.Pictures.Admin;
 
 public record RelaunchPictureEvents(Guid OrganisationId, string Topic) : IRequest;
 
@@ -28,7 +29,7 @@ public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvent
 
         foreach (var pictureSummary in flow.Pictures)
         {
-            var picture = await _storeClient.GetStateAsync<Picture>(pictureSummary.Key, cancellationToken);
+            var picture = await _storeClient.GetStateAsync<Picture>(pictureSummary.OrganisationId, pictureSummary.Id, cancellationToken);
             await _publisherClient.PublishEventAsync(request.Topic, picture, cancellationToken);
         }
 

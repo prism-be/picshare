@@ -6,8 +6,9 @@
 
 using MediatR;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
+namespace Prism.Picshare.Commands.Pictures;
 
 public record IncreaseViewCount(Guid OrganisationId, Guid PictureId) : IRequest<Picture>;
 
@@ -22,10 +23,10 @@ public class IncreaseViewCountHandler : IRequestHandler<IncreaseViewCount, Pictu
 
     public async Task<Picture> Handle(IncreaseViewCount request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStateAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken);
+        var picture = await _storeClient.GetStateAsync<Picture>(request.OrganisationId, request.PictureId, cancellationToken);
 
         picture.Views++;
-        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture, cancellationToken);
 
         return picture;
     }

@@ -42,6 +42,12 @@ public abstract class StoreClient
         typeof(User)
     };
 
+    public async Task<T> GetStateAsync<T>(Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class, new()
+    {
+        var result = await GetStateNullableAsync<T>(organisationId, id, cancellationToken);
+        return result ?? new T();
+    }
+
     public async Task<T> GetStateAsync<T>(string id, CancellationToken cancellationToken = default) where T : class, new()
     {
         var result = await GetStateNullableAsync<T>(id, cancellationToken);

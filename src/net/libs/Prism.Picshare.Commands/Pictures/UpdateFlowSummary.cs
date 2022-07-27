@@ -5,9 +5,11 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
+namespace Prism.Picshare.Commands.Pictures;
 
 public record UpdateFlowSummary(PictureSummary Summary) : IRequest<Flow>;
 

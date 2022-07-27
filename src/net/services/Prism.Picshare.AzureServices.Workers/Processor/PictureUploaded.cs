@@ -28,7 +28,7 @@ public class PictureUploaded
     }
 
     [Function(nameof(Processor) + "." + nameof(PictureUploaded))]
-    public async Task Run([ServiceBusTrigger(Topics.Pictures.Uploaded, Topics.Subscription, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
+    public async Task Run([ServiceBusTrigger(Topics.Pictures.Uploaded, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
     {
         var picture = JsonSerializer.Deserialize<EntityReference>(mySbMsg);
 

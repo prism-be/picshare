@@ -8,8 +8,9 @@ using System.Globalization;
 using MediatR;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
+namespace Prism.Picshare.Commands.Pictures;
 
 public record GeneratePictureSummary(Guid OrganisationId, Guid PictureId, List<ExifData> PictureExifs) : IRequest<Picture>;
 
@@ -26,7 +27,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
 
     public async Task<Picture> Handle(GeneratePictureSummary request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStateAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken);
+        var picture = await _storeClient.GetStateAsync<Picture>(request.OrganisationId, request.PictureId, cancellationToken);
 
         picture.Exifs = request.PictureExifs;
         picture.Summary.Id = picture.Id;
@@ -34,7 +35,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
         picture.Summary.Name = picture.Name;
         picture.Summary.Date = RetrieveDate(picture.Exifs);
 
-        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.Pictures.SummaryUpdated, picture.Summary, cancellationToken);
 
         return picture;

@@ -30,18 +30,6 @@ public class UploadController : Controller
     [Route("api/pictures/upload")]
     public async Task<IActionResult> Upload(IFormFile file)
     {
-        var pictureId = Security.GenerateIdentifier();
-        _logger.LogInformation("Processing file uploaded : {fileName} to {pictureId} for {organisationId}", file.FileName, pictureId, _userContextAccessor.OrganisationId);
-
-        await using var stream = file.OpenReadStream();
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        var data = memoryStream.ToArray();
-
-        await _mediator.Send(new UploadPicture(_userContextAccessor.OrganisationId, pictureId, data));
-        await _mediator.Send(new InitializePicture(_userContextAccessor.OrganisationId, _userContextAccessor.Id, pictureId, PictureSource.Upload));
-        await _mediator.Send(new SetPictureName(_userContextAccessor.OrganisationId, pictureId, HttpUtility.HtmlEncode(file.FileName)));
-
-        return Ok();
+        
     }
 }

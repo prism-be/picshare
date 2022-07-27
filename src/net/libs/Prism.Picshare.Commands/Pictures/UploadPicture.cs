@@ -6,12 +6,14 @@
 
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Extensions;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
+namespace Prism.Picshare.Commands.Pictures;
 
 public record UploadPicture(Guid OrganisationId, Guid Id, byte[] Data) : IRequest;
 

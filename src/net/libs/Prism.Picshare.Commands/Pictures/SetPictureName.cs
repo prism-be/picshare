@@ -7,8 +7,9 @@
 using MediatR;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Pictures;
+namespace Prism.Picshare.Commands.Pictures;
 
 public record SetPictureName(Guid OrganisationId, Guid PictureId, string Name) : IRequest<Picture>;
 
@@ -25,7 +26,7 @@ public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
 
     public async Task<Picture> Handle(SetPictureName request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStateNullableAsync<Picture>(EntityReference.ComputeKey(request.OrganisationId, request.PictureId), cancellationToken)
+        var picture = await _storeClient.GetStateNullableAsync<Picture>(request.OrganisationId, request.PictureId, cancellationToken)
                       ?? new Picture
                       {
                           OrganisationId = request.OrganisationId,
@@ -33,7 +34,7 @@ public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
                       };
 
         picture.Name = request.Name;
-        await _storeClient.SaveStateAsync(picture.Key, picture, cancellationToken);
+        await _storeClient.SaveStateAsync(picture, cancellationToken);
 
         await _publisherClient.PublishEventAsync(Topics.Pictures.Updated, picture, cancellationToken);
 

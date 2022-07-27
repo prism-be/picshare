@@ -7,8 +7,9 @@
 using MediatR;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Pictures.Commands.Admin;
+namespace Prism.Picshare.Commands.Pictures.Admin;
 
 public record RelaunchUpload(Guid OrganisationId) : IRequest;
 
