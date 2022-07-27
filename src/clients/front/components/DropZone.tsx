@@ -47,13 +47,15 @@ const DropZone = ({small}: Props) => {
         e.preventDefault();
         e.stopPropagation();
 
+        const currentFiles = files.slice();
+        
         // get files from event on the dataTransfer object as an array
         for (let i = 0; i < e.dataTransfer.files.length; i++) {
             const file: File = e.dataTransfer.files[i];
-            files.push(file);
+            currentFiles.push(file);
         }
 
-        setFiles(files);
+        setFiles(currentFiles);
 
         setInDropZone(false);
         setPercentageDone(0);
@@ -94,12 +96,14 @@ const DropZone = ({small}: Props) => {
     
     const handleFileSelected = (e: any) =>
     {
+        const currentFiles = files.slice();
+        
         for (let i = 0; i < e.target.files.length; i++) {
             const file: File = e.target.files[i];
-            files.push(file);
+            currentFiles.push(file);
         }
 
-        setFiles(files);
+        setFiles(currentFiles);
 
         if (!inProgress) {
             setInProgress(true);
