@@ -14,6 +14,22 @@ namespace Prism.Picshare.UnitTests;
 
 public static class AzureFunctionContext
 {
+    public static (Mock<HttpRequestData>, Mock<FunctionContext>) Generate()
+    {
+        var context = new Mock<FunctionContext>();
+        var requestData = new Mock<HttpRequestData>(context.Object);
+        requestData.Setup(r => r.CreateResponse()).Returns(() =>
+        {
+            var response = new Mock<HttpResponseData>(context.Object);
+            response.SetupProperty(r => r.Headers, new HttpHeadersCollection());
+            response.SetupProperty(r => r.StatusCode);
+            response.SetupProperty(r => r.Body, new MemoryStream());
+            return response.Object;
+        });
+
+        return (requestData, context);
+    }
+    
     public static (Mock<HttpRequestData>, Mock<FunctionContext>) Generate<T>(T body)
     {
         var json = JsonSerializer.Serialize(body);
