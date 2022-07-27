@@ -23,9 +23,6 @@
         <None Update="host.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="local.settings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -33,6 +30,13 @@
       <ProjectReference Include="..\..\libs\Prism.Picshare.Commands\Prism.Picshare.Commands.csproj" />
       <ProjectReference Include="..\..\libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj" />
       <ProjectReference Include="..\..\libs\Prism.Picshare.Security\Prism.Picshare.Security.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="local.settings.json" />
+      <Content Include="local.settings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

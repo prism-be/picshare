@@ -1,6 +1,6 @@
 ﻿import {useTranslation} from "next-i18next";
 import {DragEvent, useState} from "react";
-import {postFile, wakeProcessor} from "../lib/ajaxHelper";
+import {postFile} from "../lib/ajaxHelper";
 import {useSWRConfig} from "swr";
 
 interface Props {
@@ -74,8 +74,7 @@ const DropZone = ({small}: Props) => {
 
             if (file.type.toLowerCase() === "image/jpeg") {
                 await postFile("/api/pictures/upload", file);
-                wakeProcessor();
-                setTimeout(() => mutate('/api/pictures/flow'), 30000);
+                setTimeout(() => mutate('/api/pictures/flow'), 10000);
             }
         }
 
@@ -85,11 +84,30 @@ const DropZone = ({small}: Props) => {
         if (currentFileIndex == files.length) {
             setInProgress(false);
             setFiles([]);
+            currentFileIndex = -1;
+            setPercentageDone(0);
         } else if (currentFileIndex < files.length) {
             // noinspection ES6MissingAwait
             processNextFile();
         }
     };
+    
+    const handleFileSelected = (e: any) =>
+    {
+        for (let i = 0; i < e.target.files.length; i++) {
+            const file: File = e.target.files[i];
+            files.push(file);
+        }
+
+        setFiles(files);
+
+        if (!inProgress) {
+            setInProgress(true);
+
+            // noinspection JSIgnoredPromiseFromCall
+            processNextFile();
+        }
+    }
 
     return <>
         <div className={"flex border border-dashed border-gray-300 relative rounded" + (inDropZone ? " bg-gray-200" : "")}
@@ -98,7 +116,7 @@ const DropZone = ({small}: Props) => {
              onDragOver={(e) => handleDragOver(e)}
              onDrop={(e) => handleDrop(e)}
         >
-            <input type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full z-50"/>
+            <input type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full z-50" onChange={(e) => handleFileSelected(e)}/>
             <div className="flex flex-col text-center text-gray-500 absolute top-0 right-0 left-0 bottom-0 m-auto">
                 <div className={"flex grow"}>
                     <div className={"m-auto"}>

@@ -9,7 +9,6 @@ import InputText from "../../../../components/InputText";
 import Alert from "../../../../components/Alert";
 import HtmlLink from "../../../../components/HtmlLink";
 import Button from "../../../../components/Button";
-import {wakeMailing} from "../../../../lib/ajaxHelper";
 import { getStaticPaths, makeStaticProps } from '../../../../lib/getStatic'
 
 const getStaticProps = makeStaticProps(['login', 'common'])
@@ -52,7 +51,6 @@ const Register = () => {
 
         if (response.status === 204) {
             setSuccess(true);
-            wakeMailing();
             return;
         }
 
