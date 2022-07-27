@@ -9,7 +9,6 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.Picshare.AzureServices.Api.Authentication;
 using Prism.Picshare.Commands.Authentication;
@@ -60,6 +59,6 @@ public class RefreshTests
         var result = await controller.Run(requestData.Object, context.Object);
 
         // Assert
-        result.Should().BeAssignableTo<UnauthorizedResult>();
+        result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }

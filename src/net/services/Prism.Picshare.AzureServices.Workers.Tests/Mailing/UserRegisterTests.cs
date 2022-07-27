@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +23,10 @@ public class UserRegisterTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var user = new Domain.User();
+        var user = new Domain.User
+        {
+            Id = Guid.NewGuid()
+        };
 
         var mediator = new Mock<IMediator>();
         var context = new Mock<FunctionContext>();
@@ -32,6 +36,6 @@ public class UserRegisterTests
         await controller.Run(JsonSerializer.Serialize(user), context.Object);
 
         // Assert
-        mediator.Verify(x => x.Send(It.Is<RegisterConfirmation>(r => r.RegisteringUser == user), It.IsAny<CancellationToken>()), Times.Once);
+        mediator.Verify(x => x.Send(It.Is<RegisterConfirmation>(r => r.RegisteringUser.Id == user.Id), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

@@ -15,6 +15,7 @@ public static class HttpRequestDataExtensions
     {
         var response = requestData.CreateResponse(statusCode);
         await response.WriteAsJsonAsync(data);
+        response.StatusCode = statusCode;
         return response;
     }
 }

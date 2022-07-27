@@ -53,13 +53,14 @@ public class StoreClientTests
             OrganisationId = Guid.NewGuid()
         };
         var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.GetStateAsync<User>(Stores.Users, data.Id.ToString(), null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
+        daprClient.Setup(x =>
+                x.GetStateAsync<User>("state" + Stores.Users, data.OrganisationId + "+" + data.Id, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        var result = await storeClient.GetStateAsync<User>(data.Id.ToString());
+        var result = await storeClient.GetStateNullableAsync<User>(data.OrganisationId, data.Id);
 
         // Assert
         result.Should().BeEquivalentTo(data);
@@ -69,19 +70,20 @@ public class StoreClientTests
     public async Task Get_WithStore_Ok()
     {
         // Arrange
-        var data = new EntityReference
+        var data = new Album
         {
             Id = Guid.NewGuid(),
             OrganisationId = Guid.NewGuid()
         };
         var daprClient = new Mock<DaprClient>();
-        daprClient.Setup(x => x.GetStateAsync<EntityReference>(Stores.Albums, data.Id.ToString(), null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
+        daprClient.Setup(x =>
+                x.GetStateAsync<Album>("state" + Stores.Albums, data.OrganisationId + "+" + data.Id, null, It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
         var telemetryClient = new TelemetryClient(new TelemetryConfiguration());
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        var result = await storeClient.GetStateAsync<EntityReference>(Stores.Albums, data.Id.ToString());
+        var result = await storeClient.GetStateAsync<Album>(data.OrganisationId, data.Id);
 
         // Assert
         result.Should().BeEquivalentTo(data);
@@ -121,17 +123,18 @@ public class StoreClientTests
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        await storeClient.SaveStateAsync(data.Id.ToString(), data);
+        await storeClient.SaveStateAsync(data);
 
         // Assert
-        daprClient.Verify(x => x.SaveStateAsync(Stores.Users, data.Id.ToString(), data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
+        daprClient.Verify(x => x.SaveStateAsync("state" + Stores.Users, data.OrganisationId + "+" + data.Id, data, null, It.IsAny<IReadOnlyDictionary<string, string>>(),
+            It.IsAny<CancellationToken>()));
     }
 
     [Fact]
     public async Task Save_WithStore_Ok()
     {
         // Arrange
-        var data = new User
+        var data = new Album
         {
             Id = Guid.NewGuid(),
             OrganisationId = Guid.NewGuid()
@@ -141,9 +144,10 @@ public class StoreClientTests
 
         // Act
         var storeClient = new DaprStoreClient(daprClient.Object, telemetryClient);
-        await storeClient.SaveStateAsync(Stores.Albums, data);
+        await storeClient.SaveStateAsync(data);
 
         // Assert
-        daprClient.Verify(x => x.SaveStateAsync(Stores.Albums, data.Id.ToString(), data, null, It.IsAny<IReadOnlyDictionary<string, string>>(), It.IsAny<CancellationToken>()));
+        daprClient.Verify(x => x.SaveStateAsync("state" + Stores.Albums, data.OrganisationId + "+" + data.Id, data, null, It.IsAny<IReadOnlyDictionary<string, string>>(),
+            It.IsAny<CancellationToken>()));
     }
 }

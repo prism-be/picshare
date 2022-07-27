@@ -48,7 +48,7 @@ public class ShowTests
         userContextAccessor.Setup(x => x.HasAccess(organisationId)).Returns(true);
         var mediator = new Mock<IMediator>();
 
-        var (requestData, context) = AzureFunctionContext.Generate();
+        var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId);
 
         // Act
         var controller = new Show(mediator.Object);

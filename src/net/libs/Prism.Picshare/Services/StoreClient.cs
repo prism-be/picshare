@@ -35,13 +35,6 @@ public abstract class StoreClient
         }
     };
 
-    protected static readonly HashSet<Type> OrganisationScopedTypes = new()
-    {
-        typeof(Album),
-        typeof(Picture),
-        typeof(User)
-    };
-
     public async Task<T> GetStateAsync<T>(Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class, new()
     {
         var result = await GetStateNullableAsync<T>(organisationId, id, cancellationToken);
@@ -51,12 +44,6 @@ public abstract class StoreClient
     public async Task<T> GetStateAsync<T>(string id, CancellationToken cancellationToken = default) where T : class, new()
     {
         var result = await GetStateNullableAsync<T>(id, cancellationToken);
-        return result ?? new T();
-    }
-
-    public async Task<T> GetStateAsync<T>(string store, string key, CancellationToken cancellationToken = default) where T : class, new()
-    {
-        var result = await GetStateNullableAsync<T>(store, key, cancellationToken);
         return result ?? new T();
     }
 
@@ -76,16 +63,6 @@ public abstract class StoreClient
     {
         var organisation = organisationId == Guid.Empty ? String.Empty : organisationId.ToString();
         return await GetStateNullableAsync<T>(store, organisation, id.ToString(), cancellationToken);
-    }
-
-    public async Task<T?> GetStateNullableAsync<T>(string partition, string id, CancellationToken cancellationToken = default) where T : class
-    {
-        if (StoresMatching.TryGetValue(typeof(T), out var store))
-        {
-            return await GetStateNullableAsync<T>(store, partition, id, cancellationToken);
-        }
-
-        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
 
     public async Task<T?> GetStateNullableAsync<T>(string id, CancellationToken cancellationToken = default) where T : class

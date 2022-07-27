@@ -13,6 +13,7 @@ public static class HttpResponseDataExtension
 {
     public static T? GetBody<T>(this HttpResponseData responseData)
     {
+        responseData.Body.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(responseData.Body);
         var json = reader.ReadToEnd();
         return JsonSerializer.Deserialize<T>(json);

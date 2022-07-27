@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -42,7 +43,7 @@ public class ThumbsTests
         var thumb = await controller.Run(requestData.Object, context.Object, Guid.NewGuid(), Guid.NewGuid(), 150, 150);
 
         // Assert
-        thumb.Should().BeAssignableTo<NotFoundResult>();
+        thumb.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -60,14 +61,14 @@ public class ThumbsTests
         blobClient.Setup(x => x.ReadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Samples.SmallImage);
 
-        var (requestData, context) = AzureFunctionContext.Generate();
+        var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId);
 
         // Act
         var controller = new Thumbs(logger.Object, blobClient.Object);
-        var thumb = await controller.Run(requestData.Object, context.Object, Guid.NewGuid(), Guid.NewGuid(), 150, 150);
+        var thumb = await controller.Run(requestData.Object, context.Object, organisationId, Guid.NewGuid(), 150, 150);
 
         // Assert
-        thumb.Should().BeAssignableTo<FileResult>();
+        thumb.StatusCode.Should().Be(HttpStatusCode.OK);;
     }
 
     [Fact]
@@ -90,6 +91,6 @@ public class ThumbsTests
         var thumb = await controller.Run(requestData.Object, context.Object, Guid.NewGuid(), Guid.NewGuid(), 150, 150);
 
         // Assert
-        thumb.Should().BeAssignableTo<NotFoundResult>();
+        thumb.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

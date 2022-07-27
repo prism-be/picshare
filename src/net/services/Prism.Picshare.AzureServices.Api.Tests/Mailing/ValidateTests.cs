@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -15,6 +16,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Moq;
 using Prism.Picshare.AzureServices.Api.Mailing;
 using Prism.Picshare.Commands.Mailing;
+using Prism.Picshare.UnitTests;
 using Xunit;
 
 namespace Prism.Picshare.AzureServices.Api.Tests.Mailing;
@@ -30,15 +32,14 @@ public class ValidateTests
         var mediator = new Mock<IMediator>();
         mediator.Setup(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ResultCodes.MailActionAlreadyConsumed);
-        var requestData = new Mock<HttpRequestData>();
-        var context = new Mock<FunctionContext>();
+        var (requestData, context) = AzureFunctionContext.Generate();
 
         // Act
         var controller = new Validate(mediator.Object);
         var result = await controller.Run(requestData.Object, context.Object, id);
 
         // Assert
-        result.Should().BeAssignableTo<NotFoundResult>();
+        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -49,15 +50,14 @@ public class ValidateTests
         var mediator = new Mock<IMediator>();
         mediator.Setup(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ResultCodes.MailActionNotFound);
-        var requestData = new Mock<HttpRequestData>();
-        var context = new Mock<FunctionContext>();
+        var (requestData, context) = AzureFunctionContext.Generate();
 
         // Act
         var controller = new Validate(mediator.Object);
         var result = await controller.Run(requestData.Object, context.Object, id);
 
         // Assert
-        result.Should().BeAssignableTo<NotFoundResult>();
+        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -68,15 +68,14 @@ public class ValidateTests
         var mediator = new Mock<IMediator>();
         mediator.Setup(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ResultCodes.Ok);
-        var requestData = new Mock<HttpRequestData>();
-        var context = new Mock<FunctionContext>();
+        var (requestData, context) = AzureFunctionContext.Generate();
 
         // Act
         var controller = new Validate(mediator.Object);
         var result = await controller.Run(requestData.Object, context.Object, id);
 
         // Assert
-        result.Should().BeAssignableTo<OkObjectResult>();
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
         mediator.Verify(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Id == id), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

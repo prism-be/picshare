@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Web;
 using HttpMultipartParser;
@@ -30,6 +31,7 @@ public class Upload
         _mediator = mediator;
     }
 
+    [ExcludeFromCodeCoverage]
     [Authorize]
     [Function(nameof(Pictures) + "." + nameof(Upload))]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "pictures/upload")] HttpRequestData req, FunctionContext executionContext)

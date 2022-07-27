@@ -42,7 +42,7 @@ public class EmailValidatedTests
         var result = await controller.Run(message, context.Object);
 
         // Assert
-        result.Should().Be(ResultCodes.MailActionNotFound);
+        result.Should().Be(ResultCodes.UserNotFound);
     }
 
     [Fact]
