@@ -42,7 +42,7 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
 
         if (authorization.AllowAnonymous != true)
         {
-            var claims = TryGetUserFromBearer(context);
+            var claims = TryGetUserFromBearer(context) ?? TryGetUserFromQuery(context);
 
             if (claims == null)
             {
@@ -103,5 +103,22 @@ public class AuthenticationMiddleware : IFunctionsWorkerMiddleware
 
         var token = authHeaderValue.Substring("Bearer ".Length).Trim();
         return TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, token, _logger, false);
+    }
+
+    private ClaimsPrincipal? TryGetUserFromQuery(FunctionContext context)
+    {
+        if (!context.BindingContext.BindingData.TryGetValue("accessToken", out var accesstokenObj))
+        {
+            return null;
+        }
+
+        var accessToken = accesstokenObj?.ToString();
+
+        if (string.IsNullOrWhiteSpace(accessToken))
+        {
+            return null;
+        }
+
+        return TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, accessToken, _logger, false);
     }
 }

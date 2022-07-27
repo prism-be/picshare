@@ -23,6 +23,7 @@
     <ItemGroup>
       <Folder Include="Commands\Albums" />
       <Folder Include="Commands\Pictures" />
+      <Folder Include="Controllers\Api" />
     </ItemGroup>
 
 </Project>
