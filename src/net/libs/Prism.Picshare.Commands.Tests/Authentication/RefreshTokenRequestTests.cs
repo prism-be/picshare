@@ -4,16 +4,21 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Picshare.AspNetCore.Authentication;
+using Prism.Picshare.Commands.Authentication;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.Security;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
+using Xunit;
 
-namespace Prism.Picshare.Services.Authentication.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Authentication;
 
 public class RefreshTokenRequestTests
 {
@@ -39,7 +44,7 @@ public class RefreshTokenRequestTests
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
+        storeClient.SetupGetStateAsync(Stores.Users, organisationId, userId, user);
 
         var refreshToken = TokenGenerator.GenerateAccessToken(_jwtConfiguration.PrivateKey, user);
 
@@ -65,7 +70,7 @@ public class RefreshTokenRequestTests
 
         var logger = new Mock<ILogger<GenerateTokenRequestHandler>>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(organisationId, userId), user);
+        storeClient.SetupGetStateAsync(Stores.Users, organisationId, userId, user);
 
         var refreshToken = TokenGenerator.GenerateRefreshToken(_jwtConfiguration.PrivateKey, user);
 

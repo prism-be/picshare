@@ -22,15 +22,15 @@ public class EmailValidated
     }
 
     [Function(nameof(User) + "." + nameof(EmailValidated))]
-    public async Task Run([ServiceBusTrigger(Topics.Email.Validated, Topics.Subscription, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
+    public async Task<ResultCodes> Run([ServiceBusTrigger(Topics.Email.Validated, Topics.Subscription, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
     {
         var user = JsonSerializer.Deserialize<Domain.User>(mySbMsg);
 
         if (user == null)
         {
-            return;
+            return ResultCodes.Unknown;
         }
 
-        await _mediator.Send(new EmailValidatedRequest(user.OrganisationId, user.Id));
+        return await _mediator.Send(new EmailValidatedRequest(user.OrganisationId, user.Id));
     }
 }

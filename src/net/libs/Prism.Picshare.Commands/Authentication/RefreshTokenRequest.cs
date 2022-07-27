@@ -5,10 +5,12 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
-using Prism.Picshare.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
+using Prism.Picshare.Security;
+using Prism.Picshare.Services;
 
-namespace Prism.Picshare.Services.Authentication.Commands;
+namespace Prism.Picshare.Commands.Authentication;
 
 public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>
 {
@@ -20,9 +22,9 @@ public record RefreshTokenRequest(string RefreshToken) : IRequest<Token?>
 
 public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, Token?>
 {
-    private readonly StoreClient _storeClient;
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<GenerateTokenRequestHandler> _logger;
+    private readonly StoreClient _storeClient;
 
     public RefreshTokenRequestHandler(JwtConfiguration jwtConfiguration, ILogger<GenerateTokenRequestHandler> logger, StoreClient storeClient)
     {
@@ -40,12 +42,13 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
             return null;
         }
 
-        var key = principal.Claims.SingleOrDefault(x => x.Type == "Key")?.Value ?? Guid.Empty.ToString();
-        var user = await _storeClient.GetStateNullableAsync<User>(key, cancellationToken: cancellationToken);
+        var id = Guid.Parse(principal.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
+        var organisationId = Guid.Parse(principal.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
+        var user = await _storeClient.GetStateNullableAsync<User>(organisationId, id, cancellationToken);
 
         if (user == null)
         {
-            _logger.LogWarning("No user found for key : {key}", key);
+            _logger.LogWarning("No user found for key : {key}", id);
             return null;
         }
 

@@ -4,14 +4,19 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Prism.Picshare.Commands.Authentication;
 using Prism.Picshare.Domain;
-using Prism.Picshare.Services.Authentication.Commands;
+using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
+using Xunit;
 
-namespace Prism.Picshare.Services.Authentication.Tests.Commands;
+namespace Prism.Picshare.Commands.Tests.Authentication;
 
 public class EmailValidationRequestTests
 {
@@ -40,7 +45,7 @@ public class EmailValidationRequestTests
         var storeClient = new Mock<StoreClient>();
 
         var request = new EmailValidatedRequest(Guid.NewGuid(), Guid.NewGuid());
-        storeClient.SetupGetStateAsync(Stores.Users, EntityReference.ComputeKey(request.OrganisationId, request.UserId), new User
+        storeClient.SetupGetStateAsync(Stores.Users, request.OrganisationId, request.UserId, new User
         {
             OrganisationId = request.OrganisationId,
             Id = request.UserId
