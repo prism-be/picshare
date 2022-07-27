@@ -6,4 +6,10 @@
 
 namespace Prism.Picshare.Security;
 
-public record UserContext(Guid OrganisationId, Guid Id, bool IsAuthenticated, string Name);
+public record UserContext(Guid OrganisationId, Guid Id, bool IsAuthenticated, string Name)
+{
+    public bool HasAccess(Guid organisationId)
+    {
+        return OrganisationId == organisationId;
+    }
+}
