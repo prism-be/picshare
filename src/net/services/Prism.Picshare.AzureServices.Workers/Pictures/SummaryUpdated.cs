@@ -13,7 +13,7 @@ using Prism.Picshare.Events;
 
 namespace Prism.Picshare.AzureServices.Workers.Pictures;
 
-public class SummaryUpdated
+public class SummaryUpdated : ISimpleFunction
 {
     private readonly IMediator _mediator;
 

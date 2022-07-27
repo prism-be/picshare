@@ -12,7 +12,7 @@ using Prism.Picshare.Events;
 
 namespace Prism.Picshare.AzureServices.Workers.Mailing;
 
-public class UserRegister
+public class UserRegister: ISimpleFunction
 {
     private readonly IMediator _mediator;
 

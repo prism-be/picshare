@@ -15,7 +15,7 @@ using Prism.Picshare.Events;
 
 namespace Prism.Picshare.AzureServices.Workers.Processor;
 
-public class PictureCreated
+public class PictureCreated : ISimpleFunction
 {
     private readonly IMediator _mediator;
 

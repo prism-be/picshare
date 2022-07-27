@@ -68,4 +68,19 @@ public class EmailValidatedTests
         // Assert
         result.Should().Be(ResultCodes.Ok);
     }
+    
+    [Fact]
+    public async Task Validate_Null()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+        var context = new Mock<FunctionContext>();
+
+        // Act
+        var controller = new EmailValidated(mediator.Object);
+        var result = await controller.Run("null", context.Object);
+
+        // Assert
+        result.Should().Be(ResultCodes.Unknown);
+    }
 }

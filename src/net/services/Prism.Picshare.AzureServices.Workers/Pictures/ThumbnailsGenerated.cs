@@ -13,7 +13,7 @@ using Prism.Picshare.Events;
 
 namespace Prism.Picshare.AzureServices.Workers.Pictures;
 
-public class ThumbnailsGenerated
+public class ThumbnailsGenerated : ISimpleFunction
 {
     private readonly IMediator _mediator;
 

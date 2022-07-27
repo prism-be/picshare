@@ -22,8 +22,26 @@ namespace Prism.Picshare.AzureServices.Workers.Tests.Processor;
 
 public class PictureUploadedTests
 {
+
     [Fact]
-    public async Task PictureUploaded_Ok()
+    public async Task Run_Null()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+        var publisherClient = new Mock<PublisherClient>();
+
+        var context = new Mock<FunctionContext>();
+
+        // Act
+        var controller = new PictureUploaded(mediator.Object, publisherClient.Object);
+        await controller.Run("null", context.Object);
+
+        // Assert
+        mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Never());
+    }
+
+    [Fact]
+    public async Task Run_Ok()
     {
         // Arrange
         var organisationId = Guid.NewGuid();
