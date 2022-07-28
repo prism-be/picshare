@@ -9,9 +9,11 @@ using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.AzureServices.Middlewares;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Commands;
+using Prism.Picshare.Insights;
 using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 using Prism.Picshare.Services.Azure;
@@ -50,6 +52,11 @@ internal static class Program
                 services.AddScoped<BlobClient, AzureBlobClient>();
                 services.AddScoped<StoreClient, CosmosStoreClient>();
                 services.AddScoped<PublisherClient, ServiceBusPublisherClient>();
+            })
+            .ConfigureLogging(logging =>
+            {
+                logging.AddInsights();
+                logging.AddConsole();
             })
             .Build();
 
