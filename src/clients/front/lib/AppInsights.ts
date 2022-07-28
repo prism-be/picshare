@@ -17,6 +17,7 @@ export const appInsights = new ApplicationInsights({
 });
 
 let appInsightsLoaded = false;
+const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
 
 export const loadAppInsights = () => {
     
@@ -27,7 +28,7 @@ export const loadAppInsights = () => {
 
     appInsightsLoaded = true;
     
-    fetch('/api/config/insights')
+    fetch(prefix + '/api/config/insights')
         .then((response) => {
             response.json().then(data => {
                 appInsights.config.instrumentationKey = data.instrumentationKey;

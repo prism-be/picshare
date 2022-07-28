@@ -8,6 +8,8 @@ interface Props {
     togglePictureZoom: (picture: IPictureSummary) => void;
 }
 
+const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
+
 export const Thumbnail = ({picture, togglePictureZoom}: Props) => {
 
     const [selected, setSelected]= useState(false);
@@ -17,6 +19,6 @@ export const Thumbnail = ({picture, togglePictureZoom}: Props) => {
     }
 
     return <div key={picture.id} onClick={() => togglePictureZoom(picture)} className={"h-full w-full p-0 cursor-pointer border-2" + (selected ? " border-gray-500" : " border-white")}>
-        <Image loader={myLoader} layout={"responsive"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id + "/150/150/"} width={150} height={150} alt={picture.name}/>
+        <Image loader={myLoader} layout={"responsive"} src={prefix + "/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id + "/150/150/"} width={150} height={150} alt={picture.name}/>
     </div>
 }
