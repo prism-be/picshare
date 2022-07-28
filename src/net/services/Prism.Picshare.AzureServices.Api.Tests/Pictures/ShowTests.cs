@@ -6,6 +6,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
@@ -47,6 +48,12 @@ public class ShowTests
         var userContextAccessor = new Mock<IUserContextAccessor>();
         userContextAccessor.Setup(x => x.HasAccess(organisationId)).Returns(true);
         var mediator = new Mock<IMediator>();
+        mediator.Setup(x => x.Send(It.IsAny<IncreaseViewCount>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Picture
+            {
+                Id = Guid.NewGuid(),
+                OrganisationId = Guid.NewGuid()
+            });
 
         var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId);
 
@@ -56,6 +63,7 @@ public class ShowTests
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.GetBody<Picture>().Should().NotBeNull();
         mediator.VerifySend<IncreaseViewCount, Picture>(Times.Once());
     }
 }
