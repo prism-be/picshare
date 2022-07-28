@@ -76,6 +76,13 @@ jobs:
       - name: Install Packages
         working-directory: ./src/clients/front
         run: yarn install --frozen-lockfile
+        
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: '"api": ""'
+          replace: '"api": "${{ secrets.DEV_AZURE_FUNCTIONAPP_URL }}"'
+          include: "src/clients/front/lib/config.json"
 
       - name: Build Project
         working-directory: ./src/clients/front
