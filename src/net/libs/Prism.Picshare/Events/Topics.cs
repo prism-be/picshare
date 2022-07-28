@@ -13,42 +13,42 @@ public static class Topics
 
     public static class User
     {
-        public const string Register = "user~register";
-        public const string Created = "user~created";
-        public const string AuthenticationSucceeded = "user~authentication~succeeded";
-        public const string AuthenticationFailed = "user~authentication~failed";
-        public const string PasswordResetRequired = "user~password-reset~required";
-        public const string PasswordResetDone = "user~password-reset~done";
+        public const string Register = "user/register";
+        public const string Created = "user/created";
+        public const string AuthenticationSucceeded = "user/authentication/succeeded";
+        public const string AuthenticationFailed = "user/authentication/failed";
+        public const string PasswordResetRequired = "user/password-reset/required";
+        public const string PasswordResetDone = "user/password-reset/done";
     }
 
     public static class Email
     {
-        public const string Validated = "email~validated";
-        public const string PasswordResetValidated = "email~password-reset~validated";
+        public const string Validated = "email/validated";
+        public const string PasswordResetValidated = "email/password-reset/validated";
     }
 
     public static class Album
     {
-        public const string Updated = "album~updated";
+        public const string Updated = "album/updated";
     }
 
     public static class Pictures
     {
-        public const string Created = "picture~created";
-        public const string ExifRead = "picture~exif~read";
-        public const string SummaryUpdated = "picture~summary~updated";
-        public const string ThumbnailsGenerated = "picture~thumbnails~generated";
-        public const string Updated = "picture~updated";
-        public const string Uploaded = "picture~uploaded";
-        public const string Seen = "picture~seen";
+        public const string Created = "picture/created";
+        public const string ExifRead = "picture/exif/read";
+        public const string SummaryUpdated = "picture/summary/updated";
+        public const string ThumbnailsGenerated = "picture/thumbnails/generated";
+        public const string Updated = "picture/updated";
+        public const string Uploaded = "picture/uploaded";
+        public const string Seen = "picture/seen";
     }
 
     public static class Photobooth
     {
         public static class Picture
         {
-            public const string Taken = "photobooth~picture~taken";
-            public const string Uploaded = "photobooth~picture~uploaded";
+            public const string Taken = "photobooth/picture/taken";
+            public const string Uploaded = "photobooth/picture/uploaded";
         }
     }
 }
