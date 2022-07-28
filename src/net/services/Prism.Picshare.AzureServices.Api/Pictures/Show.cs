@@ -33,7 +33,7 @@ public class Show
             return req.CreateResponse(HttpStatusCode.NotFound);
         }
 
-        await _mediator.Send(new IncreaseViewCount(organisationId, pictureId));
-        return req.CreateResponse(HttpStatusCode.OK);
+        var picture = await _mediator.Send(new IncreaseViewCount(organisationId, pictureId));
+        return await req.CreateResponseAsync(HttpStatusCode.OK, picture);
     }
 }
