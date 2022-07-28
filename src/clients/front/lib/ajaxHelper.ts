@@ -1,4 +1,6 @@
-﻿interface ObjectResult
+﻿const config = require('./config.json');
+
+interface ObjectResult
 {
     status: number;
     data: any | undefined;
@@ -19,10 +21,8 @@ export interface IFlow
     pictures: IPictureSummary[];
 }
 
-const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
-
 export async function getData(route: string): Promise<ObjectResult> {
-    const response = await fetch(prefix + route, {
+    const response = await fetch(config.api + route, {
         method: "GET",
         headers: {
             'Accept': 'application/json',
@@ -62,7 +62,7 @@ export const performRefreshToken = async (): Promise<boolean> => {
             refreshToken
         };
         
-        const refreshResponse = await fetch(prefix + '/api/authentication/refresh', {
+        const refreshResponse = await fetch(config.api + '/api/authentication/refresh', {
             body: JSON.stringify(data),
             method: "POST",
             headers: {
@@ -98,7 +98,7 @@ export const performRefreshToken = async (): Promise<boolean> => {
 let autoRefreshToken: NodeJS.Timeout;
 
 export async function postData(route: string, body: any): Promise<any> {
-    const response = await fetch(prefix + route, {
+    const response = await fetch(config.api + route, {
         body: JSON.stringify(body),
         method: "POST",
         headers: {
@@ -135,7 +135,7 @@ export async function postFile(route: string, file: File): Promise<any> {
     const data = new FormData();
     data.append('file', file, file.name);
     
-    const response = await fetch(prefix + route, {
+    const response = await fetch(config.api + route, {
         body: data,
         method: "POST",
         headers: {

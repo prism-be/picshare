@@ -1,6 +1,8 @@
 ﻿import {ApplicationInsights, ITelemetryItem} from '@microsoft/applicationinsights-web';
 import {ReactPlugin} from '@microsoft/applicationinsights-react-js';
 
+const config = require('../lib/config.json');
+
 const telemetryInitializer = (envelope: ITelemetryItem) => {
     if (envelope.tags) {
         envelope.tags['ai.cloud.role'] = "front";
@@ -17,7 +19,6 @@ export const appInsights = new ApplicationInsights({
 });
 
 let appInsightsLoaded = false;
-const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
 
 export const loadAppInsights = () => {
     
@@ -28,7 +29,7 @@ export const loadAppInsights = () => {
 
     appInsightsLoaded = true;
     
-    fetch(prefix + '/api/config/insights')
+    fetch(config.api + '/api/config/insights')
         .then((response) => {
             response.json().then(data => {
                 appInsights.config.instrumentationKey = data.instrumentationKey;

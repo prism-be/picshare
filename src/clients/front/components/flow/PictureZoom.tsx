@@ -3,6 +3,8 @@ import Image, {ImageLoaderProps} from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
 import useSWR from "swr";
 
+const config = require('../../lib/config.json');
+
 interface Props {
     picture: IPictureSummary;
     togglePictureZoom: (picture: IPictureSummary) => void;
@@ -10,22 +12,20 @@ interface Props {
     nextPictureZoom: () => void;
 }
 
-const prefix = process.env.NEXT_PUBLIC_API_ROOT ? process.env.NEXT_PUBLIC_API_ROOT : "";
-
 export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, nextPictureZoom}: Props) => {
     const myLoader = ({src, width}: ImageLoaderProps) => {
         if (width <= 960) {
-            return prefix + src + "/960/540/?accessToken=" + localStorage.getItem('accessToken');
+            return config.api + src + "/960/540/?accessToken=" + localStorage.getItem('accessToken');
         }
 
         if (width <= 1920) {
-            return prefix + src + "/1920/1080/?accessToken=" + localStorage.getItem('accessToken');
+            return config.api + src + "/1920/1080/?accessToken=" + localStorage.getItem('accessToken');
         }
 
-        return prefix + src + "/3840/2160/?accessToken=" + localStorage.getItem('accessToken');
+        return config.api + src + "/3840/2160/?accessToken=" + localStorage.getItem('accessToken');
     }
 
-    const {data: pictureInfo} = useSWR(prefix + '/api/pictures/show/' + picture.organisationId + '/' + picture.id);
+    const {data: pictureInfo} = useSWR(config.api + '/api/pictures/show/' + picture.organisationId + '/' + picture.id);
 
     let touchStartX = 0;
     const onTouchStart = (event: React.Touch) => {
