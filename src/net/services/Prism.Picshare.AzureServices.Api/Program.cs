@@ -52,6 +52,8 @@ internal static class Program
                 services.AddScoped<BlobClient, AzureBlobClient>();
                 services.AddScoped<StoreClient, CosmosStoreClient>();
                 services.AddScoped<PublisherClient, ServiceBusPublisherClient>();
+                
+                services.AddInsights();
             })
             .ConfigureLogging(logging =>
             {
