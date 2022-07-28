@@ -5,6 +5,8 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
@@ -15,15 +17,24 @@ public static class LoggingBuilderExtensions
 {
     public static void AddInsights(this ILoggingBuilder builder)
     {
-        builder.Services.AddSingleton<ITelemetryInitializer, PicshareTelemetryInitializer>();
-
-        builder.Services.AddApplicationInsightsTelemetry(opt =>
-        {
-            opt.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
-        });
-
+        builder.AddApplicationInsights();
+        
         builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
         builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft.Hosting.Lifetime", LogLevel.Information);
         builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Warning);
+        
+        builder.Services.AddInsights();
+    }
+
+    public static void AddInsights(this IServiceCollection services)
+    {
+        services.AddSingleton<ITelemetryInitializer, PicshareTelemetryInitializer>();
+
+        services.AddSingleton<IHostingEnvironment, HostingEnvironment>();
+
+        services.AddApplicationInsightsTelemetry(opt =>
+        {
+            opt.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
+        });
     }
 }

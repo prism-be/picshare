@@ -9,8 +9,10 @@ using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Commands;
+using Prism.Picshare.Insights;
 using Prism.Picshare.Mailing;
 using Prism.Picshare.Services;
 using Prism.Picshare.Services.Azure;
@@ -52,6 +54,13 @@ internal static class Program
 
                 services.AddScoped<IEmailWorker, EmailWorker>();
                 services.AddScoped<ISmtpClientWrapper, SmtpClientWrapper>();
+
+                services.AddInsights();
+            })
+            .ConfigureLogging(logging =>
+            {
+                logging.AddInsights();
+                logging.AddConsole();
             })
             .Build();
 
