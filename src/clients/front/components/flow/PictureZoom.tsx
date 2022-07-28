@@ -25,7 +25,7 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
         return config.api + src + "/3840/2160/?accessToken=" + localStorage.getItem('accessToken');
     }
 
-    const {data: pictureInfo} = useSWR(config.api + '/api/pictures/show/' + picture.organisationId + '/' + picture.id);
+    const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
 
     let touchStartX = 0;
     const onTouchStart = (event: React.Touch) => {
