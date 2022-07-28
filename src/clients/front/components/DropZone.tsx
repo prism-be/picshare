@@ -10,14 +10,14 @@ interface Props {
 const DropZone = ({small}: Props) => {
 
     let currentFileIndex = -1;
+    let files: File[]= [];
 
     const {mutate} = useSWRConfig();
 
     const [percentageDone, setPercentageDone] = useState(0);
     const [inDropZone, setInDropZone] = useState(false);
-    const [files, setFiles] = useState<File[]>([]);
     const [inProgress, setInProgress] = useState(false);
-
+    
     const {t} = useTranslation('common')
 
     const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
@@ -47,16 +47,14 @@ const DropZone = ({small}: Props) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const currentFiles = files.slice();
-        
+        debugger;
+
         // get files from event on the dataTransfer object as an array
         for (let i = 0; i < e.dataTransfer.files.length; i++) {
             const file: File = e.dataTransfer.files[i];
-            currentFiles.push(file);
+            files.push(file);
         }
-
-        setFiles(currentFiles);
-
+        
         setInDropZone(false);
         setPercentageDone(0);
 
@@ -85,7 +83,7 @@ const DropZone = ({small}: Props) => {
 
         if (currentFileIndex == files.length) {
             setInProgress(false);
-            setFiles([]);
+            files = [];
             currentFileIndex = -1;
             setPercentageDone(0);
         } else if (currentFileIndex < files.length) {
@@ -96,15 +94,16 @@ const DropZone = ({small}: Props) => {
     
     const handleFileSelected = (e: any) =>
     {
-        const currentFiles = files.slice();
+        e.preventDefault();
+        e.stopPropagation();
+        
+        debugger;
         
         for (let i = 0; i < e.target.files.length; i++) {
             const file: File = e.target.files[i];
-            currentFiles.push(file);
+            files.push(file);
         }
-
-        setFiles(currentFiles);
-
+        
         if (!inProgress) {
             setInProgress(true);
 
