@@ -47,8 +47,6 @@ const DropZone = ({small}: Props) => {
         e.preventDefault();
         e.stopPropagation();
 
-        debugger;
-
         // get files from event on the dataTransfer object as an array
         for (let i = 0; i < e.dataTransfer.files.length; i++) {
             const file: File = e.dataTransfer.files[i];
@@ -96,8 +94,6 @@ const DropZone = ({small}: Props) => {
     {
         e.preventDefault();
         e.stopPropagation();
-        
-        debugger;
         
         for (let i = 0; i < e.target.files.length; i++) {
             const file: File = e.target.files[i];

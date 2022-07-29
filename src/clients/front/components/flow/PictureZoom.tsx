@@ -53,12 +53,12 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
         }
 
         if (swipeLeft) {
-            previousPictureZoom();
+            nextPictureZoom();
             return;
         }
 
         if (swipeRight) {
-            nextPictureZoom();
+            previousPictureZoom();
             return;
         }
         
