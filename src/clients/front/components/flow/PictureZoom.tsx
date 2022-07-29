@@ -28,19 +28,44 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
     const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
 
     let touchStartX = 0;
+    let touchStartY = 0;
     const onTouchStart = (event: React.Touch) => {
         touchStartX = event.pageX;
+        touchStartY = event.pageY;
     }
 
     const onTouchEnd = (event: React.Touch) => {
-        const swipeLength = event.pageX - touchStartX;
-
-        if (swipeLength < 0) {
-            previousPictureZoom();
+        const swipeXLength = event.pageX - touchStartX;
+        const swipeYLength = event.pageY - touchStartY;
+        
+        let swipeRight = false;
+        let swipeLeft = false;
+        let swipeDown = false;
+        let swipeUp = false;
+        
+        if (Math.abs(swipeXLength) > Math.abs(swipeYLength)) {
+            swipeRight = swipeXLength > 0;
+            swipeLeft = !swipeRight && swipeXLength < 0
+        }
+        else {
+            swipeUp = swipeYLength < 0;
+            swipeDown = !swipeUp && swipeYLength > 0;
         }
 
-        if (swipeLength > 0) {
+        if (swipeLeft) {
+            previousPictureZoom();
+            return;
+        }
+
+        if (swipeRight) {
             nextPictureZoom();
+            return;
+        }
+        
+        if (swipeDown)
+        {
+            togglePictureZoom(picture);
+            return;
         }
     }
 
@@ -61,7 +86,7 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
                     {pictureInfo.data.name}
                 </div>
             }
-            <div onClick={() => togglePictureZoom(picture)} className={"w-8 h-8 m-1 cursor-pointer flex absolute right-0 top-0"}>
+            <div className={"w-8 h-8 m-1 cursor-pointer flex absolute right-0 top-0"}>
                 <span className="material-icons m-auto text-gray-500">close_fullscreen</span>
             </div>
         </div>
