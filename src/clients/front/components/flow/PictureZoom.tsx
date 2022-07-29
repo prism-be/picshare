@@ -1,6 +1,7 @@
-﻿import React from "react";
+﻿import React, {useEffect} from "react";
 import Image, {ImageLoaderProps} from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
+import { useKeyPressEvent } from "react-use";
 import useSWR from "swr";
 
 const config = require('../../lib/config.json');
@@ -13,6 +14,20 @@ interface Props {
 }
 
 export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, nextPictureZoom}: Props) => {
+    
+    useKeyPressEvent('ArrowRight', () => {
+        nextPictureZoom();
+    })
+
+    useKeyPressEvent('ArrowLeft', () => {
+        previousPictureZoom();
+    })
+
+    useKeyPressEvent('Esc', () => {
+        togglePictureZoom(picture);
+    })
+
+    
     const myLoader = ({src, width}: ImageLoaderProps) => {
         if (width <= 960) {
             return config.api + src + "/960/540/?accessToken=" + localStorage.getItem('accessToken');
@@ -71,7 +86,8 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
 
     return <>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 overflow-auto bg-gray-600 flex"
-             onTouchStart={(e) => onTouchStart(e.changedTouches[0])} onTouchEnd={(e) => onTouchEnd(e.changedTouches[0])}>
+             onTouchStart={(e) => onTouchStart(e.changedTouches[0])} onTouchEnd={(e) => onTouchEnd(e.changedTouches[0])}
+        onKeyUp={(e) => console.log(e)}>
             <div className="grow relative opacity-100 m-1 cursor-pointer">
                 <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id} alt={picture.name}/>
             </div>
