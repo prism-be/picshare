@@ -26,12 +26,7 @@ public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
 
     public async Task<Picture> Handle(SetPictureName request, CancellationToken cancellationToken)
     {
-        var picture = await _storeClient.GetStateNullableAsync<Picture>(request.OrganisationId, request.PictureId, cancellationToken)
-                      ?? new Picture
-                      {
-                          OrganisationId = request.OrganisationId,
-                          Id = request.PictureId
-                      };
+        var picture = await _storeClient.GetStateAsync<Picture>(request.OrganisationId, request.PictureId, cancellationToken);
 
         picture.Name = request.Name;
         await _storeClient.SaveStateAsync(picture, cancellationToken);

@@ -7,6 +7,7 @@
 using System.Text.Json;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
+using Prism.Picshare.Commands.Authorization;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
@@ -23,15 +24,20 @@ public class Created : ISimpleFunction
     }
 
     [Function(nameof(Pictures) + "." + nameof(Created))]
-    public async Task Run([ServiceBusTrigger(Topics.Pictures.Created, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
+    public Task Run([ServiceBusTrigger(Topics.Pictures.Created, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
     {
-        var picture = JsonSerializer.Deserialize<EntityReference>(mySbMsg);
+        var picture = JsonSerializer.Deserialize<Picture>(mySbMsg);
 
         if (picture == null)
         {
-            return;
+            return Task.CompletedTask;
         }
 
-        await _mediator.Send(new ReadMetaData(picture.OrganisationId, picture.Id));
+        Task.WaitAll(
+                _mediator.Send(new ReadMetaData(picture.OrganisationId, picture.Id)),
+                _mediator.Send(new AuthorizeUser(picture.OrganisationId, picture.Owner, picture.Id))
+                );
+        
+        return Task.CompletedTask;
     }
 }

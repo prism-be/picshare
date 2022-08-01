@@ -24,16 +24,18 @@ public class SetPictureReadyHandlerTests
     public async Task Handle_Ok()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<string>(), new Picture
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture
         {
             Summary = new PictureSummary()
         });
 
         // Act
         var handler = new SetPictureReadyHandler(storeClient.Object, publisherClient.Object);
-        var result = await handler.Handle(new SetPictureReady(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
+        var result = await handler.Handle(new SetPictureReady(organisationId, pictureId), CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

@@ -57,8 +57,8 @@ public static class AzureFunctionContext
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
-            new("OrganisationId", (organisationId ?? Guid.NewGuid()).ToString()),
-            new("Id", Guid.NewGuid().ToString())
+            new(ClaimsNames.OrganisationId, (organisationId ?? Guid.NewGuid()).ToString()),
+            new(ClaimsNames.UserId, Guid.NewGuid().ToString())
         };
 
         var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));

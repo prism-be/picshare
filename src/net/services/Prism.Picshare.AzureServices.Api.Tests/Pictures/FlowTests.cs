@@ -4,11 +4,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
@@ -22,10 +22,14 @@ public class FlowTests
     public async Task GetFlow_Ok()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Flow, It.IsAny<string>(), It.IsAny<string>(), new Flow());
-        var (requestData, context) = AzureFunctionContext.Generate();
-        
+        storeClient.SetupGetStateAsync(Stores.Flow, string.Empty, organisationId.ToString(), new Flow
+        {
+            Id = organisationId
+        });
+        var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId);
+
         // Act
         var controller = new Api.Pictures.Flow(storeClient.Object);
         var flow = await controller.Run(requestData.Object, context.Object);

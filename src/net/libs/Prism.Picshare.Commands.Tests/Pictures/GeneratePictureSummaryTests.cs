@@ -26,13 +26,15 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_All()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<string>(), new Picture());
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture());
 
         // Act
         var handler = new GeneratePictureSummaryHandler(storeClient.Object, publisherClient.Object);
-        var picture = await handler.Handle(new GeneratePictureSummary(Guid.NewGuid(), Guid.NewGuid(), new List<ExifData>
+        var picture = await handler.Handle(new GeneratePictureSummary(organisationId, pictureId, new List<ExifData>
         {
             new()
             {
@@ -59,13 +61,15 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_All_But_Invalid()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<string>(), new Picture());
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture());
 
         // Act
         var handler = new GeneratePictureSummaryHandler(storeClient.Object, publisherClient.Object);
-        var picture = await handler.Handle(new GeneratePictureSummary(Guid.NewGuid(), Guid.NewGuid(), new List<ExifData>
+        var picture = await handler.Handle(new GeneratePictureSummary(organisationId, pictureId, new List<ExifData>
         {
             new()
             {
@@ -93,13 +97,15 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_Digitized()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<string>(), new Picture());
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture());
 
         // Act
         var handler = new GeneratePictureSummaryHandler(storeClient.Object, publisherClient.Object);
-        var picture = await handler.Handle(new GeneratePictureSummary(Guid.NewGuid(), Guid.NewGuid(), new List<ExifData>
+        var picture = await handler.Handle(new GeneratePictureSummary(organisationId, pictureId, new List<ExifData>
         {
             new()
             {
@@ -122,13 +128,15 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_None()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<string>(), new Picture());
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture());
 
         // Act
         var handler = new GeneratePictureSummaryHandler(storeClient.Object, publisherClient.Object);
-        var picture = await handler.Handle(new GeneratePictureSummary(Guid.NewGuid(), Guid.NewGuid(), new List<ExifData>()), CancellationToken.None);
+        var picture = await handler.Handle(new GeneratePictureSummary(organisationId, pictureId, new List<ExifData>()), CancellationToken.None);
 
         // Assert
         picture.CreationDate.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
@@ -139,13 +147,15 @@ public class GeneratePictureSummaryTests
     public async Task Handle_Ok_OnlyDate()
     {
         // Arrange
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
-        storeClient.SetupGetStateAsync(Stores.Pictures, It.IsAny<string>(), It.IsAny<string>(), new Picture());
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture());
 
         // Act
         var handler = new GeneratePictureSummaryHandler(storeClient.Object, publisherClient.Object);
-        var picture = await handler.Handle(new GeneratePictureSummary(Guid.NewGuid(), Guid.NewGuid(), new List<ExifData>
+        var picture = await handler.Handle(new GeneratePictureSummary(organisationId, pictureId, new List<ExifData>
         {
             new()
             {

@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
+using Prism.Picshare.Security;
 using Xunit;
 
 namespace Prism.Picshare.Tests.AspNetCore;
@@ -46,9 +47,9 @@ public class UserContextAccessorTests
         var httpContext = new DefaultHttpContext();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
         {
-            new("Name", name),
-            new Claim("Id", id.ToString()),
-            new Claim("OrganisationId", organisationId.ToString())
+            new(ClaimsNames.Name, name),
+            new Claim(ClaimsNames.UserId, id.ToString()),
+            new Claim(ClaimsNames.OrganisationId, organisationId.ToString())
         }, AuthSchemeConstants.PicshareAuthenticationScheme));
         httpContext.User = user;
 
@@ -76,9 +77,9 @@ public class UserContextAccessorTests
         var httpContext = new DefaultHttpContext();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
         {
-            new("Name", name),
-            new Claim("Id", id.ToString()),
-            new Claim("OrganisationId", organisationId.ToString())
+            new(ClaimsNames.Name, name),
+            new Claim(ClaimsNames.UserId, id.ToString()),
+            new Claim(ClaimsNames.OrganisationId, organisationId.ToString())
         }, AuthSchemeConstants.PicshareAuthenticationScheme));
         httpContext.User = user;
 
@@ -103,9 +104,9 @@ public class UserContextAccessorTests
         var httpContext = new DefaultHttpContext();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
         {
-            new("Name", name),
-            new Claim("Id", id.ToString()),
-            new Claim("OrganisationId", organisationId.ToString())
+            new(ClaimsNames.Name, name),
+            new Claim(ClaimsNames.UserId, id.ToString()),
+            new Claim(ClaimsNames.OrganisationId, organisationId.ToString())
         }, AuthSchemeConstants.PicshareAuthenticationScheme));
         httpContext.User = user;
 

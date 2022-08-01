@@ -37,9 +37,9 @@ public static class FunctionContextExtensions
     {
         if (context.Items.TryGetValue("PicshareClaims", out var claimsPrincipalObject) && claimsPrincipalObject is ClaimsPrincipal claimsPrincipal)
         {
-            var id = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
-            var organisationId = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
-            var name = claimsPrincipal.Claims.SingleOrDefault(x => x.Type == "Name")?.Value ?? string.Empty;
+            var id = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == ClaimsNames.UserId)?.Value ?? Guid.Empty.ToString());
+            var organisationId = Guid.Parse(claimsPrincipal.Claims.SingleOrDefault(x => x.Type == ClaimsNames.OrganisationId)?.Value ?? Guid.Empty.ToString());
+            var name = claimsPrincipal.Claims.SingleOrDefault(x => x.Type == ClaimsNames.Name)?.Value ?? string.Empty;
 
             return new UserContext(organisationId, id, id != Guid.Empty, name);
         }

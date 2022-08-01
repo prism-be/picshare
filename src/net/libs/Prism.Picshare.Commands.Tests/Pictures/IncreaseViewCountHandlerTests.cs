@@ -23,15 +23,22 @@ public class IncreaseViewCountHandlerTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var request = new IncreaseViewCount(Guid.NewGuid(), Guid.NewGuid());
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
+        var request = new IncreaseViewCount(organisationId, pictureId);
         var storeClient = new Mock<StoreClient>();
+        var picture = new Picture
+        {
+            Views = 42
+        };
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, picture);
 
         // Act
         var handler = new IncreaseViewCountHandler(storeClient.Object);
-        var picture = await handler.Handle(request, CancellationToken.None);
+        picture = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        picture.Views.Should().Be(1);
+        picture.Views.Should().Be(43);
         storeClient.VerifySaveState<Picture>(Stores.Pictures);
     }
 }

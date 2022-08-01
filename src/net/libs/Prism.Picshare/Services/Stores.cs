@@ -8,6 +8,7 @@ namespace Prism.Picshare.Services;
 
 public static class Stores
 {
+    public const string Authorizations = "authorizations";
     public const string Albums = "albums";
     public const string Credentials = "credentials";
     public const string Flow = "flows";

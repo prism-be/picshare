@@ -42,8 +42,8 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
             return null;
         }
 
-        var id = Guid.Parse(principal.Claims.SingleOrDefault(x => x.Type == "Id")?.Value ?? Guid.Empty.ToString());
-        var organisationId = Guid.Parse(principal.Claims.SingleOrDefault(x => x.Type == "OrganisationId")?.Value ?? Guid.Empty.ToString());
+        var id = Guid.Parse(principal.Claims.SingleOrDefault(x => x.Type == ClaimsNames.UserId)?.Value ?? Guid.Empty.ToString());
+        var organisationId = Guid.Parse(principal.Claims.SingleOrDefault(x => x.Type == ClaimsNames.OrganisationId)?.Value ?? Guid.Empty.ToString());
         var user = await _storeClient.GetStateNullableAsync<User>(organisationId, id, cancellationToken);
 
         if (user == null)
