@@ -26,7 +26,10 @@ public class UpdateFlowSummaryHandler : IRequestHandler<UpdateFlowSummary, Flow>
 
     public async Task<Flow> Handle(UpdateFlowSummary request, CancellationToken cancellationToken)
     {
-        var flow = await _storeClient.GetStateAsync<Flow>(request.Summary.OrganisationId.ToString(), cancellationToken);
+        var flow = await _storeClient.GetStateNullableAsync<Flow>(request.Summary.OrganisationId.ToString(), cancellationToken) ?? new Flow
+        {
+            Id = request.Summary.OrganisationId
+        };
 
         var existingSummary = flow.Pictures.SingleOrDefault(x => x.Id == request.Summary.Id);
 

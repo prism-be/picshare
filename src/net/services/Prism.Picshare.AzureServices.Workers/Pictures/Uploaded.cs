@@ -7,27 +7,25 @@
 using System.Text.Json;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
-using Prism.Picshare.AzureServices.Workers.Mailing;
-using Prism.Picshare.Commands.Mailing;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services;
 
-namespace Prism.Picshare.AzureServices.Workers.Processor;
+namespace Prism.Picshare.AzureServices.Workers.Pictures;
 
-public class PictureUploaded
+public class Uploaded
 {
     private readonly IMediator _mediator;
     private readonly PublisherClient _publisherClient;
 
-    public PictureUploaded(IMediator mediator, PublisherClient publisherClient)
+    public Uploaded(IMediator mediator, PublisherClient publisherClient)
     {
         _mediator = mediator;
         _publisherClient = publisherClient;
     }
 
-    [Function(nameof(Processor) + "." + nameof(PictureUploaded))]
+    [Function(nameof(Pictures) + "." + nameof(Uploaded))]
     public async Task Run([ServiceBusTrigger(Topics.Pictures.Uploaded, Connection = "SERVICE_BUS_CONNECTION_STRING")] string mySbMsg, FunctionContext context)
     {
         var picture = JsonSerializer.Deserialize<EntityReference>(mySbMsg);

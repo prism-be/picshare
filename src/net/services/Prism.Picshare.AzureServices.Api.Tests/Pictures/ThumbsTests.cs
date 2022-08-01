@@ -9,11 +9,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.AzureServices.Api.Pictures;
+using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 using Prism.Picshare.UnitTests;
 using Xunit;
@@ -28,6 +28,8 @@ public class ThumbsTests
     {
         // Arrange
         var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<Thumbs>>();
 
@@ -39,8 +41,8 @@ public class ThumbsTests
         var (requestData, context) = AzureFunctionContext.Generate();
 
         // Act
-        var controller = new Thumbs(logger.Object, blobClient.Object);
-        var thumb = await controller.Run(requestData.Object, context.Object, Guid.NewGuid(), Guid.NewGuid(), 150, 150);
+        var controller = new Thumbs(logger.Object, blobClient.Object, JwtConfigurationFake.JwtConfiguration);
+        var thumb = await controller.Run(requestData.Object, context.Object, Guid.NewGuid().ToString(), 150, 150);
 
         // Assert
         thumb.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -51,6 +53,8 @@ public class ThumbsTests
     {
         // Arrange
         var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<Thumbs>>();
 
@@ -62,13 +66,15 @@ public class ThumbsTests
             .ReturnsAsync(Samples.SmallImage);
 
         var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId);
+        var token = TokenGenerator.GeneratePictureToken(JwtConfigurationFake.JwtConfiguration.PrivateKey, organisationId, userId, pictureId);
 
         // Act
-        var controller = new Thumbs(logger.Object, blobClient.Object);
-        var thumb = await controller.Run(requestData.Object, context.Object, organisationId, Guid.NewGuid(), 150, 150);
+        var controller = new Thumbs(logger.Object, blobClient.Object, JwtConfigurationFake.JwtConfiguration);
+        var thumb = await controller.Run(requestData.Object, context.Object, token, 150, 150);
 
         // Assert
-        thumb.StatusCode.Should().Be(HttpStatusCode.OK);;
+        thumb.StatusCode.Should().Be(HttpStatusCode.OK);
+        ;
     }
 
     [Fact]
@@ -76,6 +82,8 @@ public class ThumbsTests
     {
         // Arrange
         var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
 
         var logger = new Mock<ILogger<Thumbs>>();
 
@@ -87,8 +95,8 @@ public class ThumbsTests
         var (requestData, context) = AzureFunctionContext.Generate();
 
         // Act
-        var controller = new Thumbs(logger.Object, blobClient.Object);
-        var thumb = await controller.Run(requestData.Object, context.Object, Guid.NewGuid(), Guid.NewGuid(), 150, 150);
+        var controller = new Thumbs(logger.Object, blobClient.Object, JwtConfigurationFake.JwtConfiguration);
+        var thumb = await controller.Run(requestData.Object, context.Object, string.Empty, 150, 150);
 
         // Assert
         thumb.StatusCode.Should().Be(HttpStatusCode.NotFound);

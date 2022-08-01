@@ -23,4 +23,7 @@ public class PictureSummary : EntityReference
 
     [JsonPropertyName("name")]
     public string Name { get; set; }
+
+    [JsonPropertyName("token")]
+    public string? Token { get; set; }
 }

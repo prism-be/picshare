@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Prism.Picshare.Domain\Prism.Picshare.Domain.csproj" />
       <ProjectReference Include="..\Prism.Picshare.Mailing\Prism.Picshare.Mailing.csproj" />
       <ProjectReference Include="..\Prism.Picshare.Security\Prism.Picshare.Security.csproj" />
       <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />

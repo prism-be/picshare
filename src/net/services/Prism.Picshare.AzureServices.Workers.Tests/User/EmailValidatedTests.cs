@@ -12,6 +12,7 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Moq;
+using Prism.Picshare.AzureServices.Workers.Email;
 using Prism.Picshare.AzureServices.Workers.User;
 using Prism.Picshare.Commands.Authentication;
 using Xunit;
@@ -38,7 +39,7 @@ public class EmailValidatedTests
         var context = new Mock<FunctionContext>();
 
         // Act
-        var controller = new EmailValidated(mediator.Object);
+        var controller = new Validated(mediator.Object);
         var result = await controller.Run(message, context.Object);
 
         // Assert
@@ -62,7 +63,7 @@ public class EmailValidatedTests
         var context = new Mock<FunctionContext>();
 
         // Act
-        var controller = new EmailValidated(mediator.Object);
+        var controller = new Validated(mediator.Object);
         var result = await controller.Run(message, context.Object);
 
         // Assert
@@ -77,7 +78,7 @@ public class EmailValidatedTests
         var context = new Mock<FunctionContext>();
 
         // Act
-        var controller = new EmailValidated(mediator.Object);
+        var controller = new Validated(mediator.Object);
         var result = await controller.Run("null", context.Object);
 
         // Assert

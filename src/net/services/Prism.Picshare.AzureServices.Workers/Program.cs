@@ -14,6 +14,7 @@ using Prism.Picshare.Behaviors;
 using Prism.Picshare.Commands;
 using Prism.Picshare.Insights;
 using Prism.Picshare.Mailing;
+using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 using Prism.Picshare.Services.Azure;
 
@@ -37,6 +38,13 @@ internal static class Program
                 var database = cosmosClient.GetDatabase("picshare");
                 services.AddSingleton(cosmosClient);
                 services.AddSingleton(database);
+                
+                var jwtConfiguration = new JwtConfiguration
+                {
+                    PrivateKey = EnvironmentConfiguration.GetConfiguration("JWT_PRIVATE_KEY") ?? string.Empty,
+                    PublicKey = EnvironmentConfiguration.GetMandatoryConfiguration("JWT_PUBLIC_KEY")
+                };
+                services.AddSingleton(jwtConfiguration);
 
                 services.AddScoped<BlobClient, AzureBlobClient>();
                 services.AddScoped<StoreClient, CosmosStoreClient>();

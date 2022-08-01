@@ -30,14 +30,14 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
 
     const myLoader = ({src, width}: ImageLoaderProps) => {
         if (width <= 960) {
-            return config.api + src + "/960/540/?accessToken=" + localStorage.getItem('accessToken');
+            return config.api + src + "/960/540/";
         }
 
         if (width <= 1920) {
-            return config.api + src + "/1920/1080/?accessToken=" + localStorage.getItem('accessToken');
+            return config.api + src + "/1920/1080/";
         }
 
-        return config.api + src + "/3840/2160/?accessToken=" + localStorage.getItem('accessToken');
+        return config.api + src + "/3840/2160/";
     }
 
     const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
@@ -80,7 +80,7 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
              onTouchStart={(e) => onTouchStart(e.changedTouches[0])} onTouchEnd={(e) => onTouchEnd(e.changedTouches[0])}
              onKeyUp={(e) => console.log(e)}>
             <div className="grow relative opacity-100 m-1 cursor-pointer">
-                <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id} alt={picture.name}/>
+                <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.token} alt={picture.name}/>
             </div>
             <div onClick={() => previousPictureZoom()} className={"w-8 cursor-pointer flex absolute left-0 top-0 bottom-0"}>
                 <span className="material-icons m-auto text-gray-500">keyboard_arrow_left</span>

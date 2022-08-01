@@ -30,6 +30,7 @@ public class InitializePictureTests
         var request = new InitializePicture(organisationId, owner, pictureId, PictureSource.Upload);
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Flow, string.Empty, organisationId.ToString(), new Flow());
 
         // Act
         var handler = new InitializePictureHandler(storeClient.Object, publisherClient.Object);

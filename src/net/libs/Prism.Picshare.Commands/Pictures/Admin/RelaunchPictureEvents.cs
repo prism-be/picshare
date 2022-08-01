@@ -29,7 +29,19 @@ public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvent
 
         foreach (var pictureSummary in flow.Pictures)
         {
-            var picture = await _storeClient.GetStateAsync<Picture>(pictureSummary.OrganisationId, pictureSummary.Id, cancellationToken);
+            var picture = await _storeClient.GetStateNullableAsync<Picture>(pictureSummary.OrganisationId, pictureSummary.Id, cancellationToken);
+            
+            if (picture == null)
+            {
+                continue;
+            }
+
+            if (picture.OrganisationId == Guid.Empty)
+            {
+                picture.OrganisationId = pictureSummary.OrganisationId;
+                await _storeClient.SaveStateAsync(picture, cancellationToken);
+            }
+            
             await _publisherClient.PublishEventAsync(request.Topic, picture, cancellationToken);
         }
 

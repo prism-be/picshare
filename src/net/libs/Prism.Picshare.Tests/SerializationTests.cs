@@ -31,6 +31,34 @@ public class SerializationTests
     }
 
     [Fact]
+    public void Authorizations_Ok()
+    {
+        // Arrange
+        var source = new Authorizations
+        {
+            Id = Guid.NewGuid(),
+            OrganisationId = Guid.NewGuid(),
+            Pictures = new Dictionary<Guid, string>
+            {
+                {
+                    Guid.NewGuid(), Guid.NewGuid().ToString()
+                },
+                {
+                    Guid.NewGuid(), Guid.NewGuid().ToString()
+                },
+                {
+                    Guid.NewGuid(), Guid.NewGuid().ToString()
+                },
+                {
+                    Guid.NewGuid(), Guid.NewGuid().ToString()
+                }
+            }
+        };
+
+        CheckSerialization(source);
+    }
+
+    [Fact]
     public void Credentials_Ok()
     {
         // Arrange
@@ -65,7 +93,7 @@ public class SerializationTests
         var source = new ExifData
         {
             Tag = Guid.NewGuid().ToString(),
-            Type = Guid.NewGuid().ToString(),
+            Type = Guid.NewGuid().ToString()
         };
 
         CheckSerialization(source);

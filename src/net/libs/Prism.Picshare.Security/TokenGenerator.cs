@@ -16,6 +16,7 @@ namespace Prism.Picshare.Security;
 
 public static class TokenGenerator
 {
+
     public static string GenerateAccessToken(string privateKey, User user)
     {
         var unixTimeSeconds = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
@@ -23,12 +24,27 @@ public static class TokenGenerator
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
-            new(nameof(user.Name), user.Name),
-            new(nameof(user.OrganisationId), user.OrganisationId.ToString()),
-            new(nameof(user.Id), user.Id.ToString())
+            new(ClaimsNames.Name, user.Name),
+            new(ClaimsNames.OrganisationId, user.OrganisationId.ToString()),
+            new(ClaimsNames.UserId, user.Id.ToString())
         };
 
         return GenerateToken(privateKey, claims, DateTime.Now.AddMinutes(30), false);
+    }
+
+    public static string GeneratePictureToken(string privateKey, Guid organisationId, Guid userId, Guid pictureId)
+    {
+        var unixTimeSeconds = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+        var claims = new Claim[]
+        {
+            new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
+            new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
+            new(ClaimsNames.UserId, userId.ToString()),
+            new(ClaimsNames.PictureId, pictureId.ToString()),
+            new(ClaimsNames.OrganisationId, organisationId.ToString())
+        };
+
+        return GenerateToken(privateKey, claims, DateTime.Now.AddDays(30), false);
     }
 
     public static string GenerateRefreshToken(string privateKey, User user)
@@ -38,8 +54,8 @@ public static class TokenGenerator
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
-            new(nameof(user.OrganisationId), user.OrganisationId.ToString()),
-            new(nameof(user.Id), user.Id.ToString())
+            new(ClaimsNames.OrganisationId, user.OrganisationId.ToString()),
+            new(ClaimsNames.UserId, user.Id.ToString())
         };
 
         return GenerateToken(privateKey, claims, DateTime.Now.AddDays(30), true);

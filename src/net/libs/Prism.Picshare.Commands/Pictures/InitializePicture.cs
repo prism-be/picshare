@@ -32,7 +32,12 @@ public class InitializePictureHandler : IRequestHandler<InitializePicture, Pictu
             Id = request.PictureId,
             Source = request.Source,
             Published = true,
-            Owner = request.Owner
+            Owner = request.Owner,
+            Summary = new PictureSummary
+            {
+                OrganisationId = request.OrganisationId,
+                Id = request.PictureId
+            }
         };
 
         await _storeClient.SaveStateAsync(picture, cancellationToken);

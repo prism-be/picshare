@@ -24,9 +24,16 @@ public class SetPictureNameHandlerTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var request = new SetPictureName(Guid.NewGuid(), Guid.NewGuid(), "Hellow World.png");
+        var organisationId = Guid.NewGuid();
+        var pictureId = Guid.NewGuid();
+        var request = new SetPictureName(organisationId, pictureId, "Hellow World.png");
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, pictureId, new Picture()
+        {
+            Id = pictureId,
+            OrganisationId = organisationId
+        });
 
         // Act
         var handler = new SetPictureNameHandler(storeClient.Object, publisherClient.Object);

@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Prism.Picshare.Domain;
+using Prism.Picshare.Exceptions;
 
 namespace Prism.Picshare.Services;
 
@@ -12,6 +13,9 @@ public abstract class StoreClient
 {
     protected static readonly Dictionary<Type, string> StoresMatching = new()
     {
+        {
+            typeof(Authorizations), Stores.Authorizations
+        },
         {
             typeof(Album), Stores.Albums
         },
@@ -35,16 +39,73 @@ public abstract class StoreClient
         }
     };
 
+    public async Task CreateStateAsync<T>(string id, T data, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            var existing = await GetStateNullableAsync<T>(store, string.Empty, id, cancellationToken);
+
+            if (existing != null)
+            {
+                throw new StoreAccessException("Cannot create an item with a key that already exists", id);
+            }
+
+            await SaveStateAsync(store, string.Empty, id, data, cancellationToken);
+            return;
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public async Task CreateStateAsync<T>(Guid id, T data, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            var organisationId = string.Empty;
+
+            if (data is EntityReference entityReference)
+            {
+                organisationId = entityReference.OrganisationId.ToString();
+            }
+
+            var existing = await GetStateNullableAsync<T>(store, organisationId, id.ToString(), cancellationToken);
+
+            if (existing != null)
+            {
+                throw new StoreAccessException("Cannot create an item with a key that already exists", $"{organisationId}-{id}");
+            }
+
+            await SaveStateAsync(store, organisationId, id.ToString(), data, cancellationToken);
+            return;
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
     public async Task<T> GetStateAsync<T>(Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class, new()
     {
         var result = await GetStateNullableAsync<T>(organisationId, id, cancellationToken);
-        return result ?? new T();
+
+        if (result == null)
+        {
+            throw new StoreAccessException("Cannot find entity", $"{organisationId}-{id}");
+        }
+
+        return result;
     }
 
     public async Task<T> GetStateAsync<T>(string id, CancellationToken cancellationToken = default) where T : class, new()
     {
         var result = await GetStateNullableAsync<T>(id, cancellationToken);
-        return result ?? new T();
+
+        if (result == null)
+        {
+            throw new StoreAccessException("Cannot find entity", id);
+        }
+
+        return result;
     }
 
     public abstract Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class;
@@ -74,6 +135,27 @@ public abstract class StoreClient
 
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
+
+    public async Task MutateStateAsync<T>(Guid organisationId, Guid id, Action<T> mutation, CancellationToken cancellationToken = default)
+        where T : EntityId
+    {
+        await MutateStateAsync(organisationId.ToString(), id.ToString(), mutation, cancellationToken);
+    }
+
+    public async Task MutateStateAsync<T>(string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
+        where T : EntityId
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            await MutateStateAsync(store, organisationId, id, mutation, cancellationToken);
+            return;
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public abstract Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
+        where T : EntityId;
 
     public abstract Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default);
 

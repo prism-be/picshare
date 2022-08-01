@@ -9,6 +9,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Prism.Picshare.AzureServices.Extensions;
 using Prism.Picshare.AzureServices.Middlewares;
+using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
 
 namespace Prism.Picshare.AzureServices.Api.Pictures;
@@ -26,9 +27,19 @@ public class Flow
     [Function(nameof(Pictures) + "." + nameof(Flow))]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "pictures/flow")] HttpRequestData req, FunctionContext executionContext)
     {
-        var flow = await _storeClient.GetStateAsync<Domain.Flow>(executionContext.GetUserContext().OrganisationId.ToString());
+        var userContext = executionContext.GetUserContext();
+        var flow = await _storeClient.GetStateAsync<Domain.Flow>(userContext.OrganisationId.ToString());
+        var authorizations = await _storeClient.GetStateAsync<Authorizations>(userContext.OrganisationId, userContext.Id);
 
         flow.Pictures = flow.Pictures.Where(x => x.Ready).ToList();
+
+        foreach (var picture in flow.Pictures)
+        {
+            if (authorizations.Pictures.TryGetValue(picture.Id, out var token))
+            {
+                picture.Token = token;
+            }
+        }
 
         return await req.CreateResponseAsync(HttpStatusCode.OK, flow);
     }

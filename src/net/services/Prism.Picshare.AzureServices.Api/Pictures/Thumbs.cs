@@ -8,9 +8,9 @@ using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Prism.Picshare.AzureServices.Extensions;
 using Prism.Picshare.AzureServices.Middlewares;
 using Prism.Picshare.Extensions;
+using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 
 namespace Prism.Picshare.AzureServices.Api.Pictures;
@@ -18,27 +18,31 @@ namespace Prism.Picshare.AzureServices.Api.Pictures;
 public class Thumbs
 {
     private readonly BlobClient _blobClient;
+    private readonly JwtConfiguration _jwtConfiguration;
     private readonly ILogger<Thumbs> _logger;
 
-    public Thumbs(ILogger<Thumbs> logger, BlobClient blobClient)
+    public Thumbs(ILogger<Thumbs> logger, BlobClient blobClient, JwtConfiguration jwtConfiguration)
     {
         _logger = logger;
         _blobClient = blobClient;
+        _jwtConfiguration = jwtConfiguration;
     }
 
-    [Authorize]
+    [Authorize(AllowAnonymous = true)]
     [Function(nameof(Pictures) + "." + nameof(Thumbs))]
-    public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "pictures/thumbs/{organisationId}/{pictureId}/{width}/{height}")] HttpRequestData req,
-        FunctionContext executionContext, Guid organisationId, Guid pictureId, int width, int height)
+    public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "pictures/thumbs/{token}/{width}/{height}")] HttpRequestData req,
+        FunctionContext executionContext, string token, int width, int height)
     {
-        var userContext = executionContext.GetUserContext();
+        var principal = TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, token, _logger, false);
 
-        if (!userContext.HasAccess(organisationId))
+        if (principal == null)
         {
-            _logger.LogInformation("User {userId} CANNOT access to picture {pictureId} in organisation {orgId} with authenticated org : {authOrgId}", userContext.Id, pictureId,
-                organisationId, userContext.OrganisationId);
+            _logger.LogInformation("Invalid token to access picture");
             return req.CreateResponse(HttpStatusCode.NotFound);
         }
+
+        var organisationId = Guid.Parse(principal.Claims.Single(x => x.Type == ClaimsNames.OrganisationId).Value);
+        var pictureId = Guid.Parse(principal.Claims.Single(x => x.Type == ClaimsNames.PictureId).Value);
 
         try
         {
@@ -47,14 +51,15 @@ public class Thumbs
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "image/jpeg");
+            response.Headers.Add("Cache-Control", "public, max-age=31536000");
             await response.WriteBytesAsync(data);
 
             return response;
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Cannot access to picture: user {userId} CANNOT access to picture {pictureId} in organisation {orgId} with authenticated org : {authOrgId}",
-                userContext.Id, pictureId, organisationId, userContext.OrganisationId);
+            _logger.LogWarning(ex, "Cannot access to picture: CANNOT access to picture {pictureId} in organisation {orgId}",
+                pictureId, organisationId);
         }
 
         return req.CreateResponse(HttpStatusCode.NotFound);

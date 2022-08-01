@@ -5,9 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using Azure.Core.Serialization;
@@ -21,12 +19,12 @@ namespace Prism.Picshare.UnitTests;
 
 public static class AzureFunctionContext
 {
-    public static (Mock<HttpRequestData>, Mock<FunctionContext>) Generate(Guid? organisationId = null)
+    public static (Mock<HttpRequestData>, Mock<FunctionContext>) Generate(Guid? organisationId = null, Guid? userId = null)
     {
-        return Generate<object>(null, organisationId);
+        return Generate<object>(null, organisationId, userId);
     }
 
-    public static (Mock<HttpRequestData>, Mock<FunctionContext>) Generate<T>(T? body, Guid? organisationId = null)
+    public static (Mock<HttpRequestData>, Mock<FunctionContext>) Generate<T>(T? body, Guid? organisationId = null, Guid? userId = null)
     {
         var serviceProvider = new Mock<IServiceProvider>();
         serviceProvider.Setup(x => x.GetService(typeof(IOptions<WorkerOptions>)))
@@ -51,21 +49,23 @@ public static class AzureFunctionContext
         {
             requestData.Setup(r => r.Body).Returns(new MemoryStream());
         }
-        
+
         var unixTimeSeconds = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
-            new("OrganisationId", (organisationId ?? Guid.NewGuid()).ToString()),
-            new("Id", Guid.NewGuid().ToString())
+            new(ClaimsNames.OrganisationId, (organisationId ?? Guid.NewGuid()).ToString()),
+            new(ClaimsNames.UserId, (userId ?? Guid.NewGuid()).ToString())
         };
 
         var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
 
         context.Setup(x => x.Items).Returns(new Dictionary<object, object>
         {
-            { "PicshareClaims", principal }
+            {
+                "PicshareClaims", principal
+            }
         });
 
         requestData.Setup(r => r.CreateResponse()).Returns(() =>
@@ -76,7 +76,7 @@ public static class AzureFunctionContext
             response.SetupProperty(r => r.Body, new MemoryStream());
             return response.Object;
         });
-        
+
         return (requestData, context);
     }
 }

@@ -48,6 +48,8 @@ public class RelaunchPictureEventsTests
         var organisationId = Guid.NewGuid();
         var publisherClient = new Mock<PublisherClient>();
         var storeClient = new Mock<StoreClient>();
+
+        var existingPictureId = Guid.NewGuid();
         storeClient.SetupGetStateAsync(Stores.Flow, string.Empty, organisationId.ToString(), new Flow
         {
             Id = organisationId,
@@ -55,7 +57,7 @@ public class RelaunchPictureEventsTests
             {
                 new()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = existingPictureId,
                     OrganisationId = organisationId
                 },
                 new()
@@ -65,6 +67,8 @@ public class RelaunchPictureEventsTests
                 }
             }
         });
+        
+        storeClient.SetupGetStateAsync(Stores.Pictures, organisationId, existingPictureId, new Picture());
 
         // Act
         var handler = new RelaunchPictureEventsHandler(storeClient.Object, publisherClient.Object);
@@ -72,6 +76,6 @@ public class RelaunchPictureEventsTests
 
         // Assert
         result.Should().Be(Unit.Value);
-        publisherClient.VerifyPublishEvent<Picture>(Topics.Pictures.Updated, Times.Exactly(2));
+        publisherClient.VerifyPublishEvent<Picture>(Topics.Pictures.Updated, Times.Exactly(1));
     }
 }

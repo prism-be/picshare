@@ -79,9 +79,15 @@ public class RegisterAccountRequestHandler : IRequestHandler<RegisterAccountRequ
             Name = request.Name
         };
 
-        await _storeClient.SaveStateAsync(organisation.Id.ToString(), organisation, cancellationToken);
-        await _storeClient.SaveStateAsync(credentials.Id, credentials, cancellationToken);
-        await _storeClient.SaveStateAsync(user.Id, user, cancellationToken);
+        var flow = new Flow
+        {
+            Id = organisation.Id
+        };
+
+        await _storeClient.CreateStateAsync(organisation.Id.ToString(), organisation, cancellationToken);
+        await _storeClient.CreateStateAsync(organisation.Id.ToString(), flow, cancellationToken);
+        await _storeClient.CreateStateAsync(credentials.Id, credentials, cancellationToken);
+        await _storeClient.CreateStateAsync(user.Id, user, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.User.Register, user, cancellationToken);
 
         return ResultCodes.Ok;
