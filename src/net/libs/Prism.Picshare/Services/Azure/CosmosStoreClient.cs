@@ -157,7 +157,7 @@ public class CosmosStoreClient : StoreClient
 
         if (item == null)
         {
-            return null;
+            throw new StoreAccessException("Cannot mutate inexisting item", $"{store}-{organisationId}-{id}");
         }
 
         return item;
