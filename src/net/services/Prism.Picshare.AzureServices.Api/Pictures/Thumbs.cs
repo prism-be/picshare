@@ -51,6 +51,7 @@ public class Thumbs
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "image/jpeg");
+            response.Headers.Add("Cache-Control", "public, max-age=31536000");
             await response.WriteBytesAsync(data);
 
             return response;

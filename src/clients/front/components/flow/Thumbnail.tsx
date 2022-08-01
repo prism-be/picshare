@@ -15,7 +15,7 @@ export const Thumbnail = ({picture, togglePictureZoom}: Props) => {
     const [selected, setSelected]= useState(false);
     
     const myLoader = ({src}: ImageLoaderProps) => {
-        return src + "?accessToken=" + localStorage.getItem('accessToken');
+        return src;
     }
 
     return <div key={picture.id} onClick={() => togglePictureZoom(picture)} className={"h-full w-full p-0 cursor-pointer border-2" + (selected ? " border-gray-500" : " border-white")}>

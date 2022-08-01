@@ -30,14 +30,14 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
 
     const myLoader = ({src, width}: ImageLoaderProps) => {
         if (width <= 960) {
-            return config.api + src + "/960/540/?accessToken=" + localStorage.getItem('accessToken');
+            return config.api + src + "/960/540/";
         }
 
         if (width <= 1920) {
-            return config.api + src + "/1920/1080/?accessToken=" + localStorage.getItem('accessToken');
+            return config.api + src + "/1920/1080/";
         }
 
-        return config.api + src + "/3840/2160/?accessToken=" + localStorage.getItem('accessToken');
+        return config.api + src + "/3840/2160/";
     }
 
     const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
