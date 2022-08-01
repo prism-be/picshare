@@ -7,6 +7,7 @@
 using Moq;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
+using Prism.Picshare.Services.Dapr;
 
 namespace Prism.Picshare.UnitTests;
 
@@ -24,17 +25,6 @@ public static class TestsExtensions
             .ReturnsAsync(data);
     }
     
-    public static void VerifyMutateState<TExpected>(this Mock<StoreClient> mock, string expectedStore) where TExpected : EntityId
-    {
-        mock.VerifyMutateState<TExpected>(expectedStore, Times.Once());
-    }
-
-    public static void VerifyMutateState<TExpected>(this Mock<StoreClient> mock, string expectedStore, Times times) where TExpected : EntityId
-    {
-        mock.Verify(x => x.MutateStateAsync(expectedStore, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Action<TExpected>>(), It.IsAny<CancellationToken>()),
-            times);
-    }
-
     public static void VerifyPublishEvent<TExpected>(this Mock<PublisherClient> mock, string expectedTopic)
     {
         mock.Verify(x => x.PublishEventAsync(expectedTopic, It.IsAny<TExpected>(), default), Times.Once);

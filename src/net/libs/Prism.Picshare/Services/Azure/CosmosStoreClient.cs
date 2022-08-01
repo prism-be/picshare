@@ -116,7 +116,7 @@ public class CosmosStoreClient : StoreClient
         }
     }
 
-    private void ReleaseLock(string store, string organisationId, string id)
+    private static void ReleaseLock(string store, string organisationId, string id)
     {
         var key = $"{store}-{organisationId}-{id}";
 

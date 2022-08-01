@@ -30,7 +30,7 @@ public class AuthorizeUserHandler : IRequestHandler<AuthorizeUser>
 
         await _storeClient.MutateStateAsync<Authorizations>(request.OrganisationId, request.UserId, authorizations =>
         {
-            if (authorizations.Id == Guid.Empty)
+            if (authorizations.OrganisationId == Guid.Empty)
             {
                 authorizations.OrganisationId = request.OrganisationId;
                 authorizations.Id = request.UserId;
