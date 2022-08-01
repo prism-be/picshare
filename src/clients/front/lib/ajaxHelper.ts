@@ -13,6 +13,7 @@ export interface IPictureSummary
     ready: boolean;
     date: Date;
     name: string;
+    token: string;
 }
 
 export interface IFlow

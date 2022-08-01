@@ -32,7 +32,7 @@ public static class TokenGenerator
         return GenerateToken(privateKey, claims, DateTime.Now.AddMinutes(30), false);
     }
 
-    public static string GeneratePictureToken(string privateKey, Guid userId, Guid pictureId)
+    public static string GeneratePictureToken(string privateKey, Guid organisationId, Guid userId, Guid pictureId)
     {
         var unixTimeSeconds = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
         var claims = new Claim[]
@@ -40,7 +40,8 @@ public static class TokenGenerator
             new(JwtRegisteredClaimNames.Iat, unixTimeSeconds.ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Jti, Identifier.Generate().ToString()),
             new(ClaimsNames.UserId, userId.ToString()),
-            new(ClaimsNames.PictureId, pictureId.ToString())
+            new(ClaimsNames.PictureId, pictureId.ToString()),
+            new(ClaimsNames.OrganisationId, organisationId.ToString())
         };
 
         return GenerateToken(privateKey, claims, DateTime.Now.AddDays(30), false);

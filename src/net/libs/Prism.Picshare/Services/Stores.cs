@@ -16,4 +16,9 @@ public static class Stores
     public const string Organisations = "organisations";
     public const string Pictures = "pictures";
     public const string Users = "users";
+
+    public static class Locks
+    {
+        public static SemaphoreLocker AuthorizationsLock { get; } = new();
+    }
 }
