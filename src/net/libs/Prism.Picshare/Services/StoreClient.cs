@@ -136,6 +136,27 @@ public abstract class StoreClient
         throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
     }
 
+    public async Task MutateStateAsync<T>(Guid organisationId, Guid id, Action<T> mutation, CancellationToken cancellationToken = default)
+        where T : EntityId
+    {
+        await MutateStateAsync(organisationId.ToString(), id.ToString(), mutation, cancellationToken);
+    }
+
+    public async Task MutateStateAsync<T>(string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
+        where T : EntityId
+    {
+        if (StoresMatching.TryGetValue(typeof(T), out var store))
+        {
+            await MutateStateAsync(store, organisationId, id, mutation, cancellationToken);
+            return;
+        }
+
+        throw new NotImplementedException($"Cannot find store for type {typeof(T).FullName}");
+    }
+
+    public abstract Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
+        where T : EntityId;
+
     public abstract Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default);
 
     public async Task SaveStateAsync<T>(string id, T data, CancellationToken cancellationToken = default)

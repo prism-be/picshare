@@ -8,11 +8,8 @@ using System.Text.Json.Serialization;
 
 namespace Prism.Picshare.Domain;
 
-public class EntityReference
+public class EntityReference : EntityId
 {
-    [JsonPropertyName("id")]
-    public Guid Id { get; set; }
-
     [JsonPropertyName("organisationId")]
     public Guid OrganisationId { get; set; }
 }

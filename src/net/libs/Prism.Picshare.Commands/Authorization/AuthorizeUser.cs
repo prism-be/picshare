@@ -28,15 +28,8 @@ public class AuthorizeUserHandler : IRequestHandler<AuthorizeUser>
     {
         var token = TokenGenerator.GeneratePictureToken(_jwtConfiguration.PrivateKey, request.OrganisationId, request.UserId, request.PictureId);
 
-        await Stores.Locks.AuthorizationsLock.LockAsync(async () =>
+        await _storeClient.MutateStateAsync<Authorizations>(request.OrganisationId, request.UserId, authorizations =>
         {
-            var authorizations = await _storeClient.GetStateNullableAsync<Authorizations>(request.OrganisationId, request.UserId, cancellationToken)
-                                 ?? new Authorizations
-                                 {
-                                     Id = request.UserId,
-                                     OrganisationId = request.OrganisationId
-                                 };
-
             if (authorizations.Id == Guid.Empty)
             {
                 authorizations.OrganisationId = request.OrganisationId;
@@ -45,9 +38,7 @@ public class AuthorizeUserHandler : IRequestHandler<AuthorizeUser>
 
             authorizations.Pictures.Remove(request.PictureId);
             authorizations.Pictures.Add(request.PictureId, token);
-
-            await _storeClient.SaveStateAsync(authorizations, cancellationToken);
-        });
+        }, cancellationToken);
 
         return Unit.Value;
     }

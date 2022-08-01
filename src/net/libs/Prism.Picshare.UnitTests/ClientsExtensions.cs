@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Moq;
+using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
 
 namespace Prism.Picshare.UnitTests;
@@ -21,6 +22,17 @@ public static class TestsExtensions
     {
         mock.Setup(x => x.GetStateNullableAsync<T>(store, organisation.ToString(), id.ToString(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
+    }
+    
+    public static void VerifyMutateState<TExpected>(this Mock<StoreClient> mock, string expectedStore) where TExpected : EntityId
+    {
+        mock.VerifyMutateState<TExpected>(expectedStore, Times.Once());
+    }
+
+    public static void VerifyMutateState<TExpected>(this Mock<StoreClient> mock, string expectedStore, Times times) where TExpected : EntityId
+    {
+        mock.Verify(x => x.MutateStateAsync(expectedStore, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Action<TExpected>>(), It.IsAny<CancellationToken>()),
+            times);
     }
 
     public static void VerifyPublishEvent<TExpected>(this Mock<PublisherClient> mock, string expectedTopic)

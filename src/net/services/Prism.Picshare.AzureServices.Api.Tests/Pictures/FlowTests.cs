@@ -23,12 +23,17 @@ public class FlowTests
     {
         // Arrange
         var organisationId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
         var storeClient = new Mock<StoreClient>();
         storeClient.SetupGetStateAsync(Stores.Flow, string.Empty, organisationId.ToString(), new Flow
         {
             Id = organisationId
         });
-        var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId);
+        storeClient.SetupGetStateAsync(Stores.Authorizations, organisationId, userId, new Authorizations
+        {
+            Id = userId
+        });
+        var (requestData, context) = AzureFunctionContext.Generate(organisationId: organisationId, userId: userId);
 
         // Act
         var controller = new Api.Pictures.Flow(storeClient.Object);

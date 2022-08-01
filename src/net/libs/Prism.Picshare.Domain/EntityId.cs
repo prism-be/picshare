@@ -8,8 +8,11 @@ using System.Text.Json.Serialization;
 
 namespace Prism.Picshare.Domain;
 
-public class SingleId
+public class EntityId
 {
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
+
+    [JsonPropertyName("locked")]
+    public bool Locked { get; set; }
 }

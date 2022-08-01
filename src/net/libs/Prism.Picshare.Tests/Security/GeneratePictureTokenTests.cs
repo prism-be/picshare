@@ -29,9 +29,10 @@ public class GeneratePictureTokenTests
         // Arrange
         var userId = Guid.NewGuid();
         var pictureId = Guid.NewGuid();
+        var organisationId = Guid.NewGuid();
 
         // Act
-        var token = TokenGenerator.GeneratePictureToken(_jwtConfiguration.PrivateKey, userId, pictureId);
+        var token = TokenGenerator.GeneratePictureToken(_jwtConfiguration.PrivateKey, organisationId, userId, pictureId);
         var claims = TokenGenerator.ValidateToken(_jwtConfiguration.PublicKey, token, Mock.Of<ILogger>(), false);
 
         var claimsUserId = Guid.Parse(claims?.FindFirst(ClaimsNames.UserId)?.Value ?? Guid.Empty.ToString());

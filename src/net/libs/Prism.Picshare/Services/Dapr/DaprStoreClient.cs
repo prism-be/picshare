@@ -51,6 +51,11 @@ public class DaprStoreClient : StoreClient
         }
     }
 
+    public override Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public override async Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;

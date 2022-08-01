@@ -6,7 +6,7 @@
 
 using Prism.Picshare.Security;
 
-namespace Prism.Picshare.Tests.Fakes;
+namespace Prism.Picshare.UnitTests;
 
 public static class JwtConfigurationFake
 {

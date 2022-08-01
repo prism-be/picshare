@@ -12,7 +12,6 @@ using Moq;
 using Prism.Picshare.Commands.Authorization;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
-using Prism.Picshare.Tests.Fakes;
 using Prism.Picshare.UnitTests;
 using Xunit;
 
@@ -34,7 +33,7 @@ public class AuthorizeUserTests
         await handler.Handle(new AuthorizeUser(organisationId, userId, pictureId), CancellationToken.None);
 
         // Assert
-        storeClient.VerifySaveState<Authorizations>(Stores.Authorizations, m => m.Pictures.ContainsKey(pictureId) && m.Id == userId && m.OrganisationId == organisationId);
+        storeClient.VerifyMutateState<Authorizations>(Stores.Authorizations);
     }
 
     [Fact]
@@ -62,6 +61,6 @@ public class AuthorizeUserTests
         await handler.Handle(new AuthorizeUser(organisationId, userId, pictureId), CancellationToken.None);
 
         // Assert
-        storeClient.VerifySaveState<Authorizations>(Stores.Authorizations, m => m.Pictures.ContainsKey(pictureId) && m.Id == userId && m.OrganisationId == organisationId);
+        storeClient.VerifyMutateState<Authorizations>(Stores.Authorizations);
     }
 }
