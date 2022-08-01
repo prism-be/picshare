@@ -124,7 +124,7 @@ public class CosmosStoreClient : StoreClient
     {
         var key = $"{store}-{organisationId}-{id}";
 
-        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
+        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "locks");
         var blob = container.GetBlobClient(key);
         blob.Delete();
     }
@@ -134,7 +134,7 @@ public class CosmosStoreClient : StoreClient
     {
         var key = $"{store}-{organisationId}-{id}";
 
-        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
+        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "locks");
         var blob = container.GetBlobClient(key);
 
         if (await blob.ExistsAsync())
