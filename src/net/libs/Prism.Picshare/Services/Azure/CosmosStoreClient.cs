@@ -14,6 +14,8 @@ namespace Prism.Picshare.Services.Azure;
 
 public class CosmosStoreClient : StoreClient
 {
+
+    private static readonly HashSet<string> LockedItems = new();
     private readonly Database _database;
 
     public CosmosStoreClient(Database database)
@@ -95,7 +97,7 @@ public class CosmosStoreClient : StoreClient
 
             if (lockedItem == null)
             {
-                Thread.Sleep(20);
+                Thread.Sleep(100);
                 retries++;
                 continue;
             }
@@ -103,29 +105,49 @@ public class CosmosStoreClient : StoreClient
             try
             {
                 mutation(lockedItem);
+                await SaveStateAsync(store, organisationId, id, lockedItem, cancellationToken);
             }
             finally
             {
-                lockedItem.Locked = false;
-                await SaveStateAsync(store, organisationId, id, lockedItem, cancellationToken);
+                ReleaseLock(store, organisationId, id);
             }
 
             break;
         }
     }
 
+    private void ReleaseLock(string store, string organisationId, string id)
+    {
+        var key = $"{store}-{organisationId}-{id}";
+
+        lock (LockedItems)
+        {
+            LockedItems.Remove(key);
+        }
+    }
+
     private async Task<T?> TryGetLock<T>(string store, string organisationId, string id)
         where T : EntityId
     {
+        var key = $"{store}-{organisationId}-{id}";
+
+        lock (LockedItems)
+        {
+            if (LockedItems.Contains(key))
+            {
+                return null;
+            }
+
+            LockedItems.Add(key);
+        }
+
         var item = await GetStateNullableAsync<T>(store, organisationId, id);
 
-        if (item == null || item.Locked)
+        if (item == null)
         {
             return null;
         }
 
-        item.Locked = true;
-        await SaveStateAsync(store, organisationId, id, item);
         return item;
     }
 }
