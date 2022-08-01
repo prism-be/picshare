@@ -50,6 +50,7 @@ public class CosmosStoreClient : StoreClient
         }
         catch (CosmosException e)
         {
+            _logger.LogError(e, "Cannot read itemin cosmos DB");
             if (e.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
