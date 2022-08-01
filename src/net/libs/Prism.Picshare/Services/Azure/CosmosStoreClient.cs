@@ -50,6 +50,7 @@ public class CosmosStoreClient : StoreClient
         }
         catch (CosmosException e)
         {
+            _logger.LogError(e, "Cannot read itemin cosmos DB");
             if (e.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
@@ -157,7 +158,7 @@ public class CosmosStoreClient : StoreClient
 
         if (item == null)
         {
-            return null;
+            throw new StoreAccessException("Cannot mutate inexisting item", $"{store}-{organisationId}-{id}");
         }
 
         return item;
