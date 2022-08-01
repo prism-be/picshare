@@ -6,7 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Prism.Picshare.AzureServices.Workers.Mailing;
+using Prism.Picshare.AzureServices.Workers.User;
 using Prism.Picshare.Commands.Mailing;
 using Prism.Picshare.UnitTests;
 using Xunit;
@@ -19,14 +19,14 @@ public class UserRegisterTests
     public async Task Run_Null()
     {
         // Arrange, Act and Assert
-        await WorkersTesting.VerifyNull<UserRegister, RegisterConfirmation>();
+        await WorkersTesting.VerifyNull<Register, RegisterConfirmation>();
     }
 
     [Fact]
     public async Task Run_Ok()
     {
         // Arrange, Act and Assert
-        await WorkersTesting.VerifyOk<UserRegister, Domain.User, RegisterConfirmation>(new Domain.User
+        await WorkersTesting.VerifyOk<Register, Domain.User, RegisterConfirmation>(new Domain.User
         {
             Id = Guid.NewGuid()
         });

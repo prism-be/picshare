@@ -7,7 +7,6 @@
 using System;
 using System.Threading.Tasks;
 using Prism.Picshare.AzureServices.Workers.Pictures;
-using Prism.Picshare.AzureServices.Workers.Processor;
 using Prism.Picshare.Commands.Pictures;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
@@ -22,14 +21,14 @@ public class PictureCreatedTests
     public async Task Run_Null()
     {
         // Arrange, Act and Assert
-        await WorkersTesting.VerifyNull<PictureCreated, EntityReference, ResultCodes, ReadMetaData>();
+        await WorkersTesting.VerifyNull<Created, EntityReference, ResultCodes, ReadMetaData>();
     }
 
     [Fact]
     public async Task Run_Ok()
     {
         // Arrange, Act and Assert
-        await WorkersTesting.VerifyOk<PictureCreated, EntityReference, ResultCodes, ReadMetaData>(new EntityReference
+        await WorkersTesting.VerifyOk<Created, EntityReference, ResultCodes, ReadMetaData>(new EntityReference
         {
             Id = Guid.NewGuid(),
             OrganisationId = Guid.NewGuid()

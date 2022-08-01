@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Moq;
-using Prism.Picshare.AzureServices.Workers.Processor;
+using Prism.Picshare.AzureServices.Workers.Pictures;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
@@ -33,7 +33,7 @@ public class PictureUploadedTests
         var context = new Mock<FunctionContext>();
 
         // Act
-        var controller = new PictureUploaded(mediator.Object, publisherClient.Object);
+        var controller = new Uploaded(mediator.Object, publisherClient.Object);
         await controller.Run("null", context.Object);
 
         // Assert
@@ -57,7 +57,7 @@ public class PictureUploadedTests
         var context = new Mock<FunctionContext>();
 
         // Act
-        var controller = new PictureUploaded(mediator.Object, publisherClient.Object);
+        var controller = new Uploaded(mediator.Object, publisherClient.Object);
         await controller.Run(message, context.Object);
 
         // Assert
