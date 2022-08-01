@@ -1,7 +1,7 @@
-﻿import React, {useEffect} from "react";
+﻿import React from "react";
 import Image, {ImageLoaderProps} from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
-import { useKeyPressEvent } from "react-use";
+import {useKeyPressEvent} from "react-use";
 import useSWR from "swr";
 
 const config = require('../../lib/config.json');
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, nextPictureZoom}: Props) => {
-    
+
     useKeyPressEvent('ArrowRight', () => {
         nextPictureZoom();
     })
@@ -27,7 +27,7 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
         togglePictureZoom(picture);
     })
 
-    
+
     const myLoader = ({src, width}: ImageLoaderProps) => {
         if (width <= 960) {
             return config.api + src + "/960/540/?accessToken=" + localStorage.getItem('accessToken');
@@ -52,42 +52,33 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
     const onTouchEnd = (event: React.Touch) => {
         const swipeXLength = event.pageX - touchStartX;
         const swipeYLength = event.pageY - touchStartY;
-        
+
         let swipeRight = false;
         let swipeLeft = false;
         let swipeDown = false;
         let swipeUp = false;
-        
+
         if (Math.abs(swipeXLength) > Math.abs(swipeYLength)) {
             swipeRight = swipeXLength > 0;
             swipeLeft = !swipeRight && swipeXLength < 0
-        }
-        else {
+        } else {
             swipeUp = swipeYLength < 0;
             swipeDown = !swipeUp && swipeYLength > 0;
         }
 
         if (swipeLeft) {
             nextPictureZoom();
-            return;
-        }
-
-        if (swipeRight) {
+        } else if (swipeRight) {
             previousPictureZoom();
-            return;
-        }
-        
-        if (swipeDown)
-        {
+        } else if (swipeDown) {
             togglePictureZoom(picture);
-            return;
         }
     }
 
     return <>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 overflow-auto bg-gray-600 flex"
              onTouchStart={(e) => onTouchStart(e.changedTouches[0])} onTouchEnd={(e) => onTouchEnd(e.changedTouches[0])}
-        onKeyUp={(e) => console.log(e)}>
+             onKeyUp={(e) => console.log(e)}>
             <div className="grow relative opacity-100 m-1 cursor-pointer">
                 <Image loader={myLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.organisationId + "/" + picture.id} alt={picture.name}/>
             </div>
