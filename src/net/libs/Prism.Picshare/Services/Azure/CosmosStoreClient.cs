@@ -5,8 +5,12 @@
 // -----------------------------------------------------------------------
 
 using System.Net;
+using System.Text;
 using System.Text.Json;
+using Azure;
+using Azure.Storage.Blobs;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Logging;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Exceptions;
 
@@ -14,13 +18,13 @@ namespace Prism.Picshare.Services.Azure;
 
 public class CosmosStoreClient : StoreClient
 {
-
-    private static readonly HashSet<string> LockedItems = new();
     private readonly Database _database;
+    private readonly ILogger<CosmosStoreClient> _logger;
 
-    public CosmosStoreClient(Database database)
+    public CosmosStoreClient(Database database, ILogger<CosmosStoreClient> logger)
     {
         _database = database;
+        _logger = logger;
     }
 
     public override async Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class
@@ -120,10 +124,9 @@ public class CosmosStoreClient : StoreClient
     {
         var key = $"{store}-{organisationId}-{id}";
 
-        lock (LockedItems)
-        {
-            LockedItems.Remove(key);
-        }
+        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
+        var blob = container.GetBlobClient(key);
+        blob.Delete();
     }
 
     private async Task<T?> TryGetLock<T>(string store, string organisationId, string id)
@@ -131,14 +134,23 @@ public class CosmosStoreClient : StoreClient
     {
         var key = $"{store}-{organisationId}-{id}";
 
-        lock (LockedItems)
-        {
-            if (LockedItems.Contains(key))
-            {
-                return null;
-            }
+        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
+        var blob = container.GetBlobClient(key);
 
-            LockedItems.Add(key);
+        if (await blob.ExistsAsync())
+        {
+            _logger.LogInformation("Ressource is locked : {key}", key);
+            return null;
+        }
+
+        try
+        {
+            await blob.UploadAsync(new MemoryStream(Encoding.Default.GetBytes(key)));
+        }
+        catch (RequestFailedException e)
+        {
+            _logger.LogInformation(e, "Lock was already took in the meantime : {key}", key);
+            return null;
         }
 
         var item = await GetStateNullableAsync<T>(store, organisationId, id);
