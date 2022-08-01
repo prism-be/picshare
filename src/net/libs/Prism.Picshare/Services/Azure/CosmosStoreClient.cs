@@ -92,7 +92,7 @@ public class CosmosStoreClient : StoreClient
     {
         while (true)
         {
-            if (retries > 10)
+            if (retries > 30)
             {
                 throw new StoreAccessException("Cannot get lock on ressource", $"{store}|{organisationId}|{id}");
             }
@@ -101,7 +101,7 @@ public class CosmosStoreClient : StoreClient
 
             if (lockedItem == null)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 retries++;
                 continue;
             }
@@ -139,7 +139,7 @@ public class CosmosStoreClient : StoreClient
 
         if (await blob.ExistsAsync())
         {
-            _logger.LogInformation("Ressource is locked : {key}", key);
+            _logger.LogWarning("Ressource is locked : {key}", key);
             return null;
         }
 
@@ -149,7 +149,7 @@ public class CosmosStoreClient : StoreClient
         }
         catch (RequestFailedException e)
         {
-            _logger.LogInformation(e, "Lock was already took in the meantime : {key}", key);
+            _logger.LogWarning(e, "Lock was already took in the meantime : {key}", key);
             return null;
         }
 
