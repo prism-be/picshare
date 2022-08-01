@@ -102,7 +102,7 @@ const Flow = () => {
         });
     }
 
-    const nextPictureZoom = () => {
+    const previousPictureZoom = () => {
         if (zoomPicture == null) {
             return;
         }
@@ -117,7 +117,7 @@ const Flow = () => {
         displayAndTrackPicture(pictures[position]);
     }
 
-    const previousPictureZoom = () => {
+    const nextPictureZoom = () => {
         if (zoomPicture === null) {
             return;
         }
