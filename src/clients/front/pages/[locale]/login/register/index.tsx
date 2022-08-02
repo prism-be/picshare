@@ -11,8 +11,6 @@ import HtmlLink from "../../../../components/HtmlLink";
 import Button from "../../../../components/Button";
 import { getStaticPaths, makeStaticProps } from '../../../../lib/getStatic'
 
-const config = require('../../../../lib/config.json');
-
 const getStaticProps = makeStaticProps(['login', 'common'])
 export { getStaticPaths, getStaticProps }
 
@@ -40,7 +38,7 @@ const Register = () => {
 
         setErrorMessage('');
 
-        const response = await fetch(config.api + "/api/authentication/register", {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_ROOT + "/api/authentication/register", {
             method: "post",
             headers: {
                 'Accept': 'application/json',
