@@ -91,7 +91,8 @@ public class PicturesController : Controller
             var blobName = BlobNamesExtensions.GetSourcePath(organisationId, pictureId, width, height);
             var data = await _blobClient.ReadAsync(blobName);
 
-            Response.Headers.Add("Cache-Control", "public, max-age=31536000");
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+            Response?.Headers.Add("Cache-Control", "public, max-age=31536000");
             return File(data, "image/jpeg");
         }
         catch (Exception ex)

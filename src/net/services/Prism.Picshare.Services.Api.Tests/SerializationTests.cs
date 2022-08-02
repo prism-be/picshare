@@ -4,13 +4,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Text.Json;
 using FluentAssertions;
-using Prism.Picshare.AzureServices.Api.Contracts;
-using Xunit;
+using Prism.Picshare.Services.Api.Contracts;
 
-namespace Prism.Picshare.AzureServices.Api.Tests.Contracts;
+namespace Prism.Picshare.Services.Api.Tests;
 
 public class SerializationTests
 {

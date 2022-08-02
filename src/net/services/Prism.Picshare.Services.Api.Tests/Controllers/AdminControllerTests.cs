@@ -1,31 +1,27 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "AdminTests.cs" company = "Prism">
+//  <copyright file = "AdminControllerTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 using Moq;
-using Prism.Picshare.AzureServices.Api.Admin.Events;
 using Prism.Picshare.Commands.Pictures.Admin;
-using Prism.Picshare.UnitTests;
-using Xunit;
+using Prism.Picshare.Services.Api.Controllers;
 
-namespace Prism.Picshare.AzureServices.Api.Tests.Pictures;
+namespace Prism.Picshare.Services.Api.Tests.Controllers;
 
-public class AdminTests
+public class AdminControllerTests
 {
     [Fact]
     public async Task Create_Ok()
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        var (requestData, context) = AzureFunctionContext.Generate();
+        var userContextAccessor = UserContextMock.Generate();
 
         // Act
-        await new Created(mediator.Object).Run(requestData.Object, context.Object);
+        await new AdminController(mediator.Object, userContextAccessor.Object).EventsCreated();
 
         // Assert
         mediator.Verify(x => x.Send(It.IsAny<RelaunchPictureEvents>(), It.IsAny<CancellationToken>()));
@@ -36,10 +32,10 @@ public class AdminTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        var (requestData, context) = AzureFunctionContext.Generate();
+        var userContextAccessor = UserContextMock.Generate();
 
         // Act
-        await new Updated(mediator.Object).Run(requestData.Object, context.Object);
+        await new AdminController(mediator.Object, userContextAccessor.Object).EventsUpdated();
 
         // Assert
         mediator.Verify(x => x.Send(It.IsAny<RelaunchPictureEvents>(), It.IsAny<CancellationToken>()));
@@ -50,10 +46,10 @@ public class AdminTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        var (requestData, context) = AzureFunctionContext.Generate();
+        var userContextAccessor = UserContextMock.Generate();
 
         // Act
-        await new Uploaded(mediator.Object).Run(requestData.Object, context.Object);
+        await new AdminController(mediator.Object, userContextAccessor.Object).EventsUploaded();
 
         // Assert
         mediator.Verify(x => x.Send(It.IsAny<RelaunchUpload>(), It.IsAny<CancellationToken>()));
