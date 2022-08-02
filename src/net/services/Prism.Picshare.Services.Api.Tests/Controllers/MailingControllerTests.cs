@@ -66,4 +66,21 @@ public class MailingControllerTests
         result.Should().BeAssignableTo<OkObjectResult>();
         mediator.Verify(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Id == id), It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task Validate_Unknown()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var mediator = new Mock<IMediator>();
+        mediator.Setup(x => x.Send(It.Is<RegisterConfirmationValidation>(r => r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResultCodes.Unknown);
+
+        // Act
+        var controller = new MailingController(mediator.Object);
+        var result = await controller.Validate(id);
+
+        // Assert
+        result.Should().BeAssignableTo<BadRequestResult>();
+    }
 }

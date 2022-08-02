@@ -35,11 +35,13 @@ public class PicturesControllerTests
             {
                 new()
                 {
-                    Id = firstPictureId
+                    Id = firstPictureId,
+                    Ready = true
                 },
                 new()
                 {
-                    Id = Guid.NewGuid()
+                    Id = Guid.NewGuid(),
+                    Ready = true
                 }
             }
         });
