@@ -1,5 +1,6 @@
 ﻿import {ApplicationInsights, ITelemetryItem} from '@microsoft/applicationinsights-web';
 import {ReactPlugin} from '@microsoft/applicationinsights-react-js';
+import getConfig from 'next/config'
 
 const telemetryInitializer = (envelope: ITelemetryItem) => {
     if (envelope.tags) {
@@ -17,6 +18,7 @@ export const appInsights = new ApplicationInsights({
 });
 
 let appInsightsLoaded = false;
+const { publicRuntimeConfig: config } = getConfig()
 
 export const loadAppInsights = () => {
     
@@ -27,7 +29,7 @@ export const loadAppInsights = () => {
 
     appInsightsLoaded = true;
     
-    fetch(process.env.NEXT_PUBLIC_API_ROOT + '/api/config/insights')
+    fetch(config.apiRoot + '/api/config/insights')
         .then((response) => {
             response.json().then(data => {
                 appInsights.config.instrumentationKey = data.instrumentationKey;

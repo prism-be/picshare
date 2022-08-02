@@ -15,5 +15,8 @@ module.exports = {
                 //destination: 'http://localhost:7071/api/:path*'
             }
         ]
+    },
+    publicRuntimeConfig: {
+        apiRoot: process.env.API_ROOT
     }
 }
