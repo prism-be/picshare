@@ -66,7 +66,6 @@ jobs:
           publish-profile: ${{ secrets.DEV_AZURE_FUNCTIONAPP_PUBLISH_PROFILE_WORKERS }}
   
   front-public:
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/cd-docker.yml
     with:
       dockerFile: ./Dockerfile
