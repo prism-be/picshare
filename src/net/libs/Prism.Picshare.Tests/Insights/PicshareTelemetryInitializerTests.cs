@@ -7,9 +7,10 @@
 using System;
 using FluentAssertions;
 using Microsoft.ApplicationInsights.DataContracts;
+using Prism.Picshare.Insights;
 using Xunit;
 
-namespace Prism.Picshare.Insights.Tests;
+namespace Prism.Picshare.Tests.Insights;
 
 public class PicshareTelemetryInitializerTests
 {

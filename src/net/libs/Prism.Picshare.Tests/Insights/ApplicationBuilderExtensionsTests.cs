@@ -6,9 +6,10 @@
 
 using Microsoft.AspNetCore.Builder;
 using Moq;
+using Prism.Picshare.Insights;
 using Xunit;
 
-namespace Prism.Picshare.Insights.Tests;
+namespace Prism.Picshare.Tests.Insights;
 
 public class ApplicationBuilderExtensionsTests
 {

@@ -6,7 +6,7 @@ using Moq;
 using Prism.Picshare.Insights.Middlewares;
 using Xunit;
 
-namespace Prism.Picshare.Insights.Tests;
+namespace Prism.Picshare.Tests.Insights;
 
 public class ErrorLoggingMiddlewareTests
 {

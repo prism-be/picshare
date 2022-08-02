@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Prism.Picshare.Insights.Tests.Fakes;
+namespace Prism.Picshare.Tests.Insights.Fakes;
 
 [ExcludeFromCodeCoverage]
 public class DummyLoggingBuilder : ILoggingBuilder
