@@ -1,5 +1,6 @@
-﻿import Image, {ImageLoaderProps} from "next/image";
+﻿import Image from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
+import {thumbsLoader} from "../../lib/pictureLoaders";
 import {useState} from "react";
 
 const config = require('../../lib/config.json');
@@ -14,11 +15,7 @@ export const Thumbnail = ({picture, togglePictureZoom}: Props) => {
 
     const [selected, setSelected]= useState(false);
     
-    const myLoader = ({src}: ImageLoaderProps) => {
-        return src;
-    }
-
     return <div key={picture.id} onClick={() => togglePictureZoom(picture)} className={"h-full w-full p-0 cursor-pointer border-2" + (selected ? " border-gray-500" : " border-white")}>
-        <Image loader={myLoader} layout={"responsive"} src={config.api + "/api/pictures/thumbs/" + picture.token + "/150/150/"} width={150} height={150} alt={picture.name}/>
+        <Image loader={thumbsLoader} layout={"responsive"} src={config.api + "/api/pictures/thumbs/" + picture.token + '/150/150/'} unoptimized={true} width={150} height={150} alt={picture.name}/>
     </div>
 }
