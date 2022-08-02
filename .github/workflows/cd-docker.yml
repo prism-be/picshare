@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push the Docker image
-        if: {{ inputs.isProduction }}
+        if: ${{ inputs.isProduction }}
         working-directory: src
         run: |
           docker push simonbaudart/picshare:${{ inputs.imageTag }}-latest
