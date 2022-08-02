@@ -13,7 +13,7 @@ namespace Prism.Picshare.Services.Api.Tests.Controllers;
 public class ConfigControllerTests
 {
     [Fact]
-    public async Task Insights_EmptyConnectionString()
+    public void Insights_EmptyConnectionString()
     {
         // Arrange
         Environment.SetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING", string.Empty);
@@ -27,7 +27,7 @@ public class ConfigControllerTests
     }
 
     [Fact]
-    public async Task Insights_Ok()
+    public void Insights_Ok()
     {
         // Arrange
         Environment.SetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING",
