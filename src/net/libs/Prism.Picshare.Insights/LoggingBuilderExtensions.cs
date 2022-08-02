@@ -30,8 +30,6 @@ public static class LoggingBuilderExtensions
     {
         services.AddSingleton<ITelemetryInitializer, PicshareTelemetryInitializer>();
 
-        services.AddSingleton<IHostingEnvironment, HostingEnvironment>();
-
         services.AddApplicationInsightsTelemetry(opt =>
         {
             opt.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
