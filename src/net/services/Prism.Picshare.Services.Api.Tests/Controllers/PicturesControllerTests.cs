@@ -27,13 +27,31 @@ public class PicturesControllerTests
         var userId = Guid.NewGuid();
         var userContextAccessor = UserContextMock.Generate(organisationId, userId);
         var storeClient = new Mock<StoreClient>();
+        var firstPictureId = Guid.NewGuid();
         storeClient.SetupGetStateAsync(Stores.Flow, string.Empty, organisationId.ToString(), new Flow
         {
-            Id = organisationId
+            Id = organisationId,
+            Pictures = new List<PictureSummary>
+            {
+                new()
+                {
+                    Id = firstPictureId
+                },
+                new()
+                {
+                    Id = Guid.NewGuid()
+                }
+            }
         });
         storeClient.SetupGetStateAsync(Stores.Authorizations, organisationId, userId, new Authorizations
         {
-            Id = userId
+            Id = userId,
+            Pictures = new Dictionary<Guid, string>
+            {
+                {
+                    firstPictureId, Guid.NewGuid().ToString()
+                }
+            }
         });
         var mediator = new Mock<IMediator>();
         var logger = new Mock<ILogger<PicturesController>>();
