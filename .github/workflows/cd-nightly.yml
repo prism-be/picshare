@@ -67,14 +67,12 @@ jobs:
   
   front-public:
     runs-on: ubuntu-latest
-    steps:
-      - name: Build Image
-        uses: ./.github/workflows/cd-docker.yml
-        with:
-          dockerFile: ./Dockerfile
-          imageTag: client-front-public
-          workingDirectory: src/clients/front/
-          isProduction: false
-        secrets:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    uses: ./.github/workflows/cd-docker.yml
+    with:
+      dockerFile: ./Dockerfile
+      imageTag: client-front-public
+      workingDirectory: src/clients/front/
+      isProduction: false
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
