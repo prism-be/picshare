@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Prism.Picshare.UnitTests;
+namespace Prism.Picshare.UnitTesting;
 
 public static class Samples
 {

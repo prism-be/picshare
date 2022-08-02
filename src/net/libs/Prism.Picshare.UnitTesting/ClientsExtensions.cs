@@ -5,11 +5,9 @@
 // -----------------------------------------------------------------------
 
 using Moq;
-using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
-using Prism.Picshare.Services.Dapr;
 
-namespace Prism.Picshare.UnitTests;
+namespace Prism.Picshare.UnitTesting;
 
 public static class TestsExtensions
 {

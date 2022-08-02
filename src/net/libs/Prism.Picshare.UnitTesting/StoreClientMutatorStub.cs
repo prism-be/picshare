@@ -8,7 +8,7 @@ using Moq;
 using Prism.Picshare.Exceptions;
 using Prism.Picshare.Services;
 
-namespace Prism.Picshare.UnitTests;
+namespace Prism.Picshare.UnitTesting;
 
 public class StoreClientMutatorStub : StoreClient
 {

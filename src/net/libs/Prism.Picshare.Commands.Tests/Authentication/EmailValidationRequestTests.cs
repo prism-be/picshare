@@ -13,7 +13,7 @@ using Moq;
 using Prism.Picshare.Commands.Authentication;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Services;
-using Prism.Picshare.UnitTests;
+using Prism.Picshare.UnitTesting;
 using Xunit;
 
 namespace Prism.Picshare.Commands.Tests.Authentication;

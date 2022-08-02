@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Prism.Picshare.AzureServices.Workers.Pictures;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
-using Prism.Picshare.UnitTests;
 using Xunit;
 
 namespace Prism.Picshare.AzureServices.Workers.Tests.Pictures;

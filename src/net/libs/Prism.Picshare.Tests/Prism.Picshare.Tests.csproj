@@ -26,7 +26,7 @@
         <ProjectReference Include="..\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj" />
         <ProjectReference Include="..\Prism.Picshare.Commands\Prism.Picshare.Commands.csproj" />
         <ProjectReference Include="..\Prism.Picshare.Mailing\Prism.Picshare.Mailing.csproj" />
-        <ProjectReference Include="..\Prism.Picshare.UnitTests\Prism.Picshare.UnitTests.csproj" />
+        <ProjectReference Include="..\Prism.Picshare.UnitTesting\Prism.Picshare.UnitTesting.csproj" />
         <ProjectReference Include="..\Prism.Picshare\Prism.Picshare.csproj" />
     </ItemGroup>
 

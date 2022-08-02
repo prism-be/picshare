@@ -8,7 +8,6 @@ using System;
 using System.Threading.Tasks;
 using Prism.Picshare.AzureServices.Workers.User;
 using Prism.Picshare.Commands.Mailing;
-using Prism.Picshare.UnitTests;
 using Xunit;
 
 namespace Prism.Picshare.AzureServices.Workers.Tests.Mailing;

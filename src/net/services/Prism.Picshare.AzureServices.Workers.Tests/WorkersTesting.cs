@@ -4,13 +4,15 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Moq;
-using Prism.Picshare.AzureServices;
 
-namespace Prism.Picshare.UnitTests;
+namespace Prism.Picshare.AzureServices.Workers.Tests;
 
 public static class WorkersTesting
 {

@@ -15,7 +15,7 @@ using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
 using Prism.Picshare.Services;
-using Prism.Picshare.UnitTests;
+using Prism.Picshare.UnitTesting;
 using Xunit;
 
 namespace Prism.Picshare.AzureServices.Workers.Tests.Processor;

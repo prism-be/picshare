@@ -6,7 +6,7 @@
 
 using Microsoft.Azure.Functions.Worker;
 
-namespace Prism.Picshare.AzureServices;
+namespace Prism.Picshare.AzureServices.Workers;
 
 public interface ISimpleFunction
 {

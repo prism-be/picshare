@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Services;
-using Prism.Picshare.UnitTests;
+using Prism.Picshare.UnitTesting;
 using Xunit;
 
 namespace Prism.Picshare.Commands.Tests.Processor;

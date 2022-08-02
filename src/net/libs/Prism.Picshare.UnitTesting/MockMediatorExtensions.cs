@@ -7,7 +7,7 @@
 using MediatR;
 using Moq;
 
-namespace Prism.Picshare.UnitTests;
+namespace Prism.Picshare.UnitTesting;
 
 public static class MockMediatorExtensions
 {

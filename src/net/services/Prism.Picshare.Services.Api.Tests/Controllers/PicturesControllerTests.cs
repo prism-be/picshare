@@ -13,7 +13,7 @@ using Prism.Picshare.Commands.Pictures;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Security;
 using Prism.Picshare.Services.Api.Controllers;
-using Prism.Picshare.UnitTests;
+using Prism.Picshare.UnitTesting;
 
 namespace Prism.Picshare.Services.Api.Tests.Controllers;
 

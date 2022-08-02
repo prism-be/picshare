@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\libs\Prism.Picshare.UnitTests\Prism.Picshare.UnitTests.csproj" />
+      <ProjectReference Include="..\..\libs\Prism.Picshare.UnitTesting\Prism.Picshare.UnitTesting.csproj" />
       <ProjectReference Include="..\Prism.Picshare.AzureServices.Workers\Prism.Picshare.AzureServices.Workers.csproj" />
     </ItemGroup>
 
