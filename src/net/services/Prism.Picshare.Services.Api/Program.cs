@@ -50,7 +50,19 @@ builder.Services.AddControllers();
 builder.Services.AddPicshareAuthentication();
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
+
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithOrigins(
+            EnvironmentConfiguration.GetMandatoryConfiguration("FRONT_DOMAIN_FQDN"),
+            EnvironmentConfiguration.GetMandatoryConfiguration("FRONT_DOMAIN_CUSTOM")
+        );
+});
 
 app.UseAuthentication()
     .UseAuthorization();
