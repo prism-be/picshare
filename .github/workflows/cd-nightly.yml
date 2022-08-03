@@ -58,3 +58,19 @@ jobs:
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  reload-apps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Azure CLI - Update App
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az containerapp update -n ${{ secrets.DEV_AZURE_APP_API }} -g ${{ secrets.DEV_AZURE_RG }}
+            az containerapp update -n ${{ secrets.DEV_AZURE_APP_FRONT }} -g ${{ secrets.DEV_AZURE_RG }}
