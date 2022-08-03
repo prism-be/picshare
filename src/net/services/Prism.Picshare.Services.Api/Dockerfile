@@ -9,7 +9,7 @@ COPY . .
 RUN dotnet restore
 
 # copy and publish app and libraries
-RUN dotnet publish services/authentication/Prism.Picshare.Services.Api/Prism.Picshare.Services.Api.csproj -c release -o /app --no-restore
+RUN dotnet publish services/Prism.Picshare.Services.Api/Prism.Picshare.Services.Api.csproj -c release -o /app --no-restore
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
