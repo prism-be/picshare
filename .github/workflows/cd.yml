@@ -7,90 +7,68 @@ on:
     
 jobs:
   api:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+    uses: ./.github/workflows/cd-docker.yml
+    with:
+      dockerFile: ./services/Prism.Picshare.Services.Api/Dockerfile
+      imageTag: service-api
+      workingDirectory: src/net/
+      isProduction: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract Version
-        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
+    workers:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.x
+        - name: Extract Version
+          uses: damienaicheh/extract-version-from-tag-action@v1.0.0
 
-      - name: Build
-        working-directory: src/net/
-        run: |
-          dotnet build services/Prism.Picshare.AzureServices.Api/Prism.Picshare.AzureServices.Api.csproj --configuration Release --output ./output
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: 6.x
 
-      - name: Publish
-        uses: Azure/functions-action@v1
-        with:
-          app-name: picshare-dev-api
-          package: src/net/output
-          publish-profile: ${{ secrets.PRD_AZURE_FUNCTIONAPP_PUBLISH_PROFILE_API }}
-  
-  workers:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+        - name: Build
+          working-directory: src/net/
+          run: |
+            dotnet build services/Prism.Picshare.AzureServices.Workers/Prism.Picshare.AzureServices.Workers.csproj --configuration Release --output ./output
 
-      - name: Extract Version
-        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
+        - name: Publish
+          uses: Azure/functions-action@v1
+          with:
+            app-name: picshare-dev-api
+            package: src/net/output
+            publish-profile: ${{ secrets.PRD_AZURE_FUNCTIONAPP_PUBLISH_PROFILE_WORKERS }}
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.x
+    front:
+      uses: ./.github/workflows/cd-docker.yml
+      with:
+        dockerFile: ./Dockerfile
+        imageTag: client-front-public
+        workingDirectory: src/clients/front/
+        isProduction: true
+      secrets:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build
-        working-directory: src/net/
-        run: |
-          dotnet build services/Prism.Picshare.AzureServices.Workers/Prism.Picshare.AzureServices.Workers.csproj --configuration Release --output ./output
-
-      - name: Publish
-        uses: Azure/functions-action@v1
-        with:
-          app-name: picshare-dev-api
-          package: src/net/output
-          publish-profile: ${{ secrets.PRD_AZURE_FUNCTIONAPP_PUBLISH_PROFILE_WORKERS }}
-  
-  front-public:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Install Packages
-        working-directory: ./src/clients/front
-        run: yarn install --frozen-lockfile
-
-      - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@v2
-        with:
-          find: '"api": ""'
-          replace: '"api": "${{ secrets.PRD_AZURE_FUNCTIONAPP_URL }}"'
-          include: "src/clients/front/lib/config.json"
-
-      - name: Build Project
-        working-directory: ./src/clients/front
-        run: yarn build
-
-      - name: Deploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.PRD_AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_app_build: true
-          skip_api_build: true
-          action: "upload"
-          app_location: "src/clients/front/out"
+    reload-apps:
+      runs-on: ubuntu-latest
+      needs: [ api, front ]
+      steps:
+        - name: Azure Login
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+        - name: Azure CLI - Update App
+          uses: azure/CLI@v1
+          with:
+            azcliversion: 2.30.0
+            inlineScript: |
+              az config set extension.use_dynamic_install=yes_without_prompt
+              az containerapp update -n ${{ secrets.PRD_AZURE_APP_API }} -g ${{ secrets.PRD_AZURE_RG }} --image docker.io/simonbaudart/picshare:service-api-latest
+              az containerapp update -n ${{ secrets.PRD_AZURE_APP_FRONT }} -g ${{ secrets.PRD_AZURE_RG }} --image docker.io/simonbaudart/picshare:client-front-public-latest

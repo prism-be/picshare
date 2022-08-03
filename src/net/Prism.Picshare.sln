@@ -8,15 +8,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Tests", "lib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights", "libs\Prism.Picshare.Insights\Prism.Picshare.Insights.csproj", "{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Insights.Tests", "libs\Prism.Picshare.Insights.Tests\Prism.Picshare.Insights.Tests.csproj", "{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{A02333E8-4F7B-4388-B3ED-38C5585A767D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AspNetCore", "libs\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj", "{CA0C2B00-EB03-44E0-9540-8370A8AD4151}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.UnitTests", "libs\Prism.Picshare.UnitTests\Prism.Picshare.UnitTests.csproj", "{DCFAAD13-AF59-4A87-A567-E18571DF8415}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AzureServices", "libs\Prism.Picshare.AzureServices\Prism.Picshare.AzureServices.csproj", "{C24CF9C2-F734-426A-BA65-81DEE35ACDF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.UnitTesting", "libs\Prism.Picshare.UnitTesting\Prism.Picshare.UnitTesting.csproj", "{DCFAAD13-AF59-4A87-A567-E18571DF8415}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Security", "libs\Prism.Picshare.Security\Prism.Picshare.Security.csproj", "{13D19846-ACAE-464B-82E1-451703DF0230}"
 EndProject
@@ -24,17 +20,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Commands", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Commands.Tests", "libs\Prism.Picshare.Commands.Tests\Prism.Picshare.Commands.Tests.csproj", "{404E503A-D12C-4E5D-AC0E-5F65651C5647}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AzureServices.Api", "services\Prism.Picshare.AzureServices.Api\Prism.Picshare.AzureServices.Api.csproj", "{454841B7-FC13-4EEC-8D06-03211B0B17D6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AzureServices.Workers", "services\Prism.Picshare.AzureServices.Workers\Prism.Picshare.AzureServices.Workers.csproj", "{3E978921-5EC9-4819-B3B9-D5A8C4958366}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Mailing", "libs\Prism.Picshare.Mailing\Prism.Picshare.Mailing.csproj", "{BA860C7C-5EF7-47BF-B197-F80A4D6E744B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AzureServices.Workers.Tests", "services\Prism.Picshare.AzureServices.Workers.Tests\Prism.Picshare.AzureServices.Workers.Tests.csproj", "{0A0DF701-241C-470D-9B9F-F00546F7A247}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.AzureServices.Api.Tests", "services\Prism.Picshare.AzureServices.Api.Tests\Prism.Picshare.AzureServices.Api.Tests.csproj", "{6B18E437-483A-4A23-8BCC-BB08E08E246C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Domain", "libs\Prism.Picshare.Domain\Prism.Picshare.Domain.csproj", "{535056DF-9329-426E-9A37-E034EB44BCD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Api", "services\Prism.Picshare.Services.Api\Prism.Picshare.Services.Api.csproj", "{F0C682C2-5672-4515-806C-23F6760A1950}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Picshare.Services.Api.Tests", "services\Prism.Picshare.Services.Api.Tests\Prism.Picshare.Services.Api.Tests.csproj", "{16835AC2-F892-487B-904D-B1319C78F57F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,10 +50,6 @@ Global
 		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA0C2B00-EB03-44E0-9540-8370A8AD4151}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,10 +58,6 @@ Global
 		{DCFAAD13-AF59-4A87-A567-E18571DF8415}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCFAAD13-AF59-4A87-A567-E18571DF8415}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCFAAD13-AF59-4A87-A567-E18571DF8415}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C24CF9C2-F734-426A-BA65-81DEE35ACDF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C24CF9C2-F734-426A-BA65-81DEE35ACDF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C24CF9C2-F734-426A-BA65-81DEE35ACDF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C24CF9C2-F734-426A-BA65-81DEE35ACDF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13D19846-ACAE-464B-82E1-451703DF0230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13D19846-ACAE-464B-82E1-451703DF0230}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13D19846-ACAE-464B-82E1-451703DF0230}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,10 +70,6 @@ Global
 		{404E503A-D12C-4E5D-AC0E-5F65651C5647}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{404E503A-D12C-4E5D-AC0E-5F65651C5647}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{404E503A-D12C-4E5D-AC0E-5F65651C5647}.Release|Any CPU.Build.0 = Release|Any CPU
-		{454841B7-FC13-4EEC-8D06-03211B0B17D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{454841B7-FC13-4EEC-8D06-03211B0B17D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{454841B7-FC13-4EEC-8D06-03211B0B17D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{454841B7-FC13-4EEC-8D06-03211B0B17D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E978921-5EC9-4819-B3B9-D5A8C4958366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E978921-5EC9-4819-B3B9-D5A8C4958366}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E978921-5EC9-4819-B3B9-D5A8C4958366}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,31 +82,33 @@ Global
 		{0A0DF701-241C-470D-9B9F-F00546F7A247}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A0DF701-241C-470D-9B9F-F00546F7A247}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A0DF701-241C-470D-9B9F-F00546F7A247}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B18E437-483A-4A23-8BCC-BB08E08E246C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B18E437-483A-4A23-8BCC-BB08E08E246C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B18E437-483A-4A23-8BCC-BB08E08E246C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B18E437-483A-4A23-8BCC-BB08E08E246C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{535056DF-9329-426E-9A37-E034EB44BCD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{535056DF-9329-426E-9A37-E034EB44BCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{535056DF-9329-426E-9A37-E034EB44BCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{535056DF-9329-426E-9A37-E034EB44BCD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0C682C2-5672-4515-806C-23F6760A1950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0C682C2-5672-4515-806C-23F6760A1950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0C682C2-5672-4515-806C-23F6760A1950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0C682C2-5672-4515-806C-23F6760A1950}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16835AC2-F892-487B-904D-B1319C78F57F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16835AC2-F892-487B-904D-B1319C78F57F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16835AC2-F892-487B-904D-B1319C78F57F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16835AC2-F892-487B-904D-B1319C78F57F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{800BA4A7-4E72-4415-B092-ED706EAB95EC} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{9AA872E3-8569-4820-948E-B7C3F908AA16} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{CA0C2B00-EB03-44E0-9540-8370A8AD4151} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{DCFAAD13-AF59-4A87-A567-E18571DF8415} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
-		{C24CF9C2-F734-426A-BA65-81DEE35ACDF8} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{13D19846-ACAE-464B-82E1-451703DF0230} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{9D014BB5-2951-4898-B086-AED64F5C64F2} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{404E503A-D12C-4E5D-AC0E-5F65651C5647} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
-		{454841B7-FC13-4EEC-8D06-03211B0B17D6} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
 		{3E978921-5EC9-4819-B3B9-D5A8C4958366} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
 		{BA860C7C-5EF7-47BF-B197-F80A4D6E744B} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{0A0DF701-241C-470D-9B9F-F00546F7A247} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
-		{6B18E437-483A-4A23-8BCC-BB08E08E246C} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
 		{D2AB04C4-566C-49D6-8D21-6CF0BE43E01E} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
-		{9042A11D-BBBF-4E09-B0F5-ACD1DF6A9FDE} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
 		{535056DF-9329-426E-9A37-E034EB44BCD7} = {05024BD0-1416-4760-8A5A-1E8E02D79F6E}
+		{F0C682C2-5672-4515-806C-23F6760A1950} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
+		{16835AC2-F892-487B-904D-B1319C78F57F} = {A02333E8-4F7B-4388-B3ED-38C5585A767D}
 	EndGlobalSection
 EndGlobal

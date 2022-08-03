@@ -10,11 +10,12 @@ import Alert from "../../../../components/Alert";
 import HtmlLink from "../../../../components/HtmlLink";
 import Button from "../../../../components/Button";
 import { getStaticPaths, makeStaticProps } from '../../../../lib/getStatic'
-
-const config = require('../../../../lib/config.json');
+import getConfig from 'next/config'
 
 const getStaticProps = makeStaticProps(['login', 'common'])
 export { getStaticPaths, getStaticProps }
+
+const { publicRuntimeConfig: config } = getConfig()
 
 const Register = () => {
 
@@ -40,7 +41,7 @@ const Register = () => {
 
         setErrorMessage('');
 
-        const response = await fetch(config.api + "/api/authentication/register", {
+        const response = await fetch(config.apiRoot + "/api/authentication/register", {
             method: "post",
             headers: {
                 'Accept': 'application/json',
