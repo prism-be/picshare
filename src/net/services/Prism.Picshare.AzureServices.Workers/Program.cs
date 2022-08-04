@@ -63,7 +63,6 @@ internal static class Program
                 services.AddScoped<IEmailWorker, EmailWorker>();
                 services.AddScoped<ISmtpClientWrapper, SmtpClientWrapper>();
 
-                services.AddInsights();
             })
             .ConfigureLogging(logging =>
             {

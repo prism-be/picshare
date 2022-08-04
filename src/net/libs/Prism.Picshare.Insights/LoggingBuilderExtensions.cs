@@ -22,8 +22,6 @@ public static class LoggingBuilderExtensions
         builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
         builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft.Hosting.Lifetime", LogLevel.Information);
         builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Warning);
-        
-        builder.Services.AddInsights();
     }
 
     public static void AddInsights(this IServiceCollection services)
