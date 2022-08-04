@@ -58,6 +58,9 @@ internal static class Program
                     SmtpUser = EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_USER"),
                     SmtpPassword = EnvironmentConfiguration.GetMandatoryConfiguration("SMTP_PASSWORD")
                 };
+
+                services.AddHttpContextAccessor();
+                
                 services.AddSingleton(mailingConfiguration);
 
                 services.AddScoped<IEmailWorker, EmailWorker>();
