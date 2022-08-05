@@ -123,7 +123,7 @@ public class PicturesController : Controller
             var userId = _userContextAccessor.Id;
             await _mediator.Send(new UploadPicture(organisationId, pictureId, data));
             await _mediator.Send(new InitializePicture(organisationId, userId, pictureId, PictureSource.Upload));
-            await _mediator.Send(new SetPictureName(organisationId, pictureId, HttpUtility.HtmlEncode(file.FileName)));
+            await _mediator.Send(new SetPictureName(organisationId, pictureId, file.FileName));
         }
 
         return NoContent();
