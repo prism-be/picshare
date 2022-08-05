@@ -29,8 +29,10 @@ public class SetPictureNameHandler : IRequestHandler<SetPictureName, Picture>
         var picture = await _storeClient.GetStateAsync<Picture>(request.OrganisationId, request.PictureId, cancellationToken);
 
         picture.Name = request.Name;
+        picture.Summary.Name = request.Name;
         await _storeClient.SaveStateAsync(picture, cancellationToken);
 
+        await _publisherClient.PublishEventAsync(Topics.Pictures.SummaryUpdated, picture.Summary, cancellationToken);
         await _publisherClient.PublishEventAsync(Topics.Pictures.Updated, picture, cancellationToken);
 
         return picture;

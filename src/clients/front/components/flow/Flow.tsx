@@ -111,7 +111,7 @@ const Flow = () => {
         position++;
 
         if (position >= pictures.length) {
-            position = 0;
+            return;
         }
 
         displayAndTrackPicture(pictures[position]);
@@ -126,7 +126,7 @@ const Flow = () => {
         position--;
 
         if (position < 0) {
-            position = pictures.length - 1;
+            return;
         }
 
         displayAndTrackPicture(pictures[position]);
