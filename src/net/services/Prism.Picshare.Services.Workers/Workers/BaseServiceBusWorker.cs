@@ -29,11 +29,13 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
         if (_processor != null)
         {
             await _processor.DisposeAsync().ConfigureAwait(false);
+            GC.SuppressFinalize(_processor);
         }
 
         if (_client != null)
         {
             await _client.DisposeAsync().ConfigureAwait(false);
+            GC.SuppressFinalize(_client);
         }
     }
 
@@ -59,9 +61,9 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
     private Task ProcessErrorAsync(ProcessErrorEventArgs arg)
     {
         _logger.LogError(arg.Exception, "Message handler encountered an exception");
-        _logger.LogDebug($"- ErrorSource: {arg.ErrorSource}");
-        _logger.LogDebug($"- Entity Path: {arg.EntityPath}");
-        _logger.LogDebug($"- FullyQualifiedNamespace: {arg.FullyQualifiedNamespace}");
+        _logger.LogDebug("- ErrorSource: {arg.ErrorSource}", arg.ErrorSource);
+        _logger.LogDebug("- Entity Path: {arg.EntityPath}",arg.EntityPath);
+        _logger.LogDebug("- FullyQualifiedNamespace: {arg.FullyQualifiedNamespace}", arg.FullyQualifiedNamespace);
 
         return Task.CompletedTask;
     }
