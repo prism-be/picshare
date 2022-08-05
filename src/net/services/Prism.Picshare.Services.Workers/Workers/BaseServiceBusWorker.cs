@@ -29,14 +29,14 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
         if (_processor != null)
         {
             await _processor.DisposeAsync().ConfigureAwait(false);
-            GC.SuppressFinalize(_processor);
         }
 
         if (_client != null)
         {
             await _client.DisposeAsync().ConfigureAwait(false);
-            GC.SuppressFinalize(_client);
         }
+        
+        GC.SuppressFinalize(this);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
