@@ -16,7 +16,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Prism.Picshare.AspNetCore\Prism.Picshare.AspNetCore.csproj" />
-      <ProjectReference Include="..\Prism.Picshare.AzureServices\Prism.Picshare.AzureServices.csproj" />
     </ItemGroup>
 
 </Project>

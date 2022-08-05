@@ -22,7 +22,7 @@ public static class TestsExtensions
         mock.Setup(x => x.GetStateNullableAsync<T>(store, organisation.ToString(), id.ToString(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(data);
     }
-    
+
     public static void VerifyPublishEvent<TExpected>(this Mock<PublisherClient> mock, string expectedTopic)
     {
         mock.Verify(x => x.PublishEventAsync(expectedTopic, It.IsAny<TExpected>(), default), Times.Once);
@@ -31,6 +31,11 @@ public static class TestsExtensions
     public static void VerifyPublishEvent<TExpected>(this Mock<PublisherClient> mock, string expectedTopic, Times times)
     {
         mock.Verify(x => x.PublishEventAsync(expectedTopic, It.IsAny<TExpected>(), default), times);
+    }
+
+    public static void VerifyPublishEvents<TExpected>(this Mock<PublisherClient> mock, string expectedTopic, Times times)
+    {
+        mock.Verify(x => x.PublishEventsAsync(expectedTopic, It.IsAny<IEnumerable<TExpected>>(), default), times);
     }
 
     public static void VerifySaveState<TExpected>(this Mock<StoreClient> mock, string expectedStore)

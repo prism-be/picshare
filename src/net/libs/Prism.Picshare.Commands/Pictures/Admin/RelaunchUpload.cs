@@ -27,6 +27,7 @@ public class RelaunchUploadHandler : IRequestHandler<RelaunchUpload>
     public async Task<Unit> Handle(RelaunchUpload request, CancellationToken cancellationToken)
     {
         var items = await _blobClient.ListAsync(request.OrganisationId, cancellationToken);
+        var references = new List<EntityReference>();
 
         foreach (var path in items.Where(x => x.EndsWith("/source.jpg")))
         {
@@ -34,13 +35,14 @@ public class RelaunchUploadHandler : IRequestHandler<RelaunchUpload>
             var organisationId = Guid.Parse(pathSplitted[^3]);
             var pictureId = Guid.Parse(pathSplitted[^2]);
 
-            await _publisherClient.PublishEventAsync(Topics.Pictures.Uploaded, new EntityReference
+            references.Add(new EntityReference
             {
                 OrganisationId = organisationId,
                 Id = pictureId
-            }, cancellationToken);
+            });
         }
 
+        await _publisherClient.PublishEventsAsync(Topics.Pictures.Uploaded, references, cancellationToken);
         return Unit.Value;
     }
 }

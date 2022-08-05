@@ -21,4 +21,13 @@ public class ServiceBusPublisherClient : PublisherClient
 
         await sender.SendMessageAsync(message, cancellationToken);
     }
+
+    public override async Task PublishEventsAsync<T>(string topic, IEnumerable<T> data, CancellationToken cancellationToken = default)
+    {
+        var messages = data.Select(item => JsonSerializer.Serialize(item)).Select(json => new ServiceBusMessage(json));
+
+        var client = new ServiceBusClient(EnvironmentConfiguration.GetMandatoryConfiguration("SERVICE_BUS_CONNECTION_STRING"));
+        var sender = client.CreateSender(topic);
+        await sender.SendMessagesAsync(messages, cancellationToken);
+    }
 }

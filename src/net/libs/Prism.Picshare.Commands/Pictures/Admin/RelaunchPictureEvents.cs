@@ -26,11 +26,12 @@ public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvent
     public async Task<Unit> Handle(RelaunchPictureEvents request, CancellationToken cancellationToken)
     {
         var flow = await _storeClient.GetStateAsync<Flow>(request.OrganisationId.ToString(), cancellationToken);
+        var pictures = new List<Picture>();
 
         foreach (var pictureSummary in flow.Pictures)
         {
             var picture = await _storeClient.GetStateNullableAsync<Picture>(pictureSummary.OrganisationId, pictureSummary.Id, cancellationToken);
-            
+
             if (picture == null)
             {
                 continue;
@@ -41,9 +42,11 @@ public class RelaunchPictureEventsHandler : IRequestHandler<RelaunchPictureEvent
                 picture.OrganisationId = pictureSummary.OrganisationId;
                 await _storeClient.SaveStateAsync(picture, cancellationToken);
             }
-            
-            await _publisherClient.PublishEventAsync(request.Topic, picture, cancellationToken);
+
+            pictures.Add(picture);
         }
+
+        await _publisherClient.PublishEventsAsync(request.Topic, pictures, cancellationToken);
 
         return Unit.Value;
     }
