@@ -20,7 +20,7 @@ jobs:
   workers:
     uses: ./.github/workflows/cd-docker.yml
     with:
-      dockerFile: ./services/Prism.Picshare.Services.Api/Dockerfile
+      dockerFile: ./services/Prism.Picshare.Services.Workers/Dockerfile
       imageTag: service-workers
       workingDirectory: src/net/
       isProduction: true
