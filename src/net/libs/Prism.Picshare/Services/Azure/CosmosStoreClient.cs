@@ -5,13 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System.Net;
-using System.Text;
 using System.Text.Json;
-using Azure;
-using Azure.Storage.Blobs;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
-using Prism.Picshare.Domain;
 using Prism.Picshare.Exceptions;
 
 namespace Prism.Picshare.Services.Azure;
@@ -19,12 +15,15 @@ namespace Prism.Picshare.Services.Azure;
 public class CosmosStoreClient : StoreClient
 {
     private readonly Database _database;
+    private readonly RedisLocker _locker;
+
     private readonly ILogger<CosmosStoreClient> _logger;
 
-    public CosmosStoreClient(Database database, ILogger<CosmosStoreClient> logger)
+    public CosmosStoreClient(Database database, ILogger<CosmosStoreClient> logger, RedisLocker locker)
     {
         _database = database;
         _logger = logger;
+        _locker = locker;
     }
 
     public override async Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class
@@ -51,6 +50,7 @@ public class CosmosStoreClient : StoreClient
         catch (CosmosException e)
         {
             _logger.LogError(e, "Cannot read itemin cosmos DB");
+
             if (e.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
@@ -64,7 +64,21 @@ public class CosmosStoreClient : StoreClient
 
     public override async Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
     {
-        await MutateStateAsync(0, store, organisationId, id, mutation, cancellationToken);
+        var key = GetKey(store, organisationId, id);
+
+        using var locker = _locker.GetLock(key);
+
+        var item = await GetStateNullableAsync<T>(store, organisationId, id, cancellationToken);
+
+        if (item == null)
+        {
+            throw new StoreAccessException("Cannot mutate inexisting item", $"{store}-{organisationId}-{id}");
+        }
+
+        mutation(item);
+        await SaveStateAsync(store, organisationId, id, item, cancellationToken);
+
+        locker.Release();
     }
 
     public override async Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default)
@@ -89,78 +103,8 @@ public class CosmosStoreClient : StoreClient
         }
     }
 
-    private async Task MutateStateAsync<T>(int retries, string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default) where T : EntityId
+    private static string GetKey(string store, string organisationId, string id)
     {
-        while (true)
-        {
-            if (retries > 30)
-            {
-                throw new StoreAccessException("Cannot get lock on ressource", $"{store}|{organisationId}|{id}");
-            }
-
-            var lockedItem = await TryGetLock<T>(store, organisationId, id);
-
-            if (lockedItem == null)
-            {
-                Thread.Sleep(1000);
-                retries++;
-                continue;
-            }
-
-            try
-            {
-                mutation(lockedItem);
-                await SaveStateAsync(store, organisationId, id, lockedItem, cancellationToken);
-            }
-            finally
-            {
-                ReleaseLock(store, organisationId, id);
-            }
-
-            break;
-        }
-    }
-
-    private static void ReleaseLock(string store, string organisationId, string id)
-    {
-        var key = $"{store}-{organisationId}-{id}";
-
-        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "locks");
-        var blob = container.GetBlobClient(key);
-        blob.Delete();
-    }
-
-    private async Task<T?> TryGetLock<T>(string store, string organisationId, string id)
-        where T : EntityId
-    {
-        var key = $"{store}-{organisationId}-{id}";
-
-        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "locks");
-        var blob = container.GetBlobClient(key);
-
-        if (await blob.ExistsAsync())
-        {
-            _logger.LogWarning("Ressource is locked : {key}", key);
-            return null;
-        }
-
-        try
-        {
-            await blob.UploadAsync(new MemoryStream(Encoding.Default.GetBytes(key)));
-        }
-        catch (RequestFailedException e)
-        {
-            _logger.LogWarning(e, "Lock was already took in the meantime : {key}", key);
-            return null;
-        }
-
-        var item = await GetStateNullableAsync<T>(store, organisationId, id);
-
-        if (item == null)
-        {
-            throw new StoreAccessException("Cannot mutate inexisting item", $"{store}-{organisationId}-{id}");
-        }
-
-        return item;
+        return $"locks/{store}/{organisationId}/{id}";
     }
 }
