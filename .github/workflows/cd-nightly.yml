@@ -58,4 +58,4 @@ jobs:
             az config set extension.use_dynamic_install=yes_without_prompt
             az containerapp update -n ${{ secrets.DEV_AZURE_APP_API }} -g ${{ secrets.DEV_AZURE_RG }} --image docker.io/simonbaudart/picshare:service-api-nightly
             az containerapp update -n ${{ secrets.DEV_AZURE_APP_FRONT }} -g ${{ secrets.DEV_AZURE_RG }} --image docker.io/simonbaudart/picshare:client-front-public-nightly
-            az containerapp update -n ${{ secrets.DEV_AZURE_APP_WORKERS }} -g ${{ secrets.DEV_AZURE_RG }} --image docker.io/simonbaudart/picshare:client-front-public-nightly
+            az containerapp update -n ${{ secrets.DEV_AZURE_APP_WORKERS }} -g ${{ secrets.DEV_AZURE_RG }} --image docker.io/simonbaudart/picshare:service-workers-nightly
