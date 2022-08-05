@@ -19,14 +19,14 @@ jobs:
 
   workers:
     uses: ./.github/workflows/cd-docker.yml
-      with:
-        dockerFile: ./services/Prism.Picshare.Services.Api/Dockerfile
-        imageTag: service-workers
-        workingDirectory: src/net/
-        isProduction: true
-      secrets:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    with:
+      dockerFile: ./services/Prism.Picshare.Services.Api/Dockerfile
+      imageTag: service-workers
+      workingDirectory: src/net/
+      isProduction: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   front:
     uses: ./.github/workflows/cd-docker.yml
