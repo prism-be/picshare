@@ -55,4 +55,4 @@ jobs:
             az config set extension.use_dynamic_install=yes_without_prompt
             az containerapp update -n ${{ secrets.PRD_AZURE_APP_API }} -g ${{ secrets.PRD_AZURE_RG }} --image docker.io/simonbaudart/picshare:service-api-latest
             az containerapp update -n ${{ secrets.PRD_AZURE_APP_FRONT }} -g ${{ secrets.PRD_AZURE_RG }} --image docker.io/simonbaudart/picshare:client-front-public-latest
-            az containerapp update -n ${{ secrets.PRD_AZURE_APP_WORKERS }} -g ${{ secrets.PRD_AZURE_RG }} --image docker.io/simonbaudart/picshare:client-front-public-latest
+            az containerapp update -n ${{ secrets.PRD_AZURE_APP_WORKERS }} -g ${{ secrets.PRD_AZURE_RG }} --image docker.io/simonbaudart/picshare:service-workers-latest
