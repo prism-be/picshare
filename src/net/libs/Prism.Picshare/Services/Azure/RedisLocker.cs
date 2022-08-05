@@ -68,13 +68,15 @@ public class RedisLock : IDisposable
         _cache = cache;
     }
 
-    public void Dispose()
-    {
-        Release();
-    }
 
     public void Release()
     {
         _cache.KeyDelete(_key);
+    }
+
+    public void Dispose()
+    {
+        Release();
+        GC.SuppressFinalize(this);
     }
 }
