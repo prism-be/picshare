@@ -39,4 +39,9 @@ public class DaprPublisherClient : PublisherClient
             _telemetryClient.TrackDependency("PUBSUB", Publishers.PubSub, topic, startTime, watch.Elapsed, success);
         }
     }
+
+    public override Task PublishEventsAsync<T>(string topic, IEnumerable<T> data, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

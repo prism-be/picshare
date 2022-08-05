@@ -76,6 +76,6 @@ public class RelaunchPictureEventsTests
 
         // Assert
         result.Should().Be(Unit.Value);
-        publisherClient.VerifyPublishEvent<Picture>(Topics.Pictures.Updated, Times.Exactly(1));
+        publisherClient.VerifyPublishEvents<Picture>(Topics.Pictures.Updated, Times.Exactly(1));
     }
 }

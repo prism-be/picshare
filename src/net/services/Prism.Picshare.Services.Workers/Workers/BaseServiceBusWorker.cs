@@ -19,9 +19,11 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
     {
         _logger = logger;
     }
-    
+
     public abstract string Queue { get; }
-    
+
+    protected virtual int MaxConcurrentCalls => 5;
+
     public async ValueTask DisposeAsync()
     {
         if (_processor != null)
@@ -39,7 +41,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
     {
         var serviceBusProcessorOptions = new ServiceBusProcessorOptions
         {
-            MaxConcurrentCalls = 1,
+            MaxConcurrentCalls = MaxConcurrentCalls,
             AutoCompleteMessages = false
         };
 
@@ -51,7 +53,9 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
         _logger.LogInformation("Start listening to queue : {queue}", Queue);
         await _processor.StartProcessingAsync(stoppingToken).ConfigureAwait(false);
     }
-    
+
+    internal abstract Task ProcessMessageAsync(T payload);
+
     private Task ProcessErrorAsync(ProcessErrorEventArgs arg)
     {
         _logger.LogError(arg.Exception, "Message handler encountered an exception");
@@ -69,14 +73,14 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
             _logger.LogInformation("Processing message {squenceNumber} on queue {queue}", args.Message.SequenceNumber, Queue);
             var payload = args.Message.Body.ToObjectFromJson<T>();
 
+            await ProcessMessageAsync(payload);
+
             await args.CompleteMessageAsync(args.Message).ConfigureAwait(false);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Erreur when processing message on queue {queue}", Queue);
+            _logger.LogError(e, "Erreur while processing message on queue {queue}", Queue);
             throw;
         }
     }
-    
-    public async Task ProcessMessage<T>(T payload)
 }
