@@ -1,20 +1,21 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["services/Prism.Picshare.Services.Workers/Prism.Picshare.Services.Workers.csproj", "Prism.Picshare.Services.Workers/"]
-RUN dotnet restore "services/Prism.Picshare.Services.Workers/Prism.Picshare.Services.Workers.csproj"
+ARG NUGET_AUTH_TOKEN
+
+WORKDIR /source
+
+# copy files and restore
 COPY . .
-WORKDIR "/src/Prism.Picshare.Services.Workers"
-RUN dotnet build "Prism.Picshare.Services.Workers.csproj" -c Release -o /app/build
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "Prism.Picshare.Services.Workers.csproj" -c Release -o /app/publish
+# copy and publish app and libraries
+RUN dotnet publish services/Prism.Picshare.Services.Workers/Prism.Picshare.Services.Workers.csproj -c release -o /app --no-restore
 
-FROM base AS final
+# final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+EXPOSE 80
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Prism.Picshare.Services.Workers.dll"]
