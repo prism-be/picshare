@@ -7,10 +7,9 @@
 using System.Text.Json.Serialization;
 using LiteDB;
 using Prism.Picshare.Exceptions;
-using Prism.Picshare.Services.Generic;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Prism.Picshare.Services.Local;
+namespace Prism.Picshare.Services.Generic;
 
 public class LiteDbStoreClient : StoreClient
 {

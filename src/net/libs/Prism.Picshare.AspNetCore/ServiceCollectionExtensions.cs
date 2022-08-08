@@ -8,13 +8,13 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Commands;
 using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 using Prism.Picshare.Services.Azure;
 using Prism.Picshare.Services.Generic;
-using Prism.Picshare.Services.Local;
 using StackExchange.Redis;
 
 namespace Prism.Picshare.AspNetCore;
@@ -55,6 +55,14 @@ public static class ServiceCollectionExtensions
         if (!string.IsNullOrWhiteSpace(liteDbConnectionString))
         {
             services.AddScoped<StoreClient, LiteDbStoreClient>();
+        }
+
+        var mongoDbConnectionString = EnvironmentConfiguration.GetConfiguration("MONGO_DB_CONNECTION_STRING");
+
+        if (!string.IsNullOrWhiteSpace(mongoDbConnectionString))
+        {
+            var client = new MongoClient(mongoDbConnectionString);
+            services.AddSingleton<IMongoClient>(client);
         }
 
         // Add the clients
