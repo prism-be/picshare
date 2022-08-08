@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Picshare.Exceptions;
 using StackExchange.Redis;
 
-namespace Prism.Picshare.Services.Azure;
+namespace Prism.Picshare.Services.Generic;
 
 public class RedisLocker
 {

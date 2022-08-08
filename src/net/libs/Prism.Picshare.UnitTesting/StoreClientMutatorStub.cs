@@ -19,9 +19,9 @@ public class StoreClientMutatorStub : StoreClient
         _storeClientMock = storeClientMock;
     }
 
-    public override async Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class
+    public override async Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class
     {
-        return await _storeClientMock.Object.GetStateNullableAsync<T>(store, organisation, id, cancellationToken);
+        return await _storeClientMock.Object.GetStateNullableAsync<T>(store, organisationId, id, cancellationToken);
     }
 
     public override async Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
@@ -38,8 +38,8 @@ public class StoreClientMutatorStub : StoreClient
         await SaveStateAsync(store, organisationId, id, data, cancellationToken);
     }
 
-    public override async Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default)
+    public override async Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default)
     {
-        await _storeClientMock.Object.SaveStateAsync(store, organisation, id, data, cancellationToken);
+        await _storeClientMock.Object.SaveStateAsync(store, organisationId, id, data, cancellationToken);
     }
 }

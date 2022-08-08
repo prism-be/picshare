@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Picshare.Exceptions;
 using Prism.Picshare.Services.Azure;
+using Prism.Picshare.Services.Generic;
 using StackExchange.Redis;
 using Xunit;
 
