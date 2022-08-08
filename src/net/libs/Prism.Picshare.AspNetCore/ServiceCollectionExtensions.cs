@@ -13,13 +13,14 @@ using Prism.Picshare.Commands;
 using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 using Prism.Picshare.Services.Azure;
+using Prism.Picshare.Services.Generic;
+using Prism.Picshare.Services.Local;
 using StackExchange.Redis;
 
 namespace Prism.Picshare.AspNetCore;
 
 public static class ServiceCollectionExtensions
 {
-
     public static IServiceCollection AddDisconnectedPicshareServices(this IServiceCollection services)
     {
         // Add Mediatr
@@ -38,14 +39,26 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(jwtConfiguration);
 
         // Add the database
-        var cosmosClient = new CosmosClient(EnvironmentConfiguration.GetMandatoryConfiguration("COSMOS_CONNECTION_STRING"));
-        var database = cosmosClient.GetDatabase("picshare");
-        services.AddSingleton(cosmosClient);
-        services.AddSingleton(database);
+        var cosmosConnectionString = EnvironmentConfiguration.GetConfiguration("COSMOS_CONNECTION_STRING");
+
+        if (!string.IsNullOrWhiteSpace(cosmosConnectionString))
+        {
+            var cosmosClient = new CosmosClient(cosmosConnectionString);
+            var database = cosmosClient.GetDatabase("picshare");
+            services.AddSingleton(cosmosClient);
+            services.AddSingleton(database);
+            services.AddScoped<StoreClient, CosmosStoreClient>();
+        }
+
+        var liteDbConnectionString = EnvironmentConfiguration.GetConfiguration("LITE_DB_DIRECTORY");
+
+        if (!string.IsNullOrWhiteSpace(liteDbConnectionString))
+        {
+            services.AddScoped<StoreClient, LiteDbStoreClient>();
+        }
 
         // Add the clients
         services.AddScoped<BlobClient, AzureBlobClient>();
-        services.AddScoped<StoreClient, CosmosStoreClient>();
         services.AddScoped<PublisherClient, ServiceBusPublisherClient>();
 
         return services;

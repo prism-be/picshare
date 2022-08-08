@@ -108,7 +108,7 @@ public abstract class StoreClient
         return result;
     }
 
-    public abstract Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class;
+    public abstract Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class;
 
     public async Task<T?> GetStateNullableAsync<T>(Guid organisationId, Guid id, CancellationToken cancellationToken = default) where T : class
     {
@@ -157,7 +157,7 @@ public abstract class StoreClient
     public abstract Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
         where T : EntityId;
 
-    public abstract Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default);
+    public abstract Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default);
 
     public async Task SaveStateAsync<T>(string id, T data, CancellationToken cancellationToken = default)
     {

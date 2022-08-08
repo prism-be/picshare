@@ -9,6 +9,7 @@ using System.Text.Json;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using Prism.Picshare.Exceptions;
+using Prism.Picshare.Services.Generic;
 
 namespace Prism.Picshare.Services.Azure;
 
@@ -26,13 +27,13 @@ public class CosmosStoreClient : StoreClient
         _locker = locker;
     }
 
-    public override async Task<T?> GetStateNullableAsync<T>(string store, string organisation, string id, CancellationToken cancellationToken = default) where T : class
+    public override async Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class
     {
         var partitionKey = id;
 
-        if (!string.IsNullOrWhiteSpace(organisation))
+        if (!string.IsNullOrWhiteSpace(organisationId))
         {
-            partitionKey = organisation;
+            partitionKey = organisationId;
         }
 
         var container = _database.GetContainer(store);
@@ -81,13 +82,13 @@ public class CosmosStoreClient : StoreClient
         locker.Release();
     }
 
-    public override async Task SaveStateAsync<T>(string store, string organisation, string id, T data, CancellationToken cancellationToken = default)
+    public override async Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default)
     {
         var partitionKey = id;
 
-        if (!string.IsNullOrWhiteSpace(organisation))
+        if (!string.IsNullOrWhiteSpace(organisationId))
         {
-            partitionKey = organisation;
+            partitionKey = organisationId;
         }
 
         var container = _database.GetContainer(store);
