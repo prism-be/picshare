@@ -22,7 +22,7 @@ public class PictureUploaded : BaseServiceBusWorker<EntityReference>
         _mediator = mediator;
     }
 
-    protected override int MaxConcurrentCalls => 1;
+    protected override int MaxConcurrentCalls => Convert.ToInt32(EnvironmentConfiguration.GetConfiguration("WORKERS_CONCURRENT_HEAVY_MESSAGES") ?? "5");
 
     public override string Queue => Topics.Pictures.Uploaded;
 

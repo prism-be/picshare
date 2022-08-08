@@ -22,7 +22,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
 
     public abstract string Queue { get; }
 
-    protected virtual int MaxConcurrentCalls => 5;
+    protected virtual int MaxConcurrentCalls => Convert.ToInt32(EnvironmentConfiguration.GetConfiguration("WORKERS_CONCURRENT_MESSAGES") ?? "50");
 
     public async ValueTask DisposeAsync()
     {
