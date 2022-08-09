@@ -13,7 +13,6 @@ using Prism.Picshare.Services.Workers.Workers.Pictures;
 using Prism.Picshare.Services.Workers.Workers.User;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseDefaultServiceProvider(options => options.ValidateScopes = false);
 
 builder.Logging.AddInsights();
 

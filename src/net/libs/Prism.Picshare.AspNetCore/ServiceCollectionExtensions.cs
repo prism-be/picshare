@@ -8,6 +8,9 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Commands;
@@ -41,9 +44,9 @@ public static class ServiceCollectionExtensions
 
         services.AddStore();
         services.AddPublisher();
+        services.AddBlob();
 
         // Add the clients
-        services.AddTransient<BlobClient, AzureBlobClient>();
         services.AddSingleton<RedisLocker>();
 
         return services;
@@ -79,10 +82,22 @@ public static class ServiceCollectionExtensions
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
             services.AddSingleton(channel);
-            services.AddSingleton<PublisherClient, RabbitPublisherClient>();
+            services.AddTransient<PublisherClient, RabbitPublisherClient>();
         }
     }
 
+    private static void AddBlob(this IServiceCollection services)
+    {
+        if (!string.IsNullOrWhiteSpace(EnvironmentConfiguration.GetConfiguration("AZURE_BLOB_CONNECTION_STRING")))
+        {
+            services.AddTransient<BlobClient, AzureBlobClient>();
+        }
+
+        if (!string.IsNullOrWhiteSpace(EnvironmentConfiguration.GetConfiguration("LOCAL_BLOB_DIRECTORY")))
+        {
+            services.AddTransient<BlobClient, FileSystemBlobClient>();
+        }
+    }
     private static void AddStore(this IServiceCollection services)
     {
         var cosmosConnectionString = EnvironmentConfiguration.GetConfiguration("COSMOS_CONNECTION_STRING");
@@ -107,6 +122,7 @@ public static class ServiceCollectionExtensions
 
         if (!string.IsNullOrWhiteSpace(mongoDbConnectionString))
         {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
             var client = new MongoClient(mongoDbConnectionString);
             services.AddSingleton<IMongoClient>(client);
             services.AddTransient<StoreClient, MongoStoreClient>();

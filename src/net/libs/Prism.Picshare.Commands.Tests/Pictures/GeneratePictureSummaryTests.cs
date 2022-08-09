@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -39,17 +38,17 @@ public class GeneratePictureSummaryTests
             new()
             {
                 Tag = "DateTimeOriginal",
-                Value = JsonSerializer.SerializeToElement("2019:02:02 08:51:07")
+                Value = "2019:02:02 08:51:07"
             },
             new()
             {
                 Tag = "DateTimeDigitized",
-                Value = JsonSerializer.SerializeToElement("2019:02:02 08:53:07")
+                Value = "2019:02:02 08:53:07"
             },
             new()
             {
                 Tag = "DateTime",
-                Value = JsonSerializer.SerializeToElement("2019:02:10 14:37:10")
+                Value = "2019:02:10 14:37:10"
             }
         }), CancellationToken.None);
 
@@ -74,17 +73,17 @@ public class GeneratePictureSummaryTests
             new()
             {
                 Tag = "DateTimeOriginal",
-                Value = JsonSerializer.SerializeToElement("2019:02:oups 08:51:07")
+                Value = "2019:02:oups 08:51:07"
             },
             new()
             {
                 Tag = "DateTimeDigitized",
-                Value = JsonSerializer.SerializeToElement("2019:02:02blibla08:53:07")
+                Value = "2019:02:02blibla08:53:07"
             },
             new()
             {
                 Tag = "DateTime",
-                Value = JsonSerializer.SerializeToElement("2019:02:10 14:37:10")
+                Value = "2019:02:10 14:37:10"
             }
         }), CancellationToken.None);
 
@@ -110,12 +109,12 @@ public class GeneratePictureSummaryTests
             new()
             {
                 Tag = "DateTimeDigitized",
-                Value = JsonSerializer.SerializeToElement("2019:02:02 08:53:07")
+                Value = "2019:02:02 08:53:07"
             },
             new()
             {
                 Tag = "DateTime",
-                Value = JsonSerializer.SerializeToElement("2019:02:10 14:37:10")
+                Value = "2019:02:10 14:37:10"
             }
         }), CancellationToken.None);
 
@@ -160,7 +159,7 @@ public class GeneratePictureSummaryTests
             new()
             {
                 Tag = "DateTime",
-                Value = JsonSerializer.SerializeToElement("2019:02:10 14:37:10")
+                Value = "2019:02:10 14:37:10"
             }
         }), CancellationToken.None);
 

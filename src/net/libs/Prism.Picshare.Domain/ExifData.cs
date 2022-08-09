@@ -13,7 +13,6 @@ public class ExifData
     public ExifData()
     {
         Tag = Type = string.Empty;
-        Value = new object();
     }
 
     [JsonPropertyName("tag")]
@@ -23,5 +22,5 @@ public class ExifData
     public string Type { get; set; }
 
     [JsonPropertyName("value")]
-    public dynamic Value { get; set; }
+    public string? Value { get; set; }
 }

@@ -64,7 +64,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
 
-        _channel.ExchangeDeclare(Queue, ExchangeType.Direct);
+        _channel.ExchangeDeclare(Queue, ExchangeType.Direct, true);
         _channel.QueueDeclare("workers/" + Queue, true, false, false);
         _channel.QueueBind("workers/" + Queue, Queue, Topics.Subscription);
 
@@ -72,22 +72,29 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
         _consumer.Received += async (_, args) =>
         {
-            using (IServiceScope scope = _serviceProvider.CreateScope())
+            try
             {
-                _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
-
-                var body = args.Body.ToArray();
-                var json = Encoding.Default.GetString(body);
-                var payload = JsonSerializer.Deserialize<T>(json);
-
-                if (payload != null)
+                using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    await ProcessMessageAsync(mediator, payload);
-                }
-            }
+                    _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
 
-            _channel.BasicAck(args.DeliveryTag, false);
+                    var body = args.Body.ToArray();
+                    var json = Encoding.Default.GetString(body);
+                    var payload = JsonSerializer.Deserialize<T>(json);
+
+                    if (payload != null)
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        await ProcessMessageAsync(mediator, payload);
+                    }
+                }
+
+                _channel.BasicAck(args.DeliveryTag, false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Cannot process message {id} on queue {queue}", args.DeliveryTag, Queue);
+            }
         };
 
         _consumerTag = _channel.BasicConsume("workers/" + Queue, false, _consumer);

@@ -58,7 +58,7 @@ public class ReadMetaDataHandler : IRequestHandler<ReadMetaData, ResultCodes>
                 {
                     Tag = exifValue.Tag.ToString(),
                     Type = exifValue.DataType.ToString(),
-                    Value = exifValue.GetValue()
+                    Value = exifValue.GetValue().ToString()
                 });
             }
         }
