@@ -8,6 +8,7 @@ using Prism.Picshare;
 using Prism.Picshare.AspNetCore;
 using Prism.Picshare.AspNetCore.Authentication;
 using Prism.Picshare.Insights;
+using Prism.Picshare.Mailing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,13 @@ builder.Logging.AddInsights();
 
 builder.Services.AddPicshare();
 
-builder.Services.AddHttpContextAccessor();
+var mailingConfiguration = new MailingConfiguration
+{
+    RootUri = EnvironmentConfiguration.GetMandatoryConfiguration("ROOT_URI"),
+};
+builder.Services.AddSingleton(mailingConfiguration);
+builder.Services.AddScoped<IEmailWorker, NullEmailWorker>();
+
 builder.Services.AddInsights();
 
 builder.Services.AddHealthChecks();

@@ -9,10 +9,10 @@ using Prism.Picshare.Exceptions;
 
 namespace Prism.Picshare.Services.Generic;
 
-public class MongoStoreClient: StoreClient
+public class MongoStoreClient : StoreClient
 {
-    private readonly IMongoClient _mongoClient;
     private readonly RedisLocker _locker;
+    private readonly IMongoClient _mongoClient;
 
     public MongoStoreClient(IMongoClient mongoClient, RedisLocker locker)
     {
@@ -22,7 +22,7 @@ public class MongoStoreClient: StoreClient
 
     public override async Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class
     {
-        var db = _mongoClient.GetDatabase(GetDatabaseName(organisationId));
+        var db = _mongoClient.GetDatabase("picshare");
         var collection = db.GetCollection<T>(store);
         var filter = Builders<T>.Filter.Eq("Id", id);
         var result = await collection.FindAsync(filter, cancellationToken: cancellationToken);
@@ -49,20 +49,17 @@ public class MongoStoreClient: StoreClient
 
     public override async Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default)
     {
-        var db = _mongoClient.GetDatabase(GetDatabaseName(organisationId));
+        var db = _mongoClient.GetDatabase("picshare");
         var collection = db.GetCollection<T>(store);
-        var filter = Builders<T>.Filter.Eq("Id", id);
-        await collection.ReplaceOneAsync(filter, data, cancellationToken: cancellationToken);
-    }
-    
-    private string GetDatabaseName(string organisationId)
-    {
 
-        if (string.IsNullOrWhiteSpace(organisationId))
+        var existing = await collection.FindAsync(Builders<T>.Filter.Eq("Id", id), cancellationToken: cancellationToken);
+
+        if (await existing.AnyAsync(cancellationToken: cancellationToken))
         {
-            return "picshare";
+            await collection.ReplaceOneAsync(Builders<T>.Filter.Eq("Id", id), data, cancellationToken: cancellationToken);
+            return;
         }
-
-        return organisationId;
+        
+        await collection.InsertOneAsync(data, cancellationToken: cancellationToken);
     }
 }

@@ -13,6 +13,7 @@ using Prism.Picshare.Services.Workers.Workers.Pictures;
 using Prism.Picshare.Services.Workers.Workers.User;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseDefaultServiceProvider(options => options.ValidateScopes = false);
 
 builder.Logging.AddInsights();
 
@@ -31,7 +32,6 @@ builder.Services.AddSingleton(mailingConfiguration);
 builder.Services.AddScoped<IEmailWorker, EmailWorker>();
 builder.Services.AddScoped<ISmtpClientWrapper, SmtpClientWrapper>();
 
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddInsights();
 
 builder.Services.AddHealthChecks();

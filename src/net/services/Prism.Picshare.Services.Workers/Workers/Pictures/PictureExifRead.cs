@@ -13,17 +13,14 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureExifRead : BaseServiceBusWorker<Picture>
 {
-    private readonly IMediator _mediator;
-
-    public PictureExifRead(ILogger<PictureExifRead> logger, IMediator mediator) : base(logger)
+    public PictureExifRead(ILogger<PictureExifRead> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
     {
-        _mediator = mediator;
     }
 
     public override string Queue => Topics.Pictures.ExifRead;
 
-    internal override async Task ProcessMessageAsync(Picture payload)
+    internal override async Task ProcessMessageAsync(IMediator mediator, Picture payload)
     {
-        await _mediator.Send(new GeneratePictureSummary(payload.OrganisationId, payload.Id, payload.Exifs));
+        await mediator.Send(new GeneratePictureSummary(payload.OrganisationId, payload.Id, payload.Exifs));
     }
 }

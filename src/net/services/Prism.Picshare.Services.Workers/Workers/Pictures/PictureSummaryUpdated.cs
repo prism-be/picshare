@@ -13,17 +13,14 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureSummaryUpdated : BaseServiceBusWorker<PictureSummary>
 {
-    private readonly IMediator _mediator;
-
-    public PictureSummaryUpdated(ILogger<PictureSummaryUpdated> logger, IMediator mediator) : base(logger)
+    public PictureSummaryUpdated(ILogger<PictureSummaryUpdated> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
     {
-        _mediator = mediator;
     }
 
     public override string Queue => Topics.Pictures.SummaryUpdated;
 
-    internal override async Task ProcessMessageAsync(PictureSummary payload)
+    internal override async Task ProcessMessageAsync(IMediator mediator, PictureSummary payload)
     {
-        await _mediator.Send(new UpdateFlowSummary(payload));
+        await mediator.Send(new UpdateFlowSummary(payload));
     }
 }

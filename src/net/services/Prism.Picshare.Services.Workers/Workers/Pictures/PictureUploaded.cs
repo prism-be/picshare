@@ -13,25 +13,21 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureUploaded : BaseServiceBusWorker<EntityReference>
 {
-    private readonly IMediator _mediator;
     private readonly PublisherClient _publisherClient;
 
-    public PictureUploaded(ILogger<PictureUploaded> logger, IMediator mediator, PublisherClient publisherClient) : base(logger)
+    public PictureUploaded(ILogger<PictureUploaded> logger, IServiceProvider serviceProvider, PublisherClient publisherClient) : base(logger, serviceProvider)
     {
         _publisherClient = publisherClient;
-        _mediator = mediator;
     }
-
-    protected override int MaxConcurrentCalls => Convert.ToInt32(EnvironmentConfiguration.GetConfiguration("WORKERS_CONCURRENT_HEAVY_MESSAGES") ?? "5");
 
     public override string Queue => Topics.Pictures.Uploaded;
 
-    internal override async Task ProcessMessageAsync(EntityReference payload)
+    internal override async Task ProcessMessageAsync(IMediator mediator, EntityReference payload)
     {
-        await _mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 150, 150, true));
-        await _mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 960, 540, false));
-        await _mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 1920, 1080, false));
-        await _mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 3840, 2160, false));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 150, 150, true));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 960, 540, false));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 1920, 1080, false));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 3840, 2160, false));
 
         await _publisherClient.PublishEventAsync(Topics.Pictures.ThumbnailsGenerated, new EntityReference
         {

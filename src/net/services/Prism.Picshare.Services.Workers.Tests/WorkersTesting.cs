@@ -23,8 +23,8 @@ public static class WorkersTesting
         var mediator = new Mock<IMediator>();
 
         // Act
-        var worker = (TWorker)Activator.CreateInstance(typeof(TWorker), logger.Object, mediator.Object)!;
-        await worker.ProcessMessageAsync(data);
+        var worker = (TWorker)Activator.CreateInstance(typeof(TWorker), logger.Object, Mock.Of<IServiceProvider>())!;
+        await worker.ProcessMessageAsync(mediator.Object, data);
 
         // Assert
         mediator.Verify(x => x.Send(It.IsAny<TExpectedRequest>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -39,8 +39,8 @@ public static class WorkersTesting
         var mediator = new Mock<IMediator>();
 
         // Act
-        var worker = (TWorker)Activator.CreateInstance(typeof(TWorker), logger.Object, mediator.Object)!;
-        await worker.ProcessMessageAsync(data);
+        var worker = (TWorker)Activator.CreateInstance(typeof(TWorker), logger.Object, Mock.Of<IServiceProvider>())!;
+        await worker.ProcessMessageAsync(mediator.Object, data);
 
         // Assert
         mediator.Verify(x => x.Send(It.IsAny<TExpectedRequest>(), It.IsAny<CancellationToken>()), Times.Once);
