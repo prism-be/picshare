@@ -32,6 +32,12 @@ export const loadAppInsights = () => {
     fetch(config.apiRoot + '/api/config/insights')
         .then((response) => {
             response.json().then(data => {
+                
+                if (data.connectionString === '')
+                {
+                    return;
+                }
+                
                 appInsights.config.instrumentationKey = data.instrumentationKey;
                 appInsights.config.connectionString = data.connectionString;
                 appInsights.loadAppInsights();

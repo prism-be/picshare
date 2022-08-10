@@ -4,16 +4,22 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using Azure.Messaging.ServiceBus;
+using System.Text;
+using System.Text.Json;
+using MediatR;
+using Prism.Picshare.Events;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Prism.Picshare.Services.Workers.Workers;
 
-public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposable
+public abstract class BaseServiceBusWorker<T> : BackgroundService
 {
     private readonly ILogger _logger;
 
-    private ServiceBusClient? _client;
-    private ServiceBusProcessor? _processor;
+    private IModel? _channel;
+    private IConnection? _connection;
+    private string? _consumerTag;
 
     protected BaseServiceBusWorker(ILogger logger)
     {
@@ -22,67 +28,77 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService, IAsyncDisposa
 
     public abstract string Queue { get; }
 
-    protected virtual int MaxConcurrentCalls => Convert.ToInt32(EnvironmentConfiguration.GetConfiguration("WORKERS_CONCURRENT_MESSAGES") ?? "50");
+    protected virtual ushort PrefetchCount => 50;
 
-    public async ValueTask DisposeAsync()
+    public override void Dispose()
     {
-        if (_processor != null)
+        if (_channel != null)
         {
-            await _processor.DisposeAsync().ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(_consumerTag))
+            {
+                _channel.BasicCancel(_consumerTag);
+            }
+
+            _channel.Dispose();
         }
 
-        if (_client != null)
+        if (_connection != null)
         {
-            await _client.DisposeAsync().ConfigureAwait(false);
+            _connection.Dispose();
         }
-        
+
         GC.SuppressFinalize(this);
+        base.Dispose();
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var serviceBusProcessorOptions = new ServiceBusProcessorOptions
+        _logger.LogInformation("Start listening on queue {queue}", Queue);
+
+        var factory = new ConnectionFactory
         {
-            MaxConcurrentCalls = MaxConcurrentCalls,
-            AutoCompleteMessages = false
+            Uri = new Uri(EnvironmentConfiguration.GetMandatoryConfiguration("RABBITMQ_CONNECTION_STRING"))
         };
 
-        _client = new ServiceBusClient(EnvironmentConfiguration.GetMandatoryConfiguration("SERVICE_BUS_CONNECTION_STRING"));
-        _processor = _client.CreateProcessor(Queue, serviceBusProcessorOptions);
-        _processor.ProcessMessageAsync += ProcessMessagesAsync;
-        _processor.ProcessErrorAsync += ProcessErrorAsync;
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
 
-        _logger.LogInformation("Start listening to queue : {queue}", Queue);
-        await _processor.StartProcessingAsync(stoppingToken).ConfigureAwait(false);
-    }
+        _channel.QueueDeclare("workers/" + Queue, true, false, false);
+        _channel.QueueBind("workers/" + Queue, Queue, Topics.Subscription);
 
-    internal abstract Task ProcessMessageAsync(T payload);
+        _channel.BasicQos(0, PrefetchCount, false);
 
-    private Task ProcessErrorAsync(ProcessErrorEventArgs arg)
-    {
-        _logger.LogError(arg.Exception, "Message handler encountered an exception");
-        _logger.LogDebug("- ErrorSource: {arg.ErrorSource}", arg.ErrorSource);
-        _logger.LogDebug("- Entity Path: {arg.EntityPath}",arg.EntityPath);
-        _logger.LogDebug("- FullyQualifiedNamespace: {arg.FullyQualifiedNamespace}", arg.FullyQualifiedNamespace);
+        var consumer = new EventingBasicConsumer(_channel);
+        consumer.Received += async (_, args) =>
+        {
+            using var scope = SharedInstances.ServiceProvider.CreateScope();
+
+            try
+            {
+                _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
+
+                var body = args.Body.ToArray();
+                var json = Encoding.Default.GetString(body);
+                var payload = JsonSerializer.Deserialize<T>(json);
+
+                if (payload != null)
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    await ProcessMessageAsync(mediator, payload);
+                }
+
+                _channel.BasicAck(args.DeliveryTag, false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Cannot process message {id} on queue {queue}", args.DeliveryTag, Queue);
+            }
+        };
+
+        _consumerTag = _channel.BasicConsume("workers/" + Queue, false, consumer);
 
         return Task.CompletedTask;
     }
 
-    private async Task ProcessMessagesAsync(ProcessMessageEventArgs args)
-    {
-        try
-        {
-            _logger.LogInformation("Processing message {squenceNumber} on queue {queue}", args.Message.SequenceNumber, Queue);
-            var payload = args.Message.Body.ToObjectFromJson<T>();
-
-            await ProcessMessageAsync(payload);
-
-            await args.CompleteMessageAsync(args.Message).ConfigureAwait(false);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Erreur while processing message on queue {queue}", Queue);
-            throw;
-        }
-    }
+    internal abstract Task ProcessMessageAsync(IMediator mediator, T payload);
 }

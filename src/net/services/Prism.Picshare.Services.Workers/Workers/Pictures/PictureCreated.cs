@@ -14,18 +14,15 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureCreated : BaseServiceBusWorker<Picture>
 {
-    private readonly IMediator _mediator;
-
-    public PictureCreated(ILogger<PictureCreated> logger, IMediator mediator) : base(logger)
+    public PictureCreated(ILogger<PictureCreated> logger, IServiceProvider serviceProvider) : base(logger)
     {
-        _mediator = mediator;
     }
 
     public override string Queue => Topics.Pictures.Created;
 
-    internal override async Task ProcessMessageAsync(Picture payload)
+    internal override async Task ProcessMessageAsync(IMediator mediator, Picture payload)
     {
-        await _mediator.Send(new ReadMetaData(payload.OrganisationId, payload.Id));
-        await _mediator.Send(new AuthorizeUser(payload.OrganisationId, payload.Owner, payload.Id));
+        await mediator.Send(new ReadMetaData(payload.OrganisationId, payload.Id));
+        await mediator.Send(new AuthorizeUser(payload.OrganisationId, payload.Owner, payload.Id));
     }
 }

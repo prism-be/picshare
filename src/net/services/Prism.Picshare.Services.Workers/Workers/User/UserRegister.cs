@@ -12,17 +12,14 @@ namespace Prism.Picshare.Services.Workers.Workers.User;
 
 public class UserRegister : BaseServiceBusWorker<Domain.User>
 {
-    private readonly IMediator _mediator;
-
-    public UserRegister(ILogger<UserRegister> logger, IMediator mediator) : base(logger)
+    public UserRegister(ILogger<UserRegister> logger, IServiceProvider serviceProvider) : base(logger)
     {
-        _mediator = mediator;
     }
 
     public override string Queue => Topics.User.Register;
 
-    internal override async Task ProcessMessageAsync(Domain.User payload)
+    internal override async Task ProcessMessageAsync(IMediator mediator, Domain.User payload)
     {
-        await _mediator.Send(new RegisterConfirmation(payload));
+        await mediator.Send(new RegisterConfirmation(payload));
     }
 }

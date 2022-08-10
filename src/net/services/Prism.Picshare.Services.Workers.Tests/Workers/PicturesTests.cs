@@ -96,8 +96,8 @@ public class PicturesTests
         };
 
         // Act
-        var controller = new PictureUploaded(Mock.Of<ILogger<PictureUploaded>>(), mediator.Object, publisherClient.Object);
-        await controller.ProcessMessageAsync(message);
+        var controller = new PictureUploaded(Mock.Of<ILogger<PictureUploaded>>(), Mock.Of<IServiceProvider>(), publisherClient.Object);
+        await controller.ProcessMessageAsync(mediator.Object, message);
 
         // Assert
         mediator.VerifySend<GenerateThumbnail, ResultCodes>(Times.Exactly(4));

@@ -13,17 +13,14 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureThumbnailsGenerated : BaseServiceBusWorker<EntityReference>
 {
-    private readonly IMediator _mediator;
-
-    public PictureThumbnailsGenerated(ILogger<PictureThumbnailsGenerated> logger, IMediator mediator) : base(logger)
+    public PictureThumbnailsGenerated(ILogger<PictureThumbnailsGenerated> logger, IServiceProvider serviceProvider) : base(logger)
     {
-        _mediator = mediator;
     }
 
     public override string Queue => Topics.Pictures.ThumbnailsGenerated;
 
-    internal override async Task ProcessMessageAsync(EntityReference payload)
+    internal override async Task ProcessMessageAsync(IMediator mediator, EntityReference payload)
     {
-        await _mediator.Send(new SetPictureReady(payload.OrganisationId, payload.Id));
+        await mediator.Send(new SetPictureReady(payload.OrganisationId, payload.Id));
     }
 }

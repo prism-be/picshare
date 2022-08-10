@@ -19,8 +19,8 @@ public interface IEmailWorker
 
 public class EmailWorker : IEmailWorker
 {
-    private readonly ISmtpClientWrapper _smtpClient;
     private readonly ILogger<EmailWorker> _logger;
+    private readonly ISmtpClientWrapper _smtpClient;
 
     public EmailWorker(ILogger<EmailWorker> logger, ISmtpClientWrapper smtpClient)
     {
@@ -39,7 +39,7 @@ public class EmailWorker : IEmailWorker
             _logger.LogWarning("Cannot found a template {template}, fall back to the default language", template);
             filePath = Path.Combine(assemblyDirectory, "Templates", $"en-{template}.txt");
         }
-        
+
         if (!File.Exists(filePath))
         {
             _logger.LogCritical("Cannot found a template {template}, even in the default language", template);
@@ -56,10 +56,26 @@ public class EmailWorker : IEmailWorker
 
         title = titleTemplate.Render(Hash.FromAnonymousObject(data));
         body = bodyTemplate.Render(Hash.FromAnonymousObject(data));
-        
+
         var message = new MailMessage("no-reply@picshare.me", recipient.Email, title, body);
         message.IsBodyHtml = false;
 
         await _smtpClient.SendAsync(message, cancellationToken);
+    }
+}
+
+public class NullEmailWorker : IEmailWorker
+{
+    private readonly ILogger<NullEmailWorker> _logger;
+
+    public NullEmailWorker(ILogger<NullEmailWorker> logger)
+    {
+        _logger = logger;
+    }
+
+    public Task RenderAndSendAsync<T>(string template, User recipient, T data, CancellationToken cancellationToken)
+    {
+        _logger.LogWarning("Cannot send email, null email worker is activated");
+        return Task.CompletedTask;
     }
 }

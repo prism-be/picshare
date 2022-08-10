@@ -8,6 +8,7 @@ using Prism.Picshare;
 using Prism.Picshare.AspNetCore;
 using Prism.Picshare.Insights;
 using Prism.Picshare.Mailing;
+using Prism.Picshare.Services.Workers.Workers;
 using Prism.Picshare.Services.Workers.Workers.Email;
 using Prism.Picshare.Services.Workers.Workers.Pictures;
 using Prism.Picshare.Services.Workers.Workers.User;
@@ -31,7 +32,6 @@ builder.Services.AddSingleton(mailingConfiguration);
 builder.Services.AddScoped<IEmailWorker, EmailWorker>();
 builder.Services.AddScoped<ISmtpClientWrapper, SmtpClientWrapper>();
 
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddInsights();
 
 builder.Services.AddHealthChecks();
@@ -47,8 +47,9 @@ builder.Services.AddHostedService<UserRegister>();
 
 var app = builder.Build();
 
-app.UseExceptionLogger();
+SharedInstances.ServiceProvider = app.Services;
 
+app.UseExceptionLogger();
 app.UseHealthChecks("/health");
 
 app.Run();
