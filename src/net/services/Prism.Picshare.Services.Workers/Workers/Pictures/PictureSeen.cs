@@ -13,7 +13,7 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureSeen : BaseServiceBusWorker<EntityReference>
 {
-    public PictureSeen(ILogger<PictureSeen> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public PictureSeen(ILogger<PictureSeen> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

@@ -12,7 +12,7 @@ namespace Prism.Picshare.Services.Workers.Workers.Email;
 
 public class EmailValidated : BaseServiceBusWorker<Domain.User>
 {
-    public EmailValidated(ILogger<EmailValidated> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public EmailValidated(ILogger<EmailValidated> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

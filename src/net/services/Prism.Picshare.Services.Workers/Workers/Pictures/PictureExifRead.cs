@@ -13,7 +13,7 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureExifRead : BaseServiceBusWorker<Picture>
 {
-    public PictureExifRead(ILogger<PictureExifRead> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public PictureExifRead(ILogger<PictureExifRead> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

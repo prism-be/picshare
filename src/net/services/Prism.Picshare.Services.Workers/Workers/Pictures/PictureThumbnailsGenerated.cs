@@ -13,7 +13,7 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureThumbnailsGenerated : BaseServiceBusWorker<EntityReference>
 {
-    public PictureThumbnailsGenerated(ILogger<PictureThumbnailsGenerated> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public PictureThumbnailsGenerated(ILogger<PictureThumbnailsGenerated> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

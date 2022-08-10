@@ -13,7 +13,7 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureSummaryUpdated : BaseServiceBusWorker<PictureSummary>
 {
-    public PictureSummaryUpdated(ILogger<PictureSummaryUpdated> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public PictureSummaryUpdated(ILogger<PictureSummaryUpdated> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

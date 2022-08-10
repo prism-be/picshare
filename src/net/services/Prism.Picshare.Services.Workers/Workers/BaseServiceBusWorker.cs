@@ -16,17 +16,15 @@ namespace Prism.Picshare.Services.Workers.Workers;
 public abstract class BaseServiceBusWorker<T> : BackgroundService
 {
     private readonly ILogger _logger;
-    private readonly IServiceProvider _serviceProvider;
-
+    
     private IModel? _channel;
     private IConnection? _connection;
     private EventingBasicConsumer? _consumer;
     private string? _consumerTag;
 
-    protected BaseServiceBusWorker(ILogger logger, IServiceProvider serviceProvider)
+    protected BaseServiceBusWorker(ILogger logger)
     {
         _logger = logger;
-        _serviceProvider = serviceProvider;
     }
 
     public abstract string Queue { get; }
@@ -74,21 +72,20 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         _consumer = new EventingBasicConsumer(_channel);
         _consumer.Received += async (_, args) =>
         {
+            using var scope = SharedInstances.ServiceProvider.CreateScope();
+
             try
             {
-                using (var scope = _serviceProvider.CreateScope())
+                _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
+
+                var body = args.Body.ToArray();
+                var json = Encoding.Default.GetString(body);
+                var payload = JsonSerializer.Deserialize<T>(json);
+
+                if (payload != null)
                 {
-                    _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
-
-                    var body = args.Body.ToArray();
-                    var json = Encoding.Default.GetString(body);
-                    var payload = JsonSerializer.Deserialize<T>(json);
-
-                    if (payload != null)
-                    {
-                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                        await ProcessMessageAsync(mediator, payload);
-                    }
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    await ProcessMessageAsync(mediator, payload);
                 }
 
                 _channel.BasicAck(args.DeliveryTag, false);

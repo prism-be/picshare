@@ -12,7 +12,7 @@ namespace Prism.Picshare.Services.Workers.Workers.User;
 
 public class UserRegister : BaseServiceBusWorker<Domain.User>
 {
-    public UserRegister(ILogger<UserRegister> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public UserRegister(ILogger<UserRegister> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

@@ -14,7 +14,7 @@ namespace Prism.Picshare.Services.Workers.Workers.Pictures;
 
 public class PictureCreated : BaseServiceBusWorker<Picture>
 {
-    public PictureCreated(ILogger<PictureCreated> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
+    public PictureCreated(ILogger<PictureCreated> logger, IServiceProvider serviceProvider) : base(logger)
     {
     }
 

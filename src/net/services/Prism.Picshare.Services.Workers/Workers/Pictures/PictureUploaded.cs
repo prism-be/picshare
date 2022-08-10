@@ -15,7 +15,7 @@ public class PictureUploaded : BaseServiceBusWorker<EntityReference>
 {
     private readonly PublisherClient _publisherClient;
 
-    public PictureUploaded(ILogger<PictureUploaded> logger, IServiceProvider serviceProvider, PublisherClient publisherClient) : base(logger, serviceProvider)
+    public PictureUploaded(ILogger<PictureUploaded> logger, IServiceProvider serviceProvider, PublisherClient publisherClient) : base(logger)
     {
         _publisherClient = publisherClient;
     }
