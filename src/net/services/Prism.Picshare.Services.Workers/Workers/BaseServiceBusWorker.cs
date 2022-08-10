@@ -63,8 +63,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-
-        _channel.ExchangeDeclare(Queue, ExchangeType.Direct, true);
+        
         _channel.QueueDeclare("workers/" + Queue, true, false, false);
         _channel.QueueBind("workers/" + Queue, Queue, Topics.Subscription);
 

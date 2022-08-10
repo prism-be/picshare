@@ -6,7 +6,7 @@
 
 namespace Prism.Picshare.Services.Generic;
 
-public class FileSystemBlobClient: BlobClient
+public class FileSystemBlobClient : BlobClient
 {
     private string BaseDirectory => EnvironmentConfiguration.GetMandatoryConfiguration("LOCAL_BLOB_DIRECTORY");
 
@@ -21,7 +21,10 @@ public class FileSystemBlobClient: BlobClient
     public override Task<List<string>> ListAsync(Guid organisationId, CancellationToken cancellationToken = default)
     {
         var directory = Path.Combine(BaseDirectory, organisationId.ToString());
-        return Task.FromResult(Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories).ToList());
+        var files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
+            .Select(x => x.Replace(BaseDirectory, string.Empty).Replace("\\", "/"))
+            .ToList();
+        return Task.FromResult(files);
     }
 
     public override Task<byte[]> ReadAsync(string blobName, CancellationToken cancellationToken = default)

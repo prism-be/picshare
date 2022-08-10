@@ -14,6 +14,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Prism.Picshare.Behaviors;
 using Prism.Picshare.Commands;
+using Prism.Picshare.Events;
 using Prism.Picshare.Security;
 using Prism.Picshare.Services;
 using Prism.Picshare.Services.Azure;
@@ -83,7 +84,23 @@ public static class ServiceCollectionExtensions
             var channel = connection.CreateModel();
             services.AddSingleton(channel);
             services.AddTransient<PublisherClient, RabbitPublisherClient>();
+
+            CreateRabbitMqExchanges(connection);
         }
+    }
+
+    private static void CreateRabbitMqExchanges(IConnection connection)
+    {
+        var channel = connection.CreateModel();
+        channel.ExchangeDeclare(Topics.Email.Validated, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.User.Register, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.Created, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.ExifRead, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.SummaryUpdated, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.ThumbnailsGenerated, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.Updated, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.Uploaded, ExchangeType.Direct, true);
+        channel.ExchangeDeclare(Topics.Pictures.Seen, ExchangeType.Direct, true);
     }
 
     private static void AddBlob(this IServiceCollection services)
