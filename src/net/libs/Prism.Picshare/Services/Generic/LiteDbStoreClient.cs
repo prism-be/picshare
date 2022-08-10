@@ -22,7 +22,7 @@ public class LiteDbStoreClient : StoreClient
 
     public override Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class
     {
-        using var db = new LiteDatabase(GetDatabaseConenctionString(organisationId));
+        using var db = new LiteDatabase(GetDatabaseConnectionString(organisationId));
         var collection = db.GetCollection<DataStorage>(store);
         var data = collection.FindById(id)?.Data;
 
@@ -30,7 +30,7 @@ public class LiteDbStoreClient : StoreClient
         {
             return Task.FromResult((T?)null);
         }
-        
+
         return Task.FromResult(JsonSerializer.Deserialize<T>(data));
     }
 
@@ -53,7 +53,7 @@ public class LiteDbStoreClient : StoreClient
 
     public override Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default)
     {
-        using var db = new LiteDatabase(GetDatabaseConenctionString(organisationId));
+        using var db = new LiteDatabase(GetDatabaseConnectionString(organisationId));
         var collection = db.GetCollection<DataStorage>(store);
         collection.Upsert(new DataStorage
         {
@@ -64,7 +64,7 @@ public class LiteDbStoreClient : StoreClient
         return Task.CompletedTask;
     }
 
-    private string GetDatabaseConenctionString(string organisationId)
+    private static string GetDatabaseConnectionString(string organisationId)
     {
         var baseConnectionString = "Connection=shared;Filename=";
 
@@ -78,10 +78,11 @@ public class LiteDbStoreClient : StoreClient
 
     private sealed class DataStorage
     {
-        [JsonPropertyName("id")]
-        public string? Id { get; set; }
 
         [JsonPropertyName("data")]
         public string? Data { get; set; }
+
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
     }
 }
