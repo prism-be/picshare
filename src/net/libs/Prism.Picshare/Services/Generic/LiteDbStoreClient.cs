@@ -6,18 +6,14 @@
 
 using System.Text.Json.Serialization;
 using LiteDB;
-using Prism.Picshare.Exceptions;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Prism.Picshare.Services.Generic;
 
-public class LiteDbStoreClient : StoreClient
+public class LiteDbStoreClient : BaseMutableStoreClient
 {
-    private readonly RedisLocker _locker;
-
-    public LiteDbStoreClient(RedisLocker locker)
+    public LiteDbStoreClient(RedisLocker locker) : base(locker)
     {
-        _locker = locker;
     }
 
     public override Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class
@@ -32,23 +28,6 @@ public class LiteDbStoreClient : StoreClient
         }
 
         return Task.FromResult(JsonSerializer.Deserialize<T>(data));
-    }
-
-    public override async Task MutateStateAsync<T>(string store, string organisationId, string id, Action<T> mutation, CancellationToken cancellationToken = default)
-    {
-        using var locked = _locker.GetLock(id);
-
-        var item = await GetStateNullableAsync<T>(store, organisationId, id, cancellationToken);
-
-        if (item == null)
-        {
-            throw new StoreAccessException("Cannot mutate inexisting item", $"{store}-{organisationId}-{id}");
-        }
-
-        mutation(item);
-        await SaveStateAsync(store, organisationId, id, item, cancellationToken);
-
-        locked.Release();
     }
 
     public override Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default)
