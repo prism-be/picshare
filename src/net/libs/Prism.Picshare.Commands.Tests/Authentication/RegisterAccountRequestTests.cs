@@ -38,6 +38,9 @@ public class RegisterAccountRequestTests
         result.Should().Be(ResultCodes.Ok);
         storeClient.VerifySaveState<Organisation>(Stores.Organisations);
         storeClient.VerifySaveState<User>(Stores.Users);
+        storeClient.VerifySaveState<Credentials>(Stores.Credentials);
+        storeClient.VerifySaveState<Flow>(Stores.Flow);
+        storeClient.VerifySaveState<Authorizations>(Stores.Authorizations);
         publisherClient.VerifyPublishEvent<User>(Topics.User.Register);
     }
 
