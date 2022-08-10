@@ -43,7 +43,10 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
 
     const onTouchEnd = (touches: React.TouchList) => {
         
-        if (touches.length > 1)
+        // Temporary disable
+        return;
+        
+        /*if (touches.length > 1)
         {
             return;
         }
@@ -63,7 +66,7 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
             nextPictureZoom();
         } else if (swipeRight) {
             previousPictureZoom();
-        }
+        }*/
     }
 
     return <>
