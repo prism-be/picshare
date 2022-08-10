@@ -23,6 +23,10 @@ public class ServiceCollectionExtensionsTests
         Environment.SetEnvironmentVariable("JWT_PRIVATE_KEY", Guid.NewGuid().ToString());
         Environment.SetEnvironmentVariable("COSMOS_CONNECTION_STRING", "AccountEndpoint=https://abcd.documents.azure.com:443/;AccountKey=abcd;");
         Environment.SetEnvironmentVariable("REDIS_CONNECTION_STRING", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("AZURE_BLOB_CONNECTION_STRING", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("LOCAL_BLOB_DIRECTORY", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("LITE_DB_DIRECTORY", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("MONGODB_CONNECTION_STRING", "mongodb://localhost");
         
         // Act
         var returnedServices = services.AddDisconnectedPicshareServices();
