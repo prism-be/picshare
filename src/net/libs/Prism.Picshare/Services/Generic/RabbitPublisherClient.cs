@@ -25,6 +25,7 @@ public class RabbitPublisherClient : PublisherClient
 
     public override Task PublishEventAsync<T>(string topic, T data, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Publishing event on topic {topic}", topic);
         var json = JsonSerializer.Serialize(data);
         var payload = Encoding.Default.GetBytes(json);
         _channel.BasicPublish(topic, Topics.Subscription , null, payload);
@@ -33,9 +34,11 @@ public class RabbitPublisherClient : PublisherClient
 
     public override Task PublishEventsAsync<T>(string topic, IEnumerable<T> data, CancellationToken cancellationToken = default)
     {
+        var enumerated = data.ToList();
+        _logger.LogInformation("Publishing events ({count}) on topic {topic}", enumerated.Count, topic);
         var batch = _channel.CreateBasicPublishBatch();
 
-        foreach (var item in data)
+        foreach (var item in enumerated)
         {
             var json = JsonSerializer.Serialize(item);
             var payload = Encoding.Default.GetBytes(json);

@@ -23,7 +23,7 @@ public class LiteDbStoreClient : StoreClient
     public override Task<T?> GetStateNullableAsync<T>(string store, string organisationId, string id, CancellationToken cancellationToken = default) where T : class
     {
         using var db = new LiteDatabase(GetDatabaseConenctionString(organisationId));
-        var collection = db.GetCollection<DataStorage<T>>(store);
+        var collection = db.GetCollection<DataStorage>(store);
         var data = collection.FindById(id)?.Data;
 
         if (data == null)
@@ -54,8 +54,8 @@ public class LiteDbStoreClient : StoreClient
     public override Task SaveStateAsync<T>(string store, string organisationId, string id, T data, CancellationToken cancellationToken = default)
     {
         using var db = new LiteDatabase(GetDatabaseConenctionString(organisationId));
-        var collection = db.GetCollection<DataStorage<T>>(store);
-        collection.Upsert(new DataStorage<T>
+        var collection = db.GetCollection<DataStorage>(store);
+        collection.Upsert(new DataStorage
         {
             Id = id,
             Data = JsonSerializer.Serialize(data)
@@ -76,17 +76,12 @@ public class LiteDbStoreClient : StoreClient
         return baseConnectionString + Path.Combine(EnvironmentConfiguration.GetMandatoryConfiguration("LITE_DB_DIRECTORY"), $"{organisationId}.db");
     }
 
-    private class DataStorage<T>
+    private sealed class DataStorage
     {
-        public DataStorage()
-        {
-            
-        }
-
         [JsonPropertyName("id")]
         public string? Id { get; set; }
 
         [JsonPropertyName("data")]
-        public string Data { get; set; }
+        public string? Data { get; set; }
     }
 }

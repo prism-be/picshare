@@ -16,10 +16,9 @@ namespace Prism.Picshare.Services.Workers.Workers;
 public abstract class BaseServiceBusWorker<T> : BackgroundService
 {
     private readonly ILogger _logger;
-    
+
     private IModel? _channel;
     private IConnection? _connection;
-    private EventingBasicConsumer? _consumer;
     private string? _consumerTag;
 
     protected BaseServiceBusWorker(ILogger logger)
@@ -69,8 +68,8 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
         _channel.BasicQos(0, PrefetchCount, false);
 
-        _consumer = new EventingBasicConsumer(_channel);
-        _consumer.Received += async (_, args) =>
+        var consumer = new EventingBasicConsumer(_channel);
+        consumer.Received += async (_, args) =>
         {
             using var scope = SharedInstances.ServiceProvider.CreateScope();
 
@@ -96,7 +95,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
             }
         };
 
-        _consumerTag = _channel.BasicConsume("workers/" + Queue, false, _consumer);
+        _consumerTag = _channel.BasicConsume("workers/" + Queue, false, consumer);
 
         return Task.CompletedTask;
     }

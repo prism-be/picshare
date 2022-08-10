@@ -63,7 +63,7 @@ public class MongoStoreClient : StoreClient
         await collection.InsertOneAsync(data, cancellationToken: cancellationToken);
     }
 
-    private FilterDefinition<T> GetFilter<T>(string id) where T : class
+    private static FilterDefinition<T> GetFilter<T>(string id) where T : class
     {
         var idProperty = typeof(T).GetProperty("Id");
 

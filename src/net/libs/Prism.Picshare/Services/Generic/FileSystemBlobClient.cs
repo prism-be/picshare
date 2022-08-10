@@ -8,7 +8,7 @@ namespace Prism.Picshare.Services.Generic;
 
 public class FileSystemBlobClient : BlobClient
 {
-    private string BaseDirectory => EnvironmentConfiguration.GetMandatoryConfiguration("LOCAL_BLOB_DIRECTORY");
+    private static string BaseDirectory => EnvironmentConfiguration.GetMandatoryConfiguration("LOCAL_BLOB_DIRECTORY");
 
     public override Task CreateAsync(string blobName, byte[] data, CancellationToken cancellationToken = default)
     {
