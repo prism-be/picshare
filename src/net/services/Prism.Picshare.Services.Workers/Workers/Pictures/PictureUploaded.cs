@@ -22,6 +22,8 @@ public class PictureUploaded : BaseServiceBusWorker<EntityReference>
 
     public override string Queue => Topics.Pictures.Uploaded;
 
+    protected override ushort PrefetchCount => 5;
+
     internal override async Task ProcessMessageAsync(IMediator mediator, EntityReference payload)
     {
         await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 150, 150, true));

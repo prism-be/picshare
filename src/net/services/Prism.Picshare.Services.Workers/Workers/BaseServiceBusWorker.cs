@@ -31,6 +31,8 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
     public abstract string Queue { get; }
 
+    protected virtual ushort PrefetchCount => 50;
+
     public override void Dispose()
     {
         if (_channel != null)
@@ -55,7 +57,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Start listening on queue {queue}", Queue);
-        
+
         var factory = new ConnectionFactory
         {
             Uri = new Uri(EnvironmentConfiguration.GetMandatoryConfiguration("RABBITMQ_CONNECTION_STRING"))
@@ -63,17 +65,18 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-        
+
         _channel.QueueDeclare("workers/" + Queue, true, false, false);
         _channel.QueueBind("workers/" + Queue, Queue, Topics.Subscription);
 
-        _consumer = new EventingBasicConsumer(_channel);
+        _channel.BasicQos(0, PrefetchCount, false);
 
+        _consumer = new EventingBasicConsumer(_channel);
         _consumer.Received += async (_, args) =>
         {
             try
             {
-                using (IServiceScope scope = _serviceProvider.CreateScope())
+                using (var scope = _serviceProvider.CreateScope())
                 {
                     _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
 
