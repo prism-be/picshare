@@ -1,4 +1,6 @@
-﻿interface Props {
+﻿import styles from "../styles/modules/alert.module.scss";
+
+interface Props {
     title?: string;
     message?: string;
     small?: boolean;
@@ -18,7 +20,7 @@ const Alert = ({title, message, small, type}: Props) => {
             break;
     }
 
-    return <div className="flex justify-center items-center">
+    return <div className={styles.alert}>
         <div className={"flex my-2 mx-4 md:mx-0" + (small ? " lg:w-6/12" : " w-full")}>
             <div className={"bg-gray-100 border-t-4 border-" + color + " rounded-b text-" + color + " px-4 py-3 shadow-md w-full"} role="alert">
                 <div className="flex">

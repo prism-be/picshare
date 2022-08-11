@@ -1,4 +1,4 @@
-﻿import styles from "../../styles/modules/thumbnail.module.scss";
+﻿import styles from "../../styles/modules/flow.thumbnail.module.scss";
 
 import Image from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
