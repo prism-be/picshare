@@ -1,0 +1,77 @@
+﻿@import "../vars";
+
+.dropzone
+{
+  display: flex;
+  margin: 0.5rem;
+  border: 1px $grey dashed;
+  border-radius: 0.25rem;
+  position: relative;
+  
+  > input
+  {
+    display: block;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    position: relative;
+  }
+}
+
+.dropZoneActive
+{
+  background-color: $grey;
+}
+
+.text
+{
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  
+  > div {
+    display: flex;
+    flex-grow: 1;
+    
+    > div {
+      margin: auto;
+    }
+  }
+  
+  h4 {
+    font-weight: normal;
+    color: $darkGrey;
+  }
+}
+
+.progress
+{
+  display: flex;
+  height: 8px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.progressDone
+{
+  height: 100%;
+  flex: 1 1 auto;
+  background-color: $primaryColor;
+}
+
+.progressTodo
+{
+  height: 100%;
+  flex: 1 1 auto;
+  background-color: $grey;
+}
