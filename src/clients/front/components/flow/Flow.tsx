@@ -1,11 +1,12 @@
-﻿import {useEffect, useState} from "react";
-import {getData, IFlow, IPictureSummary} from "../../lib/ajaxHelper";
-import {Thumbnail} from "./Thumbnail";
+﻿import styles from "../../styles/modules/flow.module.scss";
+import {useEffect, useState} from "react";
 import useSWR from "swr";
+import {Thumbnail} from "./Thumbnail";
 import {format, parseISO, parseJSON} from "date-fns";
 import {getCurrentLocale} from "../../lib/locales";
 import {PictureZoom} from "./PictureZoom";
 import {appInsights} from "../../lib/AppInsights";
+import {getData, IFlow, IPictureSummary} from "../../lib/ajaxHelper";
 
 const getFlow = async (route: string): Promise<IFlow> => {
 
@@ -134,13 +135,13 @@ const Flow = () => {
 
     return <>
         <div className="">
-            {groupedFlows && groupedFlows.map(groupedFlow => <div key={groupedFlow.day} className="pb-5">
-                <h1 className="text-gray-500">
+            {groupedFlows && groupedFlows.map(groupedFlow => <div key={groupedFlow.day} className={styles.groupedFlow}>
+                <h1>
                     {format(groupedFlow.date, 'EEEE d MMMM yyyy', {
                         locale: getCurrentLocale()
                     })}
                 </h1>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-1">
+                <div className={styles.grid}>
                     {groupedFlow.pictures && groupedFlow.pictures.map(picture =>
                         <Thumbnail picture={picture} key={picture.id}
                                    togglePictureSelection={togglePictureSelection}
