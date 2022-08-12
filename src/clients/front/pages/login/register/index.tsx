@@ -81,14 +81,13 @@ const Register = () => {
 
                 <div className={styles.container}>
                     <div className={styles.header}>
-                        <div className="flex items-center justify-center">
-                        </div>
                         <h2 className={styles.title}>
                             {t("register.title")}
                         </h2>
-                        <span className={styles.subtitle}>{t("register.or")}&nbsp;
+                        <span className={styles.subtitle}>
+                            {t("register.or")}&nbsp;
                             <HtmlLink href="/login">{t("register.login")}</HtmlLink>
-                    </span>
+                        </span>
                     </div>
 
                     <div className={styles.panel}>
