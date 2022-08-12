@@ -7,6 +7,12 @@ html, body {
 
 a, a:link, a:hover, a:visited, a:active {
   color: $primaryColor;
+  text-decoration: none;
+}
+
+a:hover
+{
+  text-decoration: underline;
 }
 
 h1 {

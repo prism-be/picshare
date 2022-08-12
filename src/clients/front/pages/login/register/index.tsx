@@ -1,5 +1,5 @@
 ﻿// noinspection JSUnusedGlobalSymbols
-
+import styles from "../../../styles/pages/login.module.scss";
 import {useTranslation} from "next-i18next";
 import {useForm} from "react-hook-form";
 import * as yup from "yup";
@@ -18,7 +18,7 @@ export const getStaticProps = async ({locale}: any) => ({
     }
 })
 
-const { publicRuntimeConfig: config } = getConfig()
+const {publicRuntimeConfig: config} = getConfig()
 
 const Register = () => {
 
@@ -79,54 +79,54 @@ const Register = () => {
         <>
             <div>
 
-                <div className="container max-w-full mx-auto px-6">
-                    <div className="text-center mt-24">
+                <div className={styles.container}>
+                    <div className={styles.header}>
                         <div className="flex items-center justify-center">
                         </div>
-                        <h2 className="text-4xl text-teal-600 tracking-tight">
+                        <h2 className={styles.title}>
                             {t("register.title")}
                         </h2>
-                        <span className="text-sm">{t("register.or")}&nbsp;
+                        <span className={styles.subtitle}>{t("register.or")}&nbsp;
                             <HtmlLink href="/login">{t("register.login")}</HtmlLink>
                     </span>
                     </div>
 
-                    <div className="flex justify-center my-2 mx-4 md:mx-0">
-                        <form className="w-full max-w-xl bg-slate-50 rounded-lg shadow-md p-6"
-                              onSubmit={handleSubmit(onSubmit)}>
-                            <div className="flex flex-wrap -mx-3">
-                                {!success && <>
-                                    <InputText name="name" label={t("register.form.name")} type="text"
-                                               required={true} register={register} error={errors.name}/>
-                                    <InputText name="organisation" label={t("register.form.organisation")} type="text"
-                                               required={true} register={register} error={errors.organisation}/>
-                                    <InputText name="login" label={t("register.form.login")} type="text"
-                                               required={true} register={register} error={errors.login}/>
-                                    <InputText name="email" label={t("register.form.email")} type="email"
-                                               required={true} register={register} error={errors.email}/>
-                                    <InputText name="password" label={t("register.form.password")} type="password"
-                                               required={true} register={register} error={errors.password}/>
-                                    <InputText name="passwordCheck" label={t("register.form.passwordCheck")} type="password"
-                                               required={true} register={register} error={errors.passwordCheck}/>
+                    <div className={styles.panel}>
+                        <div>
+                            <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                                <div>
+                                    {!success && <>
+                                        <InputText name="name" label={t("register.form.name")} type="text"
+                                                   required={true} register={register} error={errors.name}/>
+                                        <InputText name="organisation" label={t("register.form.organisation")} type="text"
+                                                   required={true} register={register} error={errors.organisation}/>
+                                        <InputText name="login" label={t("register.form.login")} type="text"
+                                                   required={true} register={register} error={errors.login}/>
+                                        <InputText name="email" label={t("register.form.email")} type="email"
+                                                   required={true} register={register} error={errors.email}/>
+                                        <InputText name="password" label={t("register.form.password")} type="password"
+                                                   required={true} register={register} error={errors.password}/>
+                                        <InputText name="passwordCheck" label={t("register.form.passwordCheck")} type="password"
+                                                   required={true} register={register} error={errors.passwordCheck}/>
 
-                                    <div className="w-full md:w-full px-3 pt-3">
-                                        <Button text={t("register.form.go")}/>
-                                    </div>
-                                </>}
+                                        <div className={styles.button}>
+                                            <Button text={t("register.form.go")}/>
+                                        </div>
+                                    </>}
 
-                                {errorMessage && <div className="w-full md:w-full px-3 pt-10">
-                                    <Alert message={errorMessage} type={"alert"}/>
-                                </div>}
+                                    {errorMessage && <div className={styles.alert}>
+                                        <Alert message={errorMessage} type={"alert"}/>
+                                    </div>}
 
-                                {success && <div className="w-full md:w-full px-3">
-                                    <Alert title={t("register.success.title")} message={t("register.success.message")} type={"info"}/>
-                                </div>}
+                                    {success && <div className={styles.alert}>
+                                        <Alert title={t("register.success.title")} message={t("register.success.message")} type={"info"}/>
+                                    </div>}
 
-                            </div>
-                        </form>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </>
     )

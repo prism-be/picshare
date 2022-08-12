@@ -1,5 +1,7 @@
 ﻿// noinspection JSUnusedGlobalSymbols
 
+import styles from "../../styles/pages/login.module.scss";
+
 import type {NextPage} from 'next'
 import {useTranslation} from "next-i18next";
 import Button from "../../components/Button";
@@ -22,8 +24,8 @@ export const getStaticProps = async ({locale}: any) => ({
 })
 
 const Login: NextPage = () => {
-    
-    const { mutateUser } = useUser();
+
+    const {mutateUser} = useUser();
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -45,10 +47,10 @@ const Login: NextPage = () => {
         if (result.status === 200) {
             localStorage.setItem('accessToken', result.data.accessToken);
             localStorage.setItem('refreshToken', result.data.refreshToken);
-            
+
             await mutateUser();
             await router.push('/');
-            
+
             return;
         }
 
@@ -58,34 +60,33 @@ const Login: NextPage = () => {
     return (
         <div>
 
-            <div className="container max-w-full mx-auto py-24 px-6">
-                <div className="text-center mt-24">
+            <div className={styles.container}>
+                <div className={styles.header}>
                     <div className="flex items-center justify-center">
                     </div>
-                    <h2 className="text-4xl text-teal-600 tracking-tight">
+                    <h2 className={styles.title}>
                         {t("login.title")}
                     </h2>
-                    <span className="text-sm">
+                    <span className={styles.subtitle}>
                         {t("login.or")}&nbsp;
                         <HtmlLink href="/login/register">{t("login.register")}</HtmlLink>
                     </span>
                 </div>
 
-                <div className="flex justify-center my-2 mx-4 md:mx-0">
-                    <div className="flex justify-center my-2 mx-4 md:mx-0">
-                        <form className="w-full max-w-xl bg-slate-50 rounded-lg shadow-md p-6"
-                              onSubmit={handleSubmit(onSubmit)}>
-                            <div className="flex flex-wrap -mx-3">
+                <div className={styles.panel}>
+                    <div>
+                        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                            <div>
                                 <InputText name="login" label={t("login.form.login")} type="text"
                                            required={true} register={register} error={errors.login}/>
                                 <InputText name="password" label={t("login.form.password")} type="password"
                                            required={true} register={register} error={errors.password}/>
 
-                                <div className="w-full md:w-full px-3 pt-3">
+                                <div className={styles.button}>
                                     <Button text={t("login.form.go")}/>
                                 </div>
 
-                                {errorMessage && <div className="w-full md:w-full px-3 pt-10">
+                                {errorMessage && <div className={styles.alert}>
                                     <Alert message={errorMessage} type={"alert"}/>
                                 </div>}
 

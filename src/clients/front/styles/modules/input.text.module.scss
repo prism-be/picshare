@@ -1,0 +1,53 @@
+﻿@import "../vars";
+
+.container
+{
+  width: 100%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  border: 0 solid $grey;
+  
+  > label
+  {
+    letter-spacing: .025em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: .75rem;
+    line-height: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  > input {
+    line-height: 1.25;
+    font-weight: 500;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    width: 100%;
+    display: block;
+    
+    &:focus
+    {
+      outline: none;
+    }
+  }
+}
+
+.input
+{
+  border: 1px $grey solid;
+}
+
+.errorInput
+{
+  border: 1px $red solid;
+}
+
+.errorMessage
+{
+  color: $red;
+  font-size: .8rem;
+}
