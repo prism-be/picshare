@@ -1,4 +1,5 @@
-﻿import Link from "./Link";
+﻿import styles from "../styles/modules/link.module.scss";
+import Link from "./Link";
 
 interface Props
 {
@@ -8,7 +9,7 @@ interface Props
 }
 
 const HtmlLink = ({children, href, textSmall}: Props) => {
-    return <Link href={href}><a className={"text-teal-600" + (textSmall ? " text-sm tracking-tight" : "")}>{children}</a></Link>
+    return <Link href={href}><a className={(textSmall ? styles.small : "")}>{children}</a></Link>
 }
 
 export default HtmlLink;

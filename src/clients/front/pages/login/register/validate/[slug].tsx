@@ -1,7 +1,8 @@
-﻿import {useRouter} from 'next/router'
+﻿import styles from "../../../../styles/pages/login.module.scss";
+import {useRouter} from 'next/router'
 import {useTranslation} from "next-i18next";
 import Loader from "../../../../components/Loader";
-import {getData} from "../../../../lib/ajaxHelper";
+import {postData} from "../../../../lib/ajaxHelper";
 import Alert from "../../../../components/Alert";
 import Button from "../../../../components/Button";
 import HtmlLink from "../../../../components/HtmlLink";
@@ -38,7 +39,7 @@ const Validate = () => {
     const validate = async () => {
         setStarted(true);
         setInProgress(true);
-        const response = await getData("/api/mailing/validate/" + slug);
+        const response = await postData("/api/mailing/validate/" + slug, {});
         setInProgress(false);
 
 
@@ -54,41 +55,36 @@ const Validate = () => {
 
     return <>
 
-        <div className="container max-w-full mx-auto px-6">
-            <div className="text-center mt-24">
-                <div className="flex items-center justify-center">
-                </div>
-                <h2 className="text-4xl text-teal-600 tracking-tight">
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h2 className={styles.title}>
                     {t("validation.title")}
                 </h2>
-                <span className="text-sm">{t("register.or")}&nbsp;
+                <span className={styles.subtitle}>
+                    {t("register.or")}&nbsp;
                     <HtmlLink href="/login">{t("register.login")}</HtmlLink>
-                    </span>
+                </span>
             </div>
-            <div className="flex justify-center my-2 mx-4 md:mx-0">
-                <div className="w-full max-w-xl bg-slate-50 rounded-lg shadow-md p-6 text-center">
+            <div className={styles.panel}>
+                <div>
+                    <div className={styles.form}>
 
-                    {!started && <div className="pb-3">{t("validation.help")}</div>}
-                    {!started && <Button text={t("validation.button")} onClick={validate}></Button>}
+                        {!started && <div className="pb-3">{t("validation.help")}</div>}
+                        {!started && <Button text={t("validation.button")} onClick={validate}></Button>}
 
-                    {inProgress && <Loader title={t("validation.loading")}/>}
+                        {inProgress && <Loader title={t("validation.loading")}/>}
 
-                    {errorMessage && <div className="w-full md:w-full px-3">
-                        <Alert message={errorMessage} type={"alert"}/>
-                    </div>}
+                        {errorMessage && <div className={styles.alert}>
+                            <Alert message={errorMessage} type={"alert"}/>
+                        </div>}
 
-                    {confirmationMessage && <div className="w-full md:w-full px-3">
-                        <Alert message={confirmationMessage} type={"info"}/>
-                    </div>}
+                        {confirmationMessage && <div className={styles.alert}>
+                            <Alert message={confirmationMessage} type={"info"}/>
+                        </div>}
+                    </div>
                 </div>
-
-
             </div>
-
-
         </div>
-
-
     </>
 }
 

@@ -1,0 +1,76 @@
+﻿@import "../vars";
+
+.cover
+{
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  background-color: $mediumGrey;
+}
+
+.picture
+{
+  cursor: pointer;
+  flex-grow: 1;
+  margin: 0.25rem;
+  position: relative;
+}
+
+.navigation
+{
+  width: 5rem;
+  cursor: pointer;
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  
+  > span
+  {
+    margin: auto;
+    color: $darkGrey;
+  }
+}
+
+.previous
+{
+  left: 0;
+}
+
+.next{
+  right: 0;
+}
+
+.summary
+{
+  height: 2rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  color: $grey;
+  opacity: 0.6;
+  font-size: 0.8rem;
+}
+
+.close
+{
+  display: flex;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  > span
+  {
+    margin: auto;
+    color: $darkGrey;
+  }
+}

@@ -1,0 +1,11 @@
+﻿@import "../vars";
+
+.title
+{
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  padding-top: 1.25rem;
+  color: $primaryColor;
+  font-style: italic;
+}

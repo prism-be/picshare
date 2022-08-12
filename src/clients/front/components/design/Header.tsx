@@ -1,11 +1,15 @@
-﻿import useUser from "../../lib/useUser";
-import Link from "../Link";
+﻿import styles from '../../styles/modules/header.module.scss';
+
+import React from "react";
 import Image, {ImageLoaderProps} from "next/image";
+
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 import {useSWRConfig} from "swr";
-import React from "react";
+
+import Link from "../Link";
 import DropZone from "../DropZone";
+import useUser from "../../lib/useUser";
 
 const Header = () => {
 
@@ -28,22 +32,20 @@ const Header = () => {
     }
 
     return <>
-        <div className="h-16 flex flex-nowrap border-b border-gray-300">
-            <div className="flex">
+        <div className={styles.bar}>
+            <div className={styles.logo}>
                 <Link href="/">
-                    <a className="m-auto pl-2 pr-2">
+                    <a>
                         <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"Picshare by PRISM"} unoptimized={true}></Image>
                     </a>
                 </Link>
             </div>
-            <div className="grow">
+            <div className={styles.menu}>
             </div>
-            <div className="flex w-[150px] sm:w-[300px] lg:w-[400px]">
-                <div className="flex p-2">
-                <DropZone small={true} />
-                </div>
+            <div className={styles.upload}>
+                <DropZone small={true}/>
             </div>
-            <div className="flex">
+            <div className={styles.hello}>
                 <div className="m-auto pl-2 pr-2 text-sm">
                     {t("header.hello")} {user.name} !<br/>
                     <a href="#" onClick={logout}>{t("header.logout")}</a>

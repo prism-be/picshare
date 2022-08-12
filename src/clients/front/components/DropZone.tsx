@@ -1,4 +1,5 @@
-﻿import {useTranslation} from "next-i18next";
+﻿import styles from '../styles/modules/dropzone.module.scss'
+import {useTranslation} from "next-i18next";
 import {DragEvent, useState} from "react";
 import {postFile} from "../lib/ajaxHelper";
 import {useSWRConfig} from "swr";
@@ -109,16 +110,16 @@ const DropZone = ({small}: Props) => {
     }
 
     return <>
-        <div className={"flex border border-dashed border-gray-300 relative rounded" + (inDropZone ? " bg-gray-200" : "")}
+        <div className={styles.dropzone + (inDropZone ? " " + styles.dropZoneActive : "")}
              onDragEnter={(e) => handleDragEnter(e)}
              onDragLeave={(e) => handleDragLeave(e)}
              onDragOver={(e) => handleDragOver(e)}
              onDrop={(e) => handleDrop(e)}
         >
-            <input type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full z-50" onChange={(e) => handleFileSelected(e)}/>
-            <div className="flex flex-col text-center text-gray-500 absolute top-0 right-0 left-0 bottom-0 m-auto">
-                <div className={"flex grow"}>
-                    <div className={"m-auto"}>
+            <input type="file" multiple onChange={(e) => handleFileSelected(e)}/>
+            <div className={styles.text}>
+                <div>
+                    <div>
                         <h4>
                             {t("components.dropzone.drop-anywhere")}
                             { !small && <>
@@ -128,10 +129,10 @@ const DropZone = ({small}: Props) => {
                         </h4>
                     </div>
                 </div>
-                <div className={"flex h-2 absolute right-0 left-0 bottom-0"}>
+                <div className={styles.progress}>
                     {inProgress && <>
-                        <div className={"h-full flex-auto bg-teal-600"} style={{width: percentageDone + "%"}}></div>
-                        <div className={"h-full flex-auto bg-gray-300"} style={{width: (100 - percentageDone) + "%"}}></div>
+                        <div className={styles.progressDone} style={{width: percentageDone + "%"}}></div>
+                        <div className={styles.progressTodo} style={{width: (100 - percentageDone) + "%"}}></div>
                     </>}
                 </div>
             </div>

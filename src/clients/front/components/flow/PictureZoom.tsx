@@ -1,4 +1,5 @@
-﻿import React from "react";
+﻿import styles from "../../styles/modules/flow.zoom.module.scss";
+import React from "react";
 import Image from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
 import {useKeyPressEvent} from "react-use";
@@ -30,24 +31,23 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
     const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
 
     return <>
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-50 overflow-auto bg-gray-600 flex"
-             onKeyUp={(e) => console.log(e)}>
-            <div className="grow relative opacity-100 m-1 cursor-pointer">
+        <div className={styles.cover}>
+            <div className={styles.picture}>
                 <Image loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.token} alt={picture.name}/>
             </div>
-            <div onClick={() => previousPictureZoom()} className={"w-8 cursor-pointer flex absolute left-0 top-0 bottom-0"}>
-                <span className="material-icons m-auto text-gray-500">keyboard_arrow_left</span>
+            <div onClick={() => previousPictureZoom()} className={styles.navigation + " " + styles.previous}>
+                <span className="material-icons">keyboard_arrow_left</span>
             </div>
-            <div onClick={() => nextPictureZoom()} className={"w-8 cursor-pointer flex absolute right-0 top-0 bottom-0"}>
-                <span className="material-icons m-auto text-gray-500">keyboard_arrow_right</span>
+            <div onClick={() => nextPictureZoom()} className={styles.navigation + " " + styles.next}>
+                <span className="material-icons">keyboard_arrow_right</span>
             </div>
             {pictureInfo &&
-                <div className={"h-8 absolute right-0 left-0 bottom-0 text-center text-sm text-gray-200 opacity-60"}>
+                <div className={styles.summary}>
                     {pictureInfo.data.name}
                 </div>
             }
-            <div onClick={() => togglePictureZoom(picture)} className={"w-8 h-8 m-1 cursor-pointer flex absolute right-0 top-0"}>
-                <span className="material-icons m-auto text-gray-500">close_fullscreen</span>
+            <div onClick={() => togglePictureZoom(picture)} className={styles.close}>
+                <span className="material-icons">close_fullscreen</span>
             </div>
         </div>
     </>
