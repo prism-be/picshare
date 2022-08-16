@@ -28,7 +28,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
     public abstract string Queue { get; }
 
-    protected virtual ushort PrefetchCount => 50;
+    protected virtual ushort PrefetchCount => Convert.ToUInt16(EnvironmentConfiguration.GetConfiguration("RABBITMQ_PREFETCH_DEFAULT") ?? "50");
 
     public override void Dispose()
     {
