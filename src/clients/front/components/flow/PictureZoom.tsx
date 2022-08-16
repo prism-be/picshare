@@ -1,6 +1,6 @@
 ﻿import styles from "../../styles/modules/flow.zoom.module.scss";
 import React from "react";
-import Image, {ImageLoaderProps} from "next/image";
+import Image, {ImageLoaderProps} from "next/future/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
 import {useKeyPressEvent} from "react-use";
 import useSWR from "swr";
@@ -34,9 +34,6 @@ export const PictureZoom = ({picture, picturePrevious, pictureNext, togglePictur
     const { publicRuntimeConfig: config } = getConfig()
 
     const thumbsLoader = ({src, width}: ImageLoaderProps) => {
-        
-        console.log(width);
-        
         const baseSrc = config.apiRoot + "/api/pictures/thumbs/" + src;
         const widthSuffix = getWidthSuffix(width);
         
@@ -66,9 +63,9 @@ export const PictureZoom = ({picture, picturePrevious, pictureNext, togglePictur
     return <>
         <div className={styles.cover}>
             <div className={styles.picture}>
-                {picturePrevious && <Image className={styles.preload} loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={picturePrevious.token} alt={picture.name}/>}
-                {pictureNext && <Image className={styles.preload} loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={pictureNext.token} alt={picture.name}/>}
-                <Image loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={picture.token} alt={picture.name}/>
+                {picturePrevious && <Image className={styles.preload} loader={thumbsLoader} sizes="100vw" fill={true} src={picturePrevious.token} alt={picture.name}/>}
+                {pictureNext && <Image className={styles.preload} loader={thumbsLoader} sizes="100vw" fill={true} src={pictureNext.token} alt={picture.name}/>}
+                <Image loader={thumbsLoader} sizes="100vw" fill={true} src={picture.token} alt={picture.name}/>
             </div>
             <div onClick={() => previousPictureZoom()} className={styles.navigation + " " + styles.previous}>
                 <span className="material-icons">keyboard_arrow_left</span>
