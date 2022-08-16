@@ -22,7 +22,7 @@
 
 .navigation
 {
-  width: 5rem;
+  width: 15rem;
   cursor: pointer;
   display: flex;
   position: absolute;
@@ -31,7 +31,6 @@
   
   > span
   {
-    margin: auto;
     color: $darkGrey;
   }
 }
@@ -39,10 +38,20 @@
 .previous
 {
   left: 0;
+  
+  > span
+  {
+    margin: auto auto auto 0;
+  }
 }
 
 .next{
   right: 0;
+
+  > span
+  {
+    margin: auto 0 auto auto;
+  }
 }
 
 .summary
