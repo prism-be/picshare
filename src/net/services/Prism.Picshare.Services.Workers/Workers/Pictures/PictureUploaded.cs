@@ -23,7 +23,7 @@ public class PictureUploaded : BaseServiceBusWorker<EntityReference>
 
     public override string Queue => Topics.Pictures.Uploaded;
 
-    protected override ushort PrefetchCount => 5;
+    protected override ushort PrefetchCount => Convert.ToUInt16(EnvironmentConfiguration.GetConfiguration("RABBITMQ_PREFETCH_PICTURES") ?? "5");
 
     internal override async Task ProcessMessageAsync(IMediator mediator, EntityReference payload)
     {
