@@ -39,6 +39,8 @@ const Flow = () => {
     const [pictures, setPictures] = useState<IPictureSummary[]>([]);
     const [selectedPictures, setSelectedPictures] = useState<string[]>([]);
     const [zoomPicture, setZoomPicture] = useState<IPictureSummary | null>(null);
+    const [zoomPicturePrevious, setZoomPicturePrevious] = useState<IPictureSummary | null>(null);
+    const [zoomPictureNext, setZoomPictureNext] = useState<IPictureSummary | null>(null);
     const [zoom, setZoom] = useState(false);
     
     useEffect(() => {
@@ -110,6 +112,9 @@ const Flow = () => {
         // noinspection JSIgnoredPromiseFromCall
         router.push(pathNameTrimmed + "/?zoom=true", pathNameTrimmed + "/zoom");
         setZoomPicture(picture);
+
+        let position = pictures.indexOf(picture);
+        setPreviousAndNextPictures(position);
         
         appInsights.trackPageView({
             uri: 'flow/' + picture.organisationId + "/" + picture.id
@@ -145,6 +150,26 @@ const Flow = () => {
 
         displayAndTrackPicture(pictures[position]);
     }
+    
+    const setPreviousAndNextPictures = (position: number) => {
+        if (position > 0)
+        {
+            setZoomPicturePrevious(pictures[position - 1]);
+        }
+        else
+        {
+            setZoomPicturePrevious(null);
+        }
+        
+        if (position < pictures.length - 1)
+        {
+            setZoomPictureNext(pictures[position + 1]);
+        }
+        else
+        {
+            setZoomPictureNext(null);
+        }
+    }
 
     return <>
         <div className="">
@@ -164,7 +189,7 @@ const Flow = () => {
                 </div>
             </div>)}
 
-            {zoomPicture && zoom && <PictureZoom picture={zoomPicture} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
+            {zoomPicture && zoom && <PictureZoom picture={zoomPicture} picturePrevious={zoomPicturePrevious} pictureNext={zoomPictureNext} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
 
         </div>
     </>

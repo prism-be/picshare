@@ -1,19 +1,21 @@
 ﻿import styles from "../../styles/modules/flow.zoom.module.scss";
 import React from "react";
-import Image from "next/image";
+import Image, {ImageLoaderProps} from "next/image";
 import {IPictureSummary} from "../../lib/ajaxHelper";
 import {useKeyPressEvent} from "react-use";
 import useSWR from "swr";
-import {thumbsLoader} from "../../lib/pictureLoaders";
+import getConfig from "next/config";
 
 interface Props {
     picture: IPictureSummary;
+    picturePrevious: IPictureSummary | null;
+    pictureNext: IPictureSummary | null;
     togglePictureZoom: (picture: IPictureSummary) => void;
     previousPictureZoom: () => void;
     nextPictureZoom: () => void;
 }
 
-export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, nextPictureZoom}: Props) => {
+export const PictureZoom = ({picture, picturePrevious, pictureNext, togglePictureZoom, previousPictureZoom, nextPictureZoom}: Props) => {
 
     useKeyPressEvent('ArrowRight', () => {
         nextPictureZoom();
@@ -26,14 +28,39 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
     useKeyPressEvent('Escape', () => {
         togglePictureZoom(picture);
     })
-
-
+    
     const {data: pictureInfo} = useSWR('/api/pictures/show/' + picture.organisationId + '/' + picture.id);
+
+    const { publicRuntimeConfig: config } = getConfig()
+
+    const thumbsLoader = ({src, width}: ImageLoaderProps) => {
+        
+        console.log(width);
+        
+        const baseSrc = config.apiRoot + "/api/pictures/thumbs/" + src;
+        const widthSuffix = getWidthSuffix(width);
+        
+        return baseSrc + widthSuffix;
+    }
+    
+    const getWidthSuffix = (width: number) => {
+        if (width <= 960) {
+            return "/960/540/";
+        }
+
+        if (width <= 1920) {
+            return "/1920/1080/";
+        }
+
+        return "/3840/2160/";
+    }
 
     return <>
         <div className={styles.cover}>
             <div className={styles.picture}>
-                <Image loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={"/api/pictures/thumbs/" + picture.token} alt={picture.name}/>
+                {picturePrevious && <Image className={styles.preload} loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={picturePrevious.token} alt={picture.name}/>}
+                {pictureNext && <Image className={styles.preload} loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={pictureNext.token} alt={picture.name}/>}
+                <Image loader={thumbsLoader} layout={"fill"} objectFit={"contain"} src={picture.token} alt={picture.name}/>
             </div>
             <div onClick={() => previousPictureZoom()} className={styles.navigation + " " + styles.previous}>
                 <span className="material-icons">keyboard_arrow_left</span>
@@ -49,6 +76,9 @@ export const PictureZoom = ({picture, togglePictureZoom, previousPictureZoom, ne
             <div onClick={() => togglePictureZoom(picture)} className={styles.close}>
                 <span className="material-icons">close_fullscreen</span>
             </div>
+        </div>
+        <div>
+            
         </div>
     </>
 }
