@@ -17,11 +17,27 @@ public class AzureBlobClient : BlobClient
         await blob.UploadAsync(new BinaryData(data), cancellationToken);
     }
 
+    public override async Task DeleteAsync(string blobName, CancellationToken cancellationToken = default)
+    {
+        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
+        var blob = container.GetBlobClient(blobName);
+        await blob.DeleteAsync(cancellationToken: cancellationToken);
+    }
+
     public override Task<List<string>> ListAsync(Guid organisationId, CancellationToken cancellationToken = default)
     {
         var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
 
         return Task.FromResult(container.GetBlobs(prefix: organisationId.ToString(), cancellationToken: cancellationToken)
+            .Select(x => x.Name)
+            .ToList());
+    }
+
+    public override Task<List<string>> ListAsync(Guid organisationId, Guid pictureId, CancellationToken cancellationToken = default)
+    {
+        var container = new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_BLOB_CONNECTION_STRING"), "picshare");
+
+        return Task.FromResult(container.GetBlobs(prefix: organisationId + "/" + pictureId, cancellationToken: cancellationToken)
             .Select(x => x.Name)
             .ToList());
     }

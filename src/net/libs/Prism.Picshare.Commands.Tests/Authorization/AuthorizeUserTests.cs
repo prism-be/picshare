@@ -15,7 +15,7 @@ using Prism.Picshare.Services;
 using Prism.Picshare.UnitTesting;
 using Xunit;
 
-namespace Prism.Picshare.Tests.Commands.Authorization;
+namespace Prism.Picshare.Commands.Tests.Authorization;
 
 public class AuthorizeUserTests
 {
