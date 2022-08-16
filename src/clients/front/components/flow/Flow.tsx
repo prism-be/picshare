@@ -100,12 +100,15 @@ const Flow = () => {
         
         if (picture == null)
         {
+        console.log(router);
+            // noinspection JSIgnoredPromiseFromCall
             router.push("/");
             setZoomPicture(null);
             return;
         }
 
-        router.push("/?zoom=true", "/zoom");
+        // noinspection JSIgnoredPromiseFromCall
+        router.push(router.pathname + "/?zoom=true", router.pathname + "/zoom");
         setZoomPicture(picture);
         
         appInsights.trackPageView({
