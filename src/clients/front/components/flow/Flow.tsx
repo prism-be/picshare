@@ -7,6 +7,7 @@ import {getCurrentLocale} from "../../lib/locales";
 import {PictureZoom} from "./PictureZoom";
 import {appInsights} from "../../lib/AppInsights";
 import {getData, IFlow, IPictureSummary} from "../../lib/ajaxHelper";
+import {useRouter} from "next/router";
 
 const getFlow = async (route: string): Promise<IFlow> => {
 
@@ -30,12 +31,19 @@ interface IGroupedFlow {
 
 const Flow = () => {
 
+    const router = useRouter();
+    
     const {data: flow} = useSWR("/api/pictures/flow", getFlow);
 
     const [groupedFlows, setGroupedFlows] = useState<IGroupedFlow[]>([]);
     const [pictures, setPictures] = useState<IPictureSummary[]>([]);
     const [selectedPictures, setSelectedPictures] = useState<string[]>([]);
     const [zoomPicture, setZoomPicture] = useState<IPictureSummary | null>(null);
+    const [zoom, setZoom] = useState(false);
+    
+    useEffect(() => {
+        setZoom(!!router.query.zoom);
+    }, [router.query.zoom])
 
     useEffect(() => {
         if (flow) {
@@ -92,10 +100,15 @@ const Flow = () => {
         
         if (picture == null)
         {
+        console.log(router);
+            // noinspection JSIgnoredPromiseFromCall
+            router.push("/");
             setZoomPicture(null);
             return;
         }
-        
+
+        // noinspection JSIgnoredPromiseFromCall
+        router.push(router.pathname + "/?zoom=true", router.pathname + "/zoom");
         setZoomPicture(picture);
         
         appInsights.trackPageView({
@@ -151,7 +164,7 @@ const Flow = () => {
                 </div>
             </div>)}
 
-            {zoomPicture && <PictureZoom picture={zoomPicture} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
+            {zoomPicture && zoom && <PictureZoom picture={zoomPicture} togglePictureZoom={togglePictureZoom} nextPictureZoom={nextPictureZoom} previousPictureZoom={previousPictureZoom}/>}
 
         </div>
     </>
