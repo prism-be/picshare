@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
+using Prism.Picshare.Commands.Pictures;
 using Prism.Picshare.Commands.Processor;
 using Prism.Picshare.Domain;
 using Prism.Picshare.Events;
@@ -26,9 +27,14 @@ public class PictureUploaded : BaseServiceBusWorker<EntityReference>
 
     internal override async Task ProcessMessageAsync(IMediator mediator, EntityReference payload)
     {
+        await mediator.Send(new CleanThumbnails(payload.OrganisationId, payload.Id));
+        
         await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 150, 150, true));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 300, 300, true));
         await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 960, 540, false));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 1280, 720, false));
         await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 1920, 1080, false));
+        await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 2560, 1440, false));
         await mediator.Send(new GenerateThumbnail(payload.OrganisationId, payload.Id, 3840, 2160, false));
 
         await _publisherClient.PublishEventAsync(Topics.Pictures.ThumbnailsGenerated, new EntityReference

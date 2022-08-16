@@ -48,8 +48,16 @@ export const PictureZoom = ({picture, picturePrevious, pictureNext, togglePictur
             return "/960/540/";
         }
 
+        if (width <= 1280) {
+            return "/1280/720/";
+        }
+
         if (width <= 1920) {
             return "/1920/1080/";
+        }
+
+        if (width <= 2560) {
+            return "/2560/1440/";
         }
 
         return "/3840/2160/";

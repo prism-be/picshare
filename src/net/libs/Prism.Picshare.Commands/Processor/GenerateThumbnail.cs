@@ -73,8 +73,8 @@ public class GenerateThumbnailHandler : IRequestHandler<GenerateThumbnail, Resul
         image.RePage();
 
         using var outputStream = new MemoryStream();
-        image.Format = MagickFormat.Jpg;
-        image.Quality = 95;
+        image.Format = MagickFormat.WebP;
+        image.Quality = 90;
         await image.WriteAsync(outputStream, cancellationToken);
 
         var blobNameResized = BlobNamesExtensions.GetSourcePath(request.OrganisationId, request.PictureId, request.Width, request.Height);

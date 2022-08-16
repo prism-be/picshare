@@ -15,6 +15,6 @@ public static class BlobNamesExtensions
     
     public static string GetSourcePath(Guid organisationId, Guid pictureId, int width, int height)
     {
-        return $"{organisationId}/{pictureId}/{width}-{height}.jpg";
+        return $"{organisationId}/{pictureId}/{width}-{height}.webp";
     }
 }

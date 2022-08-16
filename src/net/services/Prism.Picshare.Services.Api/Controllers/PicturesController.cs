@@ -93,7 +93,7 @@ public class PicturesController : Controller
 
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             Response?.Headers.Add("Cache-Control", "public, max-age=31536000");
-            return File(data, "image/jpeg");
+            return File(data, "image/webp");
         }
         catch (Exception ex)
         {
