@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Elastic.Apm.NetCoreAll;
 using Prism.Picshare;
 using Prism.Picshare.AspNetCore;
 using Prism.Picshare.AspNetCore.Authentication;
@@ -22,6 +23,8 @@ var mailingConfiguration = new MailingConfiguration
 builder.Services.AddSingleton(mailingConfiguration);
 builder.Services.AddScoped<IEmailWorker, NullEmailWorker>();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddPicshareAuthentication();
@@ -30,6 +33,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors();
 
 var app = builder.Build();
+
+app.UseAllElasticApm();
 
 app.UseCors(opt =>
 {
