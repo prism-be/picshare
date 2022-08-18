@@ -5,7 +5,6 @@ import {Thumbnail} from "./Thumbnail";
 import {format, parseISO, parseJSON} from "date-fns";
 import {getCurrentLocale} from "../../lib/locales";
 import {PictureZoom} from "./PictureZoom";
-import {appInsights} from "../../lib/AppInsights";
 import {getData, IFlow, IPictureSummary} from "../../lib/ajaxHelper";
 import {useRouter} from "next/router";
 

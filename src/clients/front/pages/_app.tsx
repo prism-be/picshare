@@ -5,9 +5,6 @@ import type {AppProps} from 'next/app'
 import Head from "next/head";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {SWRConfig} from "swr";
-import {withAITracking} from "@microsoft/applicationinsights-react-js";
-import {loadAppInsights, reactPlugin} from "../lib/AppInsights";
-import {useEffect} from "react";
 import {getData} from "../lib/ajaxHelper";
 
 export const getStaticProps = async ({locale}: any) => ({
@@ -20,10 +17,6 @@ const MyApp = ({Component, pageProps}: AppProps) => {
 
     const {t} = useTranslation('common')
 
-    useEffect(() => {
-        loadAppInsights();
-    }, []);
-
     return <>
         <Head>
             <title>{t('header.title')}</title>
@@ -33,4 +26,4 @@ const MyApp = ({Component, pageProps}: AppProps) => {
         </SWRConfig>
     </>
 }
-export default withAITracking(reactPlugin, appWithTranslation(MyApp));
+export default appWithTranslation(MyApp);

@@ -4,10 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Prism.Picshare.Exceptions;
 
 namespace Prism.Picshare.Behaviors;
 

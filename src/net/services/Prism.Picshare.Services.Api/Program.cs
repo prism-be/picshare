@@ -7,12 +7,11 @@
 using Prism.Picshare;
 using Prism.Picshare.AspNetCore;
 using Prism.Picshare.AspNetCore.Authentication;
-using Prism.Picshare.Insights;
 using Prism.Picshare.Mailing;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddInsights();
+builder.ConfigureSerilog("api");
 
 builder.Services.AddPicshare();
 
@@ -22,8 +21,6 @@ var mailingConfiguration = new MailingConfiguration
 };
 builder.Services.AddSingleton(mailingConfiguration);
 builder.Services.AddScoped<IEmailWorker, NullEmailWorker>();
-
-builder.Services.AddInsights();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
@@ -46,8 +43,6 @@ app.UseCors(opt =>
 
 app.UseAuthentication()
     .UseAuthorization();
-
-app.UseExceptionLogger();
 
 app.UseHealthChecks("/health");
 

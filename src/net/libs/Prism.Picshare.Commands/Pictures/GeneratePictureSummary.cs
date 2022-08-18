@@ -58,7 +58,7 @@ public class GeneratePictureSummaryHandler : IRequestHandler<GeneratePictureSumm
             return null;
         }
 
-        string value = exif.Value.ToString();
+        var value = exif.Value ?? string.Empty;
 
         var splitted = value.Split(' ');
 
